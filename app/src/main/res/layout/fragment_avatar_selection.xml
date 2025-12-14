@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/background">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/avatar_selection_title"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_primary"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp" />
+
+    <!-- Camera Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/cameraPreview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintBottom_toTopOf="@id/cameraControls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp" />
+
+    <!-- Avatar Display -->
+    <ImageView
+        android:id="@+id/avatarImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        android:background="@color/surface"
+        android:contentDescription="@string/choose_avatar"
+        app:layout_constraintTop_toBottomOf="@id/titleText"
+        app:layout_constraintBottom_toTopOf="@id/cameraControls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        android:layout_margin="32dp" />
+
+    <!-- Camera Controls -->
+    <LinearLayout
+        android:id="@+id/cameraControls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/actionButtons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/captureButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/capture_photo"
+            android:layout_margin="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/retakeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/retake_photo"
+            android:visibility="gone"
+            android:layout_margin="8dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:id="@+id/actionButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/useCameraButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/use_camera"
+            android:textSize="18sp"
+            android:layout_margin="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/chooseAvatarButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/choose_avatar"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/continueButton"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="@string/continue_button"
+            android:textSize="18sp"
+            android:layout_margin="8dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
