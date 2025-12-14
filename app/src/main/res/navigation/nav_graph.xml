@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/serverDiscoveryFragment">
+
+    <fragment
+        android:id="@+id/serverDiscoveryFragment"
+        android:name="com.game.remoteclient.ui.ServerDiscoveryFragment"
+        android:label="Server Discovery">
+        <action
+            android:id="@+id/action_serverDiscovery_to_nameEntry"
+            app:destination="@id/nameEntryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nameEntryFragment"
+        android:name="com.game.remoteclient.ui.NameEntryFragment"
+        android:label="Name Entry">
+        <argument
+            android:name="serverIp"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_nameEntry_to_avatarSelection"
+            app:destination="@id/avatarSelectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/avatarSelectionFragment"
+        android:name="com.game.remoteclient.ui.AvatarSelectionFragment"
+        android:label="Avatar Selection">
+        <argument
+            android:name="serverIp"
+            app:argType="string" />
+        <argument
+            android:name="playerName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_avatarSelection_to_waitingRoom"
+            app:destination="@id/waitingRoomFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/waitingRoomFragment"
+        android:name="com.game.remoteclient.ui.WaitingRoomFragment"
+        android:label="Waiting Room">
+        <argument
+            android:name="serverIp"
+            app:argType="string" />
+        <argument
+            android:name="playerName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_waitingRoom_to_getReady"
+            app:destination="@id/getReadyFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/getReadyFragment"
+        android:name="com.game.remoteclient.ui.GetReadyFragment"
+        android:label="Get Ready">
+        <action
+            android:id="@+id/action_getReady_to_quiz"
+            app:destination="@id/quizFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.game.remoteclient.ui.QuizFragment"
+        android:label="Quiz">
+        <action
+            android:id="@+id/action_quiz_to_getReady"
+            app:destination="@id/getReadyFragment" />
+    </fragment>
+
+</navigation>
