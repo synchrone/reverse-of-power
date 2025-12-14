@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Game Remote</string>
+
+    <!-- Server Discovery -->
+    <string name="server_discovery_title">Find Game Server</string>
+    <string name="enter_ip_address">Enter IP Address</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Connect</string>
+    <string name="discovered_servers">Discovered Servers</string>
+    <string name="scanning">Scanning for servers…</string>
+    <string name="no_servers_found">No servers found</string>
+
+    <!-- Name Entry -->
+    <string name="enter_name_title">What\'s your name?</string>
+    <string name="name_hint">Enter your name</string>
+    <string name="continue_button">Continue</string>
+
+    <!-- Avatar Selection -->
+    <string name="avatar_selection_title">Choose Your Avatar</string>
+    <string name="use_camera">Use Camera</string>
+    <string name="choose_avatar">Choose Avatar</string>
+    <string name="camera_permission_required">Camera permission is required</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="retake_photo">Retake</string>
+    <string name="use_this_photo">Use This Photo</string>
+
+    <!-- Waiting Room -->
+    <string name="waiting_room_title">Waiting Room</string>
+    <string name="players_joined">Players:</string>
+    <string name="start_game">Start Game</string>
+    <string name="waiting_for_players">Waiting for players to join…</string>
+    <string name="you">You</string>
+
+    <!-- Get Ready -->
+    <string name="get_ready">Get Ready!</string>
+    <string name="game_starting">Game starting soon…</string>
+
+    <!-- Quiz Screen -->
+    <string name="question_placeholder">Question will appear here</string>
+    <string name="answer_a">Answer A</string>
+    <string name="answer_b">Answer B</string>
+    <string name="answer_c">Answer C</string>
+    <string name="answer_d">Answer D</string>
+
+    <!-- Common -->
+    <string name="error_connection">Connection error</string>
+    <string name="error_server_unreachable">Cannot reach server</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+</resources>
