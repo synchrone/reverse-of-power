@@ -3,11 +3,10 @@ package com.game.remoteclient.ui
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android:view.ViewGroup
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentGetReadyBinding
 import com.game.remoteclient.models.GameState
 import com.game.remoteclient.network.NetworkManager
