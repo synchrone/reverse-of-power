@@ -59,20 +59,6 @@ class NetworkManager private constructor() {
         val servers = mutableListOf<GameServer>()
         val port = 8080
 
-        // Scan common IP addresses in the subnet
-        for (i in 1..254) {
-            val ipAddress = "$subnet.$i"
-            try {
-                val socket = Socket()
-                socket.connect(InetSocketAddress(ipAddress, port), 200)
-                socket.close()
-                servers.add(GameServer(ipAddress, port))
-                Log.d(TAG, "Found server at $ipAddress:$port")
-            } catch (e: IOException) {
-                // Server not found at this address
-            }
-        }
-
         servers
     }
 
