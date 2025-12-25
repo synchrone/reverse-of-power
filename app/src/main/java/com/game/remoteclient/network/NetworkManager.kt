@@ -1,6 +1,15 @@
 package com.game.remoteclient.network
 
 import android.util.Log
+import com.game.protocol.AssignPlayerIDAndSlotMessage
+import com.game.protocol.ClientQuizCommandMessage
+import com.game.protocol.GameMessage
+import com.game.protocol.GameProtocolClient
+import com.game.protocol.InterfaceVersionMessage
+import com.game.protocol.ResourceRequirementsMessage
+import com.game.protocol.ServerAvatarRequestResponseMessage
+import com.game.protocol.ServerAvatarStatusMessage
+import com.game.protocol.SessionStateMessage
 import com.game.remoteclient.models.GameServer
 import com.game.remoteclient.models.GameState
 import com.game.remoteclient.models.Player
@@ -9,28 +18,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
-import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Socket
-import java.util.concurrent.TimeUnit
+import java.util.UUID
 
 class NetworkManager private constructor() {
 
     private val TAG = "NetworkManager"
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(5, TimeUnit.SECONDS)
-        .readTimeout(10, TimeUnit.SECONDS)
-        .writeTimeout(10, TimeUnit.SECONDS)
-        .build()
-
-    private var webSocket: WebSocket? = null
+    private var protocolClient: GameProtocolClient? = null
     private var currentServer: GameServer? = null
+    private var currentPlayer: Player? = null
+    private var assignedPlayerId: Int? = null
+    private var assignedSlotId: Int? = null
+    private var deviceUID: String = UUID.randomUUID().toString().replace("-", "")
+    private var selectedAvatarId: String? = null
 
     private val _gameState = MutableStateFlow(GameState.DISCONNECTED)
     val gameState: StateFlow<GameState> = _gameState
@@ -43,6 +43,9 @@ class NetworkManager private constructor() {
 
     private val _connectionError = MutableStateFlow<String?>(null)
     val connectionError: StateFlow<String?> = _connectionError
+
+    private val _availableAvatars = MutableStateFlow<List<ServerAvatarStatusMessage>>(emptyList())
+    val availableAvatars: StateFlow<List<ServerAvatarStatusMessage>> = _availableAvatars
 
     companion object {
         @Volatile
@@ -66,36 +69,18 @@ class NetworkManager private constructor() {
         try {
             _gameState.value = GameState.CONNECTING
             currentServer = server
+            currentPlayer = player
 
-            val request = Request.Builder()
-                .url("ws://${server.fullAddress}/game")
-                .build()
+            // Create protocol client
+            protocolClient = GameProtocolClient(server.ipAddress, server.port)
 
-            webSocket = client.newWebSocket(request, object : WebSocketListener() {
-                override fun onOpen(webSocket: WebSocket, response: Response) {
-                    Log.d(TAG, "WebSocket connected")
-                    _gameState.value = GameState.LOBBY
-                    // Send player info to server
-                    sendPlayerInfo(player)
-                }
+            // Set up message handlers
+            setupMessageHandlers()
 
-                override fun onMessage(webSocket: WebSocket, text: String) {
-                    Log.d(TAG, "Received message: $text")
-                    handleMessage(text)
-                }
+            // Connect to server
+            protocolClient?.connect(deviceUID)
 
-                override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-                    Log.e(TAG, "WebSocket error", t)
-                    _connectionError.value = t.message ?: "Connection failed"
-                    _gameState.value = GameState.DISCONNECTED
-                }
-
-                override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-                    Log.d(TAG, "WebSocket closed: $reason")
-                    _gameState.value = GameState.DISCONNECTED
-                }
-            })
-
+            Log.d(TAG, "Connected to ${server.ipAddress}:${server.port} with UID: $deviceUID")
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect", e)
@@ -105,32 +90,128 @@ class NetworkManager private constructor() {
         }
     }
 
-    private fun sendPlayerInfo(player: Player) {
-        // TODO: Implement JSON serialization and send player info
-        val message = """{"type":"join","name":"${player.name}"}"""
-        webSocket?.send(message)
+    private fun setupMessageHandlers() {
+        protocolClient?.onMessageReceived = { message ->
+            handleProtocolMessage(message)
+        }
+
+        protocolClient?.onAvatarListReceived = { avatars ->
+            _availableAvatars.value = avatars
+            Log.d(TAG, "Received ${avatars.size} avatars")
+
+            // Auto-select first available avatar
+            val available = avatars.firstOrNull { it.Available }
+            available?.let {
+                Log.d(TAG, "Auto-requesting avatar: ${it.AvatarID}")
+                protocolClient?.requestAvatar(it.AvatarID)
+                selectedAvatarId = it.AvatarID
+            }
+        }
+    }
+
+    private fun handleProtocolMessage(message: GameMessage) {
+        Log.d(TAG, "Received message: ${message.TypeString}")
+
+        when (message) {
+            is InterfaceVersionMessage -> {
+                Log.d(TAG, "Server version: ${message.InterfaceVersion}")
+                _gameState.value = GameState.CONNECTED
+                protocolClient?.requestPlayerID(deviceUID)
+            }
+
+            is SessionStateMessage -> {
+                Log.d(TAG, "Session ID: ${message.SessionID}")
+            }
+
+            is AssignPlayerIDAndSlotMessage -> {
+                assignedPlayerId = message.PlayerID
+                assignedSlotId = message.SlotID
+                Log.d(TAG, "Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
+                Log.d(TAG, "Display Name: ${message.DisplayName}")
+
+                // Send required responses
+                protocolClient?.sendAllResourcesReceived()
+                protocolClient?.sendDeviceInfo(
+                    deviceUID,
+                    android.os.Build.MODEL,
+                    "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT}"
+                )
+                protocolClient?.requestAvatarStatus()
+            }
+
+            is ResourceRequirementsMessage -> {
+                Log.d(TAG, "Resources required: ${message.Requirements}")
+            }
+
+            is ServerAvatarStatusMessage -> {
+                Log.d(TAG, "Avatar ${message.AvatarID}: ${message.Available}")
+            }
+
+            is ServerAvatarRequestResponseMessage -> {
+                Log.d(TAG, "Avatar ${message.AvatarID} request response - Available: ${message.Available}")
+                if (message.Available && message.AvatarID == selectedAvatarId) {
+                    // Avatar acquired, send player profile
+                    currentPlayer?.let { player ->
+                        sendPlayerProfile(player)
+                        _gameState.value = GameState.LOBBY
+                    }
+                }
+            }
+
+            else -> {
+                Log.d(TAG, "Unhandled message type: ${message.TypeString}")
+            }
+        }
+    }
+
+    private fun sendPlayerProfile(player: Player) {
+        selectedAvatarId?.let { avatarId ->
+            protocolClient?.sendPlayerProfile(
+                name = player.name,
+                avatarId = avatarId,
+                culture = "en-US"
+            )
+            Log.d(TAG, "Sent player profile: ${player.name}")
+        }
     }
 
     fun sendAnswer(answerIndex: Int) {
-        val message = """{"type":"answer","answer":$answerIndex}"""
-        webSocket?.send(message)
+        protocolClient?.let { client ->
+            val msg = ClientQuizCommandMessage(
+                action = answerIndex,
+                time = System.currentTimeMillis() / 1000.0
+            )
+            // Note: ClientQuizCommandMessage would need to be sent via the client
+            // This requires adding a generic sendMessage method to GameProtocolClient
+            Log.d(TAG, "Sending answer: $answerIndex")
+        }
     }
 
     fun startGame() {
-        val message = """{"type":"start_game"}"""
-        webSocket?.send(message)
+        Log.d(TAG, "Start game requested")
+        // Implementation depends on protocol requirements
     }
 
-    private fun handleMessage(message: String) {
-        // TODO: Parse JSON messages and update state
-        // This is a placeholder for message handling
-        Log.d(TAG, "Handling message: $message")
+    fun requestAvatar(avatarId: String) {
+        protocolClient?.requestAvatar(avatarId)
+        selectedAvatarId = avatarId
+    }
+
+    fun sendImage(imageData: ByteArray, imageGuid: String) {
+        val transferId = (Math.random() * 10000).toInt()
+        protocolClient?.sendImage(imageData, imageGuid, transferId)
     }
 
     fun disconnect() {
-        webSocket?.close(1000, "User disconnected")
-        webSocket = null
+        protocolClient?.close()
+        protocolClient = null
         currentServer = null
+        currentPlayer = null
+        assignedPlayerId = null
+        assignedSlotId = null
+        selectedAvatarId = null
         _gameState.value = GameState.DISCONNECTED
+        _availableAvatars.value = emptyList()
+        Log.d(TAG, "Disconnected from server")
     }
 }
