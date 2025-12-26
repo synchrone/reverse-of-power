@@ -4,6 +4,7 @@ package com.game.protocol
 
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
+import java.io.File
 import java.net.*
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -411,38 +412,38 @@ class GameProtocolClient(
         val totalLength = buffer.int // length of this packet
         val flags = buffer.get() // 16th byte
 
-        sendAck(messageId)
+//        sendAck(messageId)
 
-        if(flags == 3.toByte() || packetIdx == packetNum - 1){ // multipacket or last packet
-            if(packetIdx == 0){ // buffer first packet with 2nd header
+        if (packetNum>1) { //chunked transmission
+            if(packetIdx == 0){ // buffer first packet
+                byteArrayOf(0x00, 0x00, 0x00, 0x01).copyInto(data, 3) // begin reassembling buffer with packetNum=1
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data);
             }else{
                 // push the rest after without the header for gluing after the first packet
-                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(17 until data.size));
+                // continuation packets only have a 16-byte header
+                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(16 until data.size))
             }
             return
         }
 
         val h1 = buffer.int // always zero
         val h2 = buffer.int // always 0x00, 0x00, 0x33, 0x29
-        val payloadType = buffer.int
+        val payloadType = buffer.order(ByteOrder.LITTLE_ENDIAN).int
         val payloadLength = buffer.order(ByteOrder.LITTLE_ENDIAN).int
 
         println("RPC ${messageId}/${packetNum}pieces, ${flags}: type=${payloadType.toHexString()}: ${payloadLength}b")
 
-        if (flags == 0.toByte()){ // simple payload
+        if (flags == 0.toByte()) { // simple payload
             val fragment = data.sliceArray(32 until data.size)
             if(payloadType == -1310523393 ) { // 0xB1, 0xE2, 0xFF, 0xFF = json
                 return parseJsonPayload(fragment)
-            }else if (payloadType < 10) { // 5,6,7,8 made sense with 0x03 packet flag = jpeg
-                throw NotImplementedError();
             }else{
                 throw NotImplementedError();
             }
-        }else if(flags == 1.toByte()){ // multi-payload
+        } else if(flags == 1.toByte()) { // multi-payload
             val datatype = buffer.int
-            if(datatype == -297790844){ //0x84, 0x12, 0x40, 0xEE = multijson
-                var processed = 4; // advance for read datatype var
+            if (datatype == -297790844) { //0x84, 0x12, 0x40, 0xEE = multijson
+                var processed = 4 // advance for read datatype var
                 while (processed < payloadLength-3) { // TODO: there's some byte counting error here ...
                     var doclen = buffer.order(ByteOrder.LITTLE_ENDIAN).int;
                     var doctype = buffer.int; // 0xB1, 0xE2, 0xFF, 0xFF for json
@@ -451,13 +452,19 @@ class GameProtocolClient(
                     buffer.position(buffer.position() + doclen)
                 }
                 buffer.get() // 0x32 finish
-            }else{
+            } else {
                 throw NotImplementedError();
             }
+        } else if(flags == 3.toByte()) {
+            // mostly reassembled jpegs here
+            val jpeg = data.sliceArray(buffer.position() until data.size)
+            val file = File("$messageId.jpeg")
+            file.writeBytes(jpeg)
+            println("wrote ${file.absolutePath}")
         }
     }
 
-    private fun handleFragmentedPacket(messageId: Byte, packetNum: Int, totalPackets: Int, fragment: ByteArray) {
+    private fun handleFragmentedPacket(messageId: Byte, packetNum: Int, totalPackets: Int, fragment: ByteArray, isFirstPacket: Boolean = false) {
         if (!fragmentBuffer.containsKey(messageId)) {
             fragmentBuffer[messageId] = mutableMapOf()
         }
@@ -504,6 +511,8 @@ class GameProtocolClient(
 
         try {
             val jsonStr = String(data.sliceArray(jsonStart until data.size), Charsets.UTF_8)
+            println(jsonStr)
+
             val jsonElement = json.parseToJsonElement(jsonStr).jsonObject
             val typeString = jsonElement["TypeString"]?.jsonPrimitive?.content ?: return
 
@@ -525,39 +534,8 @@ class GameProtocolClient(
 
             message?.let { onMessageReceived?.invoke(it) }
 
-            // Handle avatar list (multiple messages in one packet)
-            if (typeString.contains("ServerAvatarStatusMessage")) {
-                parseMultipleAvatarMessages(data)
-            }
-
         } catch (e: Exception) {
             println("Error parsing JSON: ${e.message}")
-        }
-    }
-
-    private fun parseMultipleAvatarMessages(data: ByteArray) {
-        val avatars = mutableListOf<ServerAvatarStatusMessage>()
-        var offset = 0
-
-        while (offset < data.size) {
-            val jsonStart = data.indexOf('{'.code.toByte(), offset)
-            if (jsonStart == -1) break
-
-            val jsonEnd = data.indexOf('}'.code.toByte(), jsonStart)
-            if (jsonEnd == -1) break
-
-            try {
-                val jsonStr = String(data.sliceArray(jsonStart..jsonEnd), Charsets.UTF_8)
-                val msg = json.decodeFromString<ServerAvatarStatusMessage>(jsonStr)
-                avatars.add(msg)
-                offset = jsonEnd + 1
-            } catch (e: Exception) {
-                break
-            }
-        }
-
-        if (avatars.isNotEmpty()) {
-            onAvatarListReceived?.invoke(avatars)
         }
     }
 
