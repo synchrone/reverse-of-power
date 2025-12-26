@@ -144,12 +144,15 @@ data class AckPacket(
 private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
 class GameProtocolClient(
+    private val deviceUID: String,
     private val serverHostStr: String,
     private val serverPort: Int = 9066,
     private val listenHostStr: String = "0.0.0.0",
     private val listenPort: Int = 9060
     ) {
 
+    private val randomSeed: Byte = Random().nextInt(0, 255).toByte()
+    private var isConnected: Boolean = false
     private var serverHost: InetAddress? = null
     private var serverSocket: DatagramSocket? = null
     private var clientSocket: DatagramSocket? = null
@@ -158,7 +161,7 @@ class GameProtocolClient(
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
-    private var messageCounter: Short = 0
+    private var messageCounter: Byte = 0
     private val fragmentBuffer = mutableMapOf<Byte, MutableMap<Int, ByteArray>>()
 
     var onMessageReceived: ((GameMessage) -> Unit)? = null
@@ -166,10 +169,16 @@ class GameProtocolClient(
 
     // ==================== Connection ====================
 
-    fun connect(deviceUID: String) {
+    fun connect() {
         startListening()
-        sendConnectionRequest()
-        sendDeviceUID(deviceUID)
+        Thread {
+            while (!isConnected) {
+                sendConnectionRequest()
+                Thread.sleep(50)
+                sendDeviceUID(deviceUID)
+                Thread.sleep(1000)
+            }
+        }.start()
     }
 
     private fun sendConnectionRequest() {
@@ -180,25 +189,21 @@ class GameProtocolClient(
         data[3] = 0xff.toByte()
         data[4] = 0xff.toByte()
         data[5] = 0xff.toByte()
-
         sendRawUDP(data)
     }
 
-    private fun sendDeviceUID(uid: String) {
+    public fun sendDeviceUID(uid: String) {
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
-        val data = ByteArray(44)
-        data[0] = 0x0c.toByte()
-        data[1] = 0x89.toByte()
-        data[2] = 0xe8.toByte()
-        data[3] = 0x84.toByte()
-        data[4] = 0x61.toByte()
-        data[5] = 0x03.toByte()
-        data[6] = 0xf4.toByte()
-        data[7] = 0x69.toByte()
-        data[8] = 0x20.toByte()
+        val data = ByteBuffer.allocate(12+uidBytes.size)
+        data.put(bytes(0xc, 0x89, 0xe8, 0x84))
+        data.put(bytes(0x61, 0x3, 0xf4))
+        data.put(bytes(0x04, 0x7a, 0x5e, 0x6b, 0x09, 0x71, 0x60, 0x77, 0x62, 0x46, 0x31, 0x61, 0x1f, 0x4c, 0x52, 0x57, 0x35, 0x3d, 0x79, 0x36, 0x69, 0x4a).random())
+        // 76, 02, 40, 2d, 10, 3f, 63, 56, 00, 58
+        // 04, 7a, 5e, 6b, 09, 71, 60, 77, 62, 46, 31, 61, 1f, 4c, 52, 57, 35, 3d, 79, 36, 69, 4a, 3d (!), 16
 
-        System.arraycopy(uidBytes, 0, data, 12, uidBytes.size.coerceAtMost(32))
-        sendRawUDP(data)
+        data.putInt(uidBytes.size)
+        data.put(uidBytes)
+        sendRawUDP(data.array())
     }
 
     // ==================== Session Management ====================
@@ -282,24 +287,7 @@ class GameProtocolClient(
     }
 
     private fun sendFragmentedData(packetNum: Short, totalPackets: Short, data: ByteArray) {
-        val buffer = ByteBuffer.allocate(1024 + 42).order(ByteOrder.LITTLE_ENDIAN)
-
-        buffer.put(0xae.toByte())
-        buffer.put(0x7f.toByte())
-        buffer.putShort(messageCounter++)
-        buffer.putShort(0x0011) // Fragment flag
-        buffer.putShort(packetNum)
-        buffer.putShort(0x0000)
-        buffer.putLong(0x00000000000000ea.toLong())
-        buffer.putLong(0x0300000000000000.toLong())
-        buffer.put(0x33.toByte())
-        buffer.put(0x29.toByte())
-
-        // Add data
-        buffer.put(data)
-
-        val packet = buffer.array().sliceArray(0 until (data.size + 42))
-        sendRawUDP(packet)
+        throw NotImplementedError()
     }
 
     // ==================== Core Messaging ====================
@@ -313,7 +301,7 @@ class GameProtocolClient(
 
         buffer.put(0xae.toByte())
         buffer.put(0x7f.toByte())
-        buffer.put((messageCounter++).toByte())
+        buffer.put(messageCounter++)
         buffer.putInt(1) // one message in packet
         buffer.putInt(0) // packet idx = 0
         buffer.putInt(jsonBytes.size + 16)
@@ -337,11 +325,13 @@ class GameProtocolClient(
         buffer.put(ack.messageId)
         buffer.put(ack.padding)
 
+        messageCounter = (messageId + 1).toByte()
+
         sendRawUDP(buffer.array())
     }
 
     private fun sendRawUDP(data: ByteArray) {
-        println("> sending ${data.size}b to ${serverHost}:${serverPort} hex: ${data.joinToString("") { "%02x".format(it) }}")
+        println("> sending ${data.size}b to ${serverHost}:${serverPort} hex: ${data.toHex()}")
         val packet = DatagramPacket(
             data,
             data.size,
@@ -354,6 +344,9 @@ class GameProtocolClient(
     // ==================== Receiving ====================
 
     private fun startListening() {
+        // Force Java to prefer IPv4 stack to avoid IPv6 binding issues
+        System.setProperty("java.net.preferIPv4Stack", "true")
+
         serverHost = InetAddress.getByName(serverHostStr)
         serverSocket = DatagramSocket(0, Inet4Address.getByName("0.0.0.0") as InetAddress)
         clientSocket = DatagramSocket(listenPort, Inet4Address.getByName(listenHostStr) as InetAddress)
@@ -383,7 +376,9 @@ class GameProtocolClient(
                 handleDataPacket(data)
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
-                // ACK packet - can be logged or ignored
+                if(data.sliceArray(4 .. 6).equals(bytes(0xff, 0xff, 0xff, 0xff))){
+                    isConnected == true;
+                }
                 println("< ACK for ${data[3]}")
             }
             else -> {
@@ -545,15 +540,14 @@ class GameProtocolClient(
     // ==================== Utilities ====================
 
     private fun ByteArray.toHex(): String =
-        joinToString("") { "%02x".format(it) }
+        HexFormat.ofDelimiter(",").formatHex(this)
 
 }
 
 // ==================== Usage Example ====================
 
 fun main() {
-    val deviceUID = "b2f3f8eb0cf4ef4b2359871d35495225"
-    val client = GameProtocolClient("192.168.0.14")
+    val client = GameProtocolClient("b2f3f8eb0cf4ef4b2359871d35495225","192.168.0.14")
     println("Game protocol started")
 
     client.onMessageReceived = { message ->
@@ -563,7 +557,7 @@ fun main() {
             }
             is SessionStateMessage -> {
                 println("Session ID: ${message.SessionID}")
-                client.requestPlayerID(deviceUID)
+//                client.requestPlayerID(deviceUID)
             }
             is AssignPlayerIDAndSlotMessage -> {
                 println("Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
@@ -604,7 +598,7 @@ fun main() {
     }
 
     // Connect to server
-    client.connect(deviceUID)
+    client.connect()
 
     // Keep running
     Thread.sleep(30000)
