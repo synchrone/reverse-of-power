@@ -71,6 +71,7 @@ class GameProtocolClientParsingTest {
         client.handleReceivedPacket(UdpPacketFixtures.singlePacket9())
         client.handleReceivedPacket(UdpPacketFixtures.singlePacket18())
         client.handleReceivedPacket(UdpPacketFixtures.singlePacket21())
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket22())
     }
 
     @Test
@@ -92,6 +93,14 @@ class GameProtocolClientParsingTest {
         }
         for (i in 73..89) {
             val resourcePath = "fixtures/11_chunked_$i.bin"
+            val inputStream = javaClass.classLoader?.getResourceAsStream(resourcePath)
+                ?: throw IllegalStateException("Could not find fixture file: $resourcePath")
+
+            val packet = inputStream.readBytes()
+            client.handleReceivedPacket(packet)
+        }
+        for (i in 1..2) {
+            val resourcePath = "fixtures/2a_chunked_$i.bin"
             val inputStream = javaClass.classLoader?.getResourceAsStream(resourcePath)
                 ?: throw IllegalStateException("Could not find fixture file: $resourcePath")
 

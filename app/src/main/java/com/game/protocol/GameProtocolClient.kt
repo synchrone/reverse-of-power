@@ -141,24 +141,19 @@ data class AckPacket(
 )
 
 // ==================== Protocol Client ====================
+private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
 class GameProtocolClient(
-    serverHostStr: String,
+    private val serverHostStr: String,
     private val serverPort: Int = 9066,
-    listenHostStr: String = "0.0.0.0",
-    listenPort: Int = 9060
+    private val listenHostStr: String = "0.0.0.0",
+    private val listenPort: Int = 9060
     ) {
 
-    private val serverHost: InetAddress
-    private val serverSocket: DatagramSocket
-    private val clientSocket: DatagramSocket
+    private var serverHost: InetAddress? = null
+    private var serverSocket: DatagramSocket? = null
+    private var clientSocket: DatagramSocket? = null
 
-    init {
-        // Now create sockets with IPv4
-        serverHost = InetAddress.getByName(serverHostStr)
-        serverSocket = DatagramSocket(0, Inet4Address.getByName("0.0.0.0") as InetAddress)
-        clientSocket = DatagramSocket(listenPort, Inet4Address.getByName(listenHostStr) as InetAddress)
-    }
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
@@ -311,24 +306,22 @@ class GameProtocolClient(
 
     private inline fun <reified T : GameMessage> sendMessage(msg: T) {
         val jsonStr = json.encodeToString(msg)
+        println("> Sending message: $jsonStr")
         val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
 
-        val buffer = ByteBuffer.allocate(jsonBytes.size + 42).order(ByteOrder.LITTLE_ENDIAN)
+        val buffer = ByteBuffer.allocate(jsonBytes.size + 32).order(ByteOrder.LITTLE_ENDIAN)
 
         buffer.put(0xae.toByte())
         buffer.put(0x7f.toByte())
-        buffer.putShort(messageCounter++)
-        buffer.putShort(0x0001) // Single packet
-        buffer.putShort(0x0000)
-        buffer.putLong(0)
-        buffer.putLong((jsonBytes.size + 16).toLong())
-        buffer.putLong(0)
-        buffer.put(0x33.toByte())
-        buffer.put(0x29.toByte())
-        buffer.put(0xb1.toByte())
-        buffer.put(0xe2.toByte())
-        buffer.put(0xff.toByte())
-        buffer.put(0xff.toByte())
+        buffer.put((messageCounter++).toByte())
+        buffer.putInt(1) // one message in packet
+        buffer.putInt(0) // packet idx = 0
+        buffer.putInt(jsonBytes.size + 16)
+        buffer.put(0) // simple packet flag
+
+        buffer.putInt(0) // zeros
+        buffer.put(bytes(0x00, 0x00, 0x33, 0x29)) // ???
+        buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
         buffer.putInt(jsonBytes.size)
         buffer.put(jsonBytes)
 
@@ -348,30 +341,29 @@ class GameProtocolClient(
     }
 
     private fun sendRawUDP(data: ByteArray) {
-        println("sending ${data.size}b to ${serverHost}:${serverPort} hex: ${data.joinToString("") { "%02x".format(it) }}")
-        try {
-            val packet = DatagramPacket(
-                data,
-                data.size,
-                serverHost,
-                serverPort
-            )
-            serverSocket.send(packet)
-        } catch (e: Exception) {
-            println("  -> ERROR sending: ${e.message}")
-            e.printStackTrace()
-        }
+        println("> sending ${data.size}b to ${serverHost}:${serverPort} hex: ${data.joinToString("") { "%02x".format(it) }}")
+        val packet = DatagramPacket(
+            data,
+            data.size,
+            serverHost,
+            serverPort
+        )
+        serverSocket?.send(packet)
     }
 
     // ==================== Receiving ====================
 
     private fun startListening() {
+        serverHost = InetAddress.getByName(serverHostStr)
+        serverSocket = DatagramSocket(0, Inet4Address.getByName("0.0.0.0") as InetAddress)
+        clientSocket = DatagramSocket(listenPort, Inet4Address.getByName(listenHostStr) as InetAddress)
+
         Thread {
             val buffer = ByteArray(2048)
             while (true) {
                 try {
                     val packet = DatagramPacket(buffer, buffer.size)
-                    clientSocket.receive(packet)
+                    clientSocket?.receive(packet)
                     handleReceivedPacket(packet.data.sliceArray(0 until packet.length))
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -392,6 +384,7 @@ class GameProtocolClient(
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
                 // ACK packet - can be logged or ignored
+                println("< ACK for ${data[3]}")
             }
             else -> {
                 // Unknown p8a,et type
@@ -412,16 +405,22 @@ class GameProtocolClient(
         val totalLength = buffer.int // length of this packet
         val flags = buffer.get() // 16th byte
 
-//        sendAck(messageId)
+        sendAck(messageId)
 
         if (packetNum>1) { //chunked transmission
+            val h1 = buffer.short
+            val h2 = buffer.int
+            println("< fragmented packet $messageId (${packetIdx+1}/$packetNum) l=$totalLength f=$flags: h1=$h1, h2=${h2.toHexString()}")
             if(packetIdx == 0){ // buffer first packet
+                // TODO: the last packet arrives with flags = 0, so maybe that's the one that's triggering reassembly and processing.
+                //  so we shuoldn't have to do the following hacks:
                 byteArrayOf(0x00, 0x00, 0x00, 0x01).copyInto(data, 3) // begin reassembling buffer with packetNum=1
+                data[15] = 0x00; //reset flags to trigger simple packet parsing
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data);
             }else{
                 // push the rest after without the header for gluing after the first packet
-                // continuation packets only have a 16-byte header
-                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(16 until data.size))
+                // continuation packets only have a 16-byte header and a 6-byte subheader, totaling 22b
+                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(22 until data.size))
             }
             return
         }
@@ -431,12 +430,17 @@ class GameProtocolClient(
         val payloadType = buffer.order(ByteOrder.LITTLE_ENDIAN).int
         val payloadLength = buffer.order(ByteOrder.LITTLE_ENDIAN).int
 
-        println("RPC ${messageId}/${packetNum}pieces, ${flags}: type=${payloadType.toHexString()}: ${payloadLength}b")
+        println("RPC ${messageId}, flags=${flags}: h1=$h1, h2=$h2, type=${payloadType.toHexString()}, len=${payloadLength}")
 
         if (flags == 0.toByte()) { // simple payload
             val fragment = data.sliceArray(32 until data.size)
-            if(payloadType == -1310523393 ) { // 0xB1, 0xE2, 0xFF, 0xFF = json
+            if(payloadType == -7503 ) { // 0xB1, 0xE2, 0xFF, 0xFF = json
                 return parseJsonPayload(fragment)
+            }else if (payloadType < 10){
+                val jpeg = data.sliceArray(buffer.position() until data.size)
+                val file = File("$messageId.jpeg")
+                file.writeBytes(jpeg)
+                println("^ wrote ${file.absolutePath}")
             }else{
                 throw NotImplementedError();
             }
@@ -456,11 +460,7 @@ class GameProtocolClient(
                 throw NotImplementedError();
             }
         } else if(flags == 3.toByte()) {
-            // mostly reassembled jpegs here
-            val jpeg = data.sliceArray(buffer.position() until data.size)
-            val file = File("$messageId.jpeg")
-            file.writeBytes(jpeg)
-            println("wrote ${file.absolutePath}")
+            // mostly jpegs here, which are always chunked, so the reassembled packets are handled under simple case
         }
     }
 
@@ -472,12 +472,9 @@ class GameProtocolClient(
         fragmentBuffer[messageId]!![packetNum] = fragment
 
         // Check if all fragments received
-        if (fragmentBuffer[messageId]!!.size == totalPackets.toInt()) {
-            val completeData = reassembleFragments(messageId, totalPackets.toInt())
+        if (fragmentBuffer[messageId]!!.size == totalPackets) {
+            val completeData = reassembleFragments(messageId, totalPackets)
             fragmentBuffer.remove(messageId)
-
-            // This is image data, not JSON
-            println("Received complete image data: ${completeData.size} bytes")
             handleDataPacket(completeData);
         }
     }
@@ -533,14 +530,16 @@ class GameProtocolClient(
             }
 
             message?.let { onMessageReceived?.invoke(it) }
-
+            if(message == null){
+                println("Unknown type: $typeString")
+            }
         } catch (e: Exception) {
             println("Error parsing JSON: ${e.message}")
         }
     }
 
     fun close() {
-        serverSocket.close()
+        serverSocket?.close()
     }
 
     // ==================== Utilities ====================
@@ -548,12 +547,6 @@ class GameProtocolClient(
     private fun ByteArray.toHex(): String =
         joinToString("") { "%02x".format(it) }
 
-    private fun ByteArray.indexOf(byte: Byte, startIndex: Int = 0): Int {
-        for (i in startIndex until size) {
-            if (this[i] == byte) return i
-        }
-        return -1
-    }
 }
 
 // ==================== Usage Example ====================
@@ -567,10 +560,10 @@ fun main() {
         when (message) {
             is InterfaceVersionMessage -> {
                 println("Connected to server version: ${message.InterfaceVersion}")
-//                client.requestPlayerID(deviceUID)
             }
             is SessionStateMessage -> {
                 println("Session ID: ${message.SessionID}")
+                client.requestPlayerID(deviceUID)
             }
             is AssignPlayerIDAndSlotMessage -> {
                 println("Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
@@ -584,14 +577,14 @@ fun main() {
 //                client.requestAvatarStatus()
             }
             is ServerAvatarRequestResponseMessage -> {
-                println("Avatar ${message.AvatarID} - Available: ${message.Available}")
+                println("< Avatar ${message.AvatarID} - Available: ${message.Available}")
                 if (message.Available) {
                     // Avatar acquired, send profile
 //                    client.sendPlayerProfile("test", message.AvatarID)
                 }
             }
             else -> {
-                println("Received: $message")
+                println("< Received: $message")
             }
         }
     }
