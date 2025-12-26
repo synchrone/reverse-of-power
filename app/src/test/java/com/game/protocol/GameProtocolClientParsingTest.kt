@@ -43,6 +43,11 @@ class GameProtocolClientParsingTest {
         receivedAvatarLists.clear()
     }
 
+    @Test
+    fun testConnect(){
+        client.sendDeviceUID("b2f3f8eb0cf4ef4b2359871d35495225")
+    }
+
     // ==================== Single Packet Tests ====================
 
     /**
