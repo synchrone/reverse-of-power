@@ -174,7 +174,6 @@ class GameProtocolClient(
         Thread {
             while (!isConnected) {
                 sendConnectionRequest()
-                Thread.sleep(50)
                 sendDeviceUID(deviceUID)
                 Thread.sleep(1000)
             }
@@ -192,15 +191,12 @@ class GameProtocolClient(
         sendRawUDP(data)
     }
 
-    public fun sendDeviceUID(uid: String) {
+    public fun sendDeviceUID(uid: String, theByte: Byte = 0x00) {
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
-        val data = ByteBuffer.allocate(12+uidBytes.size)
+        val data = ByteBuffer.allocate(12+uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
         data.put(bytes(0xc, 0x89, 0xe8, 0x84))
         data.put(bytes(0x61, 0x3, 0xf4))
-        data.put(bytes(0x04, 0x7a, 0x5e, 0x6b, 0x09, 0x71, 0x60, 0x77, 0x62, 0x46, 0x31, 0x61, 0x1f, 0x4c, 0x52, 0x57, 0x35, 0x3d, 0x79, 0x36, 0x69, 0x4a).random())
-        // 76, 02, 40, 2d, 10, 3f, 63, 56, 00, 58
-        // 04, 7a, 5e, 6b, 09, 71, 60, 77, 62, 46, 31, 61, 1f, 4c, 52, 57, 35, 3d, 79, 36, 69, 4a, 3d (!), 16
-
+        data.put(theByte)
         data.putInt(uidBytes.size)
         data.put(uidBytes)
         sendRawUDP(data.array())
@@ -331,7 +327,7 @@ class GameProtocolClient(
     }
 
     private fun sendRawUDP(data: ByteArray) {
-        println("> sending ${data.size}b to ${serverHost}:${serverPort} hex: ${data.toHex()}")
+        println("> sending ${data.size}b: ${data.toHex()}")
         val packet = DatagramPacket(
             data,
             data.size,
@@ -377,9 +373,10 @@ class GameProtocolClient(
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
                 if(data.sliceArray(4 .. 6).equals(bytes(0xff, 0xff, 0xff, 0xff))){
-                    isConnected == true;
+                    isConnected = true;
+                }else {
+                    println("< ACK for ${data[3]}")
                 }
-                println("< ACK for ${data[3]}")
             }
             else -> {
                 // Unknown p8a,et type
@@ -547,7 +544,8 @@ class GameProtocolClient(
 // ==================== Usage Example ====================
 
 fun main() {
-    val client = GameProtocolClient("b2f3f8eb0cf4ef4b2359871d35495225","192.168.0.14")
+//    val client = GameProtocolClient("b2f3f8eb0cf4ef4b2359871d35495225","192.168.0.14")
+    val client = GameProtocolClient("5ca923a0193251c3b24c46546829519a","192.168.0.14")
     println("Game protocol started")
 
     client.onMessageReceived = { message ->
@@ -557,7 +555,7 @@ fun main() {
             }
             is SessionStateMessage -> {
                 println("Session ID: ${message.SessionID}")
-//                client.requestPlayerID(deviceUID)
+                client.requestPlayerID()
             }
             is AssignPlayerIDAndSlotMessage -> {
                 println("Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
