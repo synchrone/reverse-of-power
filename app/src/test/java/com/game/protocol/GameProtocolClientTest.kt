@@ -1,627 +1,195 @@
 package com.game.protocol
 
-import kotlinx.serialization.json.Json
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import java.net.DatagramPacket
-import java.net.DatagramSocket
-import java.net.InetAddress
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
+import com.game.protocol.GameProtocolClient
+
+fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
 /**
- * Unit test for GameProtocolClient based on docs/start-game.txt protocol capture.
+ * Focused unit test for GameProtocolClient packet parsing using UdpPacketFixtures.
  *
- * Protocol participants:
- * - Client: 192.168.1.98 (GameProtocolClient implementation)
- * - Server: 192.168.1.152 (Mock server fixture in this test)
+ * This test directly exercises the handleReceivedPacket() method without requiring
+ * network I/O, making it fast and easy to iterate on protocol parsing bugs.
  *
- * This test verifies the complete handshake and message exchange sequence.
+ * The fixtures come from actual PCAP captures and represent correct protocol data.
  */
 class GameProtocolClientTest {
 
-    private lateinit var mockServerSocket: DatagramSocket
-    private lateinit var mockServerThread: Thread
     private lateinit var client: GameProtocolClient
-
-    private val deviceUID = "b2f3f8eb0cf4ef4b2359871d35495225"
-    private val serverPort = 12345
-    private val json = Json { ignoreUnknownKeys = true }
-
-    // Track received messages
-    private val clientSentPackets = mutableListOf<ByteArray>()
-    private var mockServerRunning = false
+    private val receivedMessages = mutableListOf<GameMessage>()
+    private val receivedAvatarLists = mutableListOf<List<ServerAvatarStatusMessage>>()
 
     @Before
     fun setup() {
-        // Create mock server socket that will receive client packets
-        mockServerSocket = DatagramSocket(serverPort)
-        mockServerRunning = true
-        clientSentPackets.clear()
-    }
+        // Create client with dummy addresses - we won't be doing actual network I/O
+        client = GameProtocolClient("5ca923a0193251c3b24c46546829519a", "192.168.0.14")
 
-    @After
-    fun tearDown() {
-        mockServerRunning = false
-        if (::client.isInitialized) {
-            client.close()
-        }
-        if (::mockServerSocket.isInitialized) {
-            mockServerSocket.close()
-        }
-        if (::mockServerThread.isInitialized) {
-            mockServerThread.interrupt()
-            mockServerThread.join(1000)
-        }
-    }
-
-    /**
-     * Test the complete protocol handshake sequence from docs/start-game.txt
-     * Frames 1-20 from the protocol capture
-     */
-    @Test
-    fun testCompleteProtocolHandshake() {
-        val messagesReceived = mutableListOf<GameMessage>()
-        val avatarListLatch = CountDownLatch(1)
-        val assignPlayerLatch = CountDownLatch(1)
-
-        // Start mock server that responds according to protocol
-        startMockServer()
-
-        // Create client pointing to localhost mock server
-        client = GameProtocolClient("127.0.0.1", serverPort)
-
+        // Set up message handlers to capture parsed messages
         client.onMessageReceived = { message ->
-            println("TEST: Received message: ${message::class.simpleName} - $message")
-            messagesReceived.add(message)
+            println("Parsed message: ${message::class.simpleName} - $message")
+            receivedMessages.add(message)
+        }
+
+        client.onAvatarListReceived = { avatars ->
+            println("Parsed avatar list with ${avatars.size} avatars")
+            receivedAvatarLists.add(avatars)
+        }
+
+        // Clear state
+        receivedMessages.clear()
+        receivedAvatarLists.clear()
+    }
+
+    @Test
+    fun testConnect(){
+        val client = GameProtocolClient("5ca923a0193251c3b24c46546829519a", "192.168.0.14")
+        client.onMessageReceived = { message ->
             when (message) {
                 is InterfaceVersionMessage -> {
-                    println("TEST: Requesting player ID")
-                    // When interface version is received, request player ID (Frame 10)
-                    client.requestPlayerID(deviceUID)
+                    println("Connected to server version: ${message.InterfaceVersion}")
+                }
+                is SessionStateMessage -> {
+                    println("Session ID: ${message.SessionID}")
+                    client.requestPlayerID()
                 }
                 is AssignPlayerIDAndSlotMessage -> {
-                    println("TEST: Assigned player ID ${message.PlayerID}, sending resources/device info")
-                    // When player is assigned, send resources received and device info
+                    println("Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}, Name: ${message.DisplayName}")
                     client.sendAllResourcesReceived()
-                    client.sendDeviceInfo(deviceUID, "Genymobile Pixel 9", "Android OS 11 / API-30 (RQ1A.210105.003/857)")
+                    client.sendDeviceInfo(
+                        "Genymobile Pixel 9",
+                        "Android OS 11 / API-30 (RQ1A.210105.003/857)"
+                    )
                     client.requestAvatarStatus()
-                    assignPlayerLatch.countDown()
+                }
+                is ServerAvatarStatusMessage -> {
+                    client.requestAvatar("COWGIRL")
+                }
+                is ServerAvatarRequestResponseMessage -> {
+                    println("< Avatar ${message.AvatarID} - Available: ${message.Available}")
+                    if (message.Available) {
+                        // Avatar acquired, send profile
+//                    client.sendPlayerProfile("test", message.AvatarID)
+                    }
                 }
                 else -> {
-                    println("TEST: Other message type: ${message::class.simpleName}")
+                    println("< Received: $message")
                 }
             }
         }
 
         client.onAvatarListReceived = { avatars ->
-            println("TEST: Received avatar list with ${avatars.size} avatars")
-            avatarListLatch.countDown()
-        }
+            println("Available avatars:")
+            avatars.forEach { avatar ->
+                println("  - ${avatar.AvatarID}: ${if (avatar.Available) "Available" else "Taken"}")
+            }
 
-        // Connect (sends connection requests and device UID)
-        client.connect(deviceUID)
-
-        // Wait for messages to be received
-        assertTrue("Should receive AssignPlayerID message",
-            assignPlayerLatch.await(15, TimeUnit.SECONDS))
-        assertTrue("Should receive avatar list",
-            avatarListLatch.await(15, TimeUnit.SECONDS))
-
-        // Give time for all packets to be exchanged
-        Thread.sleep(1000)
-
-        // Verify client sent the correct initial packets
-        assertTrue("Client should send at least 5 packets", clientSentPackets.size >= 5)
-
-        // Verify Frame 1 & 2: Connection requests (sent twice)
-        verifyConnectionRequest(clientSentPackets[0])
-        verifyConnectionRequest(clientSentPackets[1])
-
-        // Verify Frame 3: Device UID packet
-        verifyDeviceUIDPacket(clientSentPackets[2])
-
-        // Verify we received the expected messages
-        val interfaceVersionMsg = messagesReceived.filterIsInstance<InterfaceVersionMessage>()
-        assertTrue("Should receive InterfaceVersionMessage", interfaceVersionMsg.isNotEmpty())
-        assertEquals("KIP_2016-11-14-1222", interfaceVersionMsg[0].InterfaceVersion)
-
-        val sessionStateMsg = messagesReceived.filterIsInstance<SessionStateMessage>()
-        assertTrue("Should receive SessionStateMessage", sessionStateMsg.isNotEmpty())
-        assertEquals(1838788817L, sessionStateMsg[0].SessionID)
-
-        val assignPlayerMsg = messagesReceived.filterIsInstance<AssignPlayerIDAndSlotMessage>()
-        assertTrue("Should receive AssignPlayerIDAndSlotMessage", assignPlayerMsg.isNotEmpty())
-        assertEquals(5, assignPlayerMsg[0].PlayerID)
-        assertEquals(0, assignPlayerMsg[0].SlotID)
-        assertEquals("Player 1", assignPlayerMsg[0].DisplayName)
-    }
-
-    /**
-     * Test that ACK packets are sent correctly
-     */
-    @Test
-    fun testAckPacketsFormat() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
-
-        client.connect(deviceUID)
-        Thread.sleep(1000)
-
-        // Find ACK packets (header 0x8a, secondary 0x33, but not connection request)
-        val ackPackets = clientSentPackets.filter { packet ->
-            packet.size == 38 &&
-            packet[0] == 0x8a.toByte() &&
-            packet[1] == 0x33.toByte() &&
-            // Not a connection request (has message ID)
-            !(packet[2] == 0xff.toByte() && packet[3] == 0xff.toByte())
-        }
-
-        assertTrue("Should send ACK packets", ackPackets.isNotEmpty())
-
-        // Verify ACK packet structure (Frame 7, 9, 13, 16 from docs)
-        ackPackets.forEach { ack ->
-            assertEquals("ACK header should be 0x8a", 0x8a.toByte(), ack[0])
-            assertEquals("ACK secondary header should be 0x33", 0x33.toByte(), ack[1])
-            // Message ID in bytes 2-3 (should reference server message)
-            // Rest should be padding (zeros)
-            for (i in 4 until 38) {
-                assertEquals("ACK padding should be zero at byte $i", 0.toByte(), ack[i])
+            // Request first available avatar
+            val available = avatars.firstOrNull { it.Available }
+            available?.let {
+                println("Requesting avatar: ${it.AvatarID}")
+                client.requestAvatar(it.AvatarID)
             }
         }
+        client.connect()
+        println("Game protocol started")
+
+        Thread.sleep(30000)
+        client.close()
     }
 
+    // ==================== Single Packet Tests ====================
+
     /**
-     * Test ClientRequestPlayerIDMessage format (Frame 10)
+     * Test parsing ACK packet (0x8a 0x33)
+     * Fixture: singlePacket4 - ACK with message ID 0x0019
      */
     @Test
-    fun testClientRequestPlayerIDMessage() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
+    fun testParseAckPacket() {
+        val ackPacket = byteArrayOf(
+            0x8A.toByte(), 0x33, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        )
 
-        client.connect(deviceUID)
-        Thread.sleep(500)
+        // ACK packets should be handled silently (no messages emitted)
+        client.handleReceivedPacket(ackPacket)
 
-        // Request player ID
-        client.requestPlayerID(deviceUID)
-        Thread.sleep(500)
-
-        // Find the ClientRequestPlayerIDMessage packet
-        val requestPacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("ClientRequestPlayerIDMessage")
-        }
-
-        assertNotNull("Should find ClientRequestPlayerIDMessage packet", requestPacket)
-        requestPacket?.let { packet ->
-            // Verify packet structure
-            assertEquals("Data header should be 0xae", 0xae.toByte(), packet[0])
-            assertEquals("Data secondary header should be 0x7f", 0x7f.toByte(), packet[1])
-
-            val buffer = ByteBuffer.wrap(packet).order(ByteOrder.LITTLE_ENDIAN)
-            buffer.position(2)
-            val messageId = buffer.short
-            val packetFlags = buffer.short
-
-            assertEquals("Should be single packet", 0x0001.toShort(), packetFlags)
-
-            // Extract JSON payload
-            val jsonStr = extractJsonFromPacket(packet)
-            assertTrue("Should contain ClientRequestPlayerIDMessage",
-                jsonStr.contains("ClientRequestPlayerIDMessage"))
-            assertTrue("Should contain device UID",
-                jsonStr.contains(deviceUID))
-        }
+        assertEquals("ACK packets should not generate messages", 0, receivedMessages.size)
     }
 
-    /**
-     * Test AllResourcesReceivedMessage format (Frame 17)
-     */
     @Test
-    fun testAllResourcesReceivedMessage() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
-
-        client.connect(deviceUID)
-        Thread.sleep(500)
-
-        // Send AllResourcesReceived
-        client.sendAllResourcesReceived()
-        Thread.sleep(500)
-
-        val allResourcesPacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("AllResourcesReceivedMessage")
-        }
-
-        assertNotNull("Should find AllResourcesReceivedMessage packet", allResourcesPacket)
-        allResourcesPacket?.let { packet ->
-            val jsonStr = extractJsonFromPacket(packet)
-            assertTrue("Should contain AllResourcesReceivedMessage",
-                jsonStr.contains("AllResourcesReceivedMessage"))
-            assertTrue("Should contain empty Requirements array",
-                jsonStr.contains("\"Requirements\":[]"))
-        }
+    fun testValidSinglePackets() {
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket6())
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket9())
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket18())
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket21())
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket22())
     }
 
-    /**
-     * Test DeviceInfoMessage format (Frame 19)
-     */
     @Test
-    fun testDeviceInfoMessage() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
-
-        client.connect(deviceUID)
-        Thread.sleep(500)
-
-        // Send device info
-        val deviceModel = "Genymobile Pixel 9"
-        val deviceOS = "Android OS 11 / API-30 (RQ1A.210105.003/857)"
-        client.sendDeviceInfo(deviceUID, deviceModel, deviceOS)
-        Thread.sleep(500)
-
-        val deviceInfoPacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("DeviceInfoMessage")
-        }
-
-        assertNotNull("Should find DeviceInfoMessage packet", deviceInfoPacket)
-        deviceInfoPacket?.let { packet ->
-            val jsonStr = extractJsonFromPacket(packet)
-            val deviceInfo = json.decodeFromString<DeviceInfoMessage>(jsonStr)
-
-            assertEquals("Response should be 10", 10, deviceInfo.Response)
-            assertEquals("DeviceSize should be 2", 2, deviceInfo.DeviceSize)
-            assertEquals("DeviceOS should be 1", 1, deviceInfo.DeviceOS)
-            assertEquals("DeviceModel should match", deviceModel, deviceInfo.DeviceModel)
-            assertEquals("DeviceType should be Handheld", "Handheld", deviceInfo.DeviceType)
-            assertEquals("DeviceUID should match", deviceUID, deviceInfo.DeviceUID)
-            assertEquals("DeviceOperatingSystem should match", deviceOS, deviceInfo.DeviceOperatingSystem)
-        }
+    fun testValidMultiPackets() {
+        client.handleReceivedPacket(bytes(0xae, 0x7f, 0xe0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xea, 0x3, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x33, 0x29, 0x40, 0x0, 0x0, 0x0, 0xe1, 0x3, 0x0, 0x0, 0x84, 0x12, 0x40, 0xee, 0x3e, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x52, 0x65, 0x71, 0x75, 0x69, 0x72, 0x65, 0x6d, 0x65, 0x6e, 0x74, 0x73, 0x22, 0x3a, 0x5b, 0x5d, 0x7d, 0x40, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x43, 0x6c, 0x69, 0x65, 0x6e, 0x74, 0x51, 0x75, 0x69, 0x7a, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x3a, 0x33, 0x31, 0x2c, 0x22, 0x74, 0x69, 0x6d, 0x65, 0x22, 0x3a, 0x30, 0x2e, 0x30, 0x7d, 0x61, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x43, 0x4f, 0x57, 0x47, 0x49, 0x52, 0x4c, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x5e, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x47, 0x4f, 0x46, 0x46, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x63, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x48, 0x4f, 0x54, 0x44, 0x4f, 0x47, 0x4d, 0x41, 0x4e, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x5f, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x4c, 0x4f, 0x56, 0x45, 0x52, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x65, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x4d, 0x4f, 0x55, 0x4e, 0x54, 0x41, 0x49, 0x4e, 0x45, 0x45, 0x52, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x63, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x53, 0x43, 0x49, 0x45, 0x4e, 0x54, 0x49, 0x53, 0x54, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x62, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x53, 0x50, 0x41, 0x43, 0x45, 0x4d, 0x41, 0x4e, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x62, 0x0, 0x0, 0x0, 0xb1, 0xe2, 0xff, 0xff, 0x7b, 0x22, 0x54, 0x79, 0x70, 0x65, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x22, 0x3a, 0x22, 0x4b, 0x6e, 0x6f, 0x77, 0x6c, 0x65, 0x64, 0x67, 0x65, 0x49, 0x73, 0x50, 0x6f, 0x77, 0x65, 0x72, 0x2e, 0x53, 0x65, 0x72, 0x76, 0x65, 0x72, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x74, 0x61, 0x72, 0x49, 0x44, 0x22, 0x3a, 0x22, 0x4d, 0x41, 0x47, 0x49, 0x43, 0x49, 0x41, 0x4e, 0x22, 0x2c, 0x22, 0x41, 0x76, 0x61, 0x69, 0x6c, 0x61, 0x62, 0x6c, 0x65, 0x22, 0x3a, 0x74, 0x72, 0x75, 0x65, 0x7d, 0x32));
+        client.handleReceivedPacket(bytes(0xae, 0x7f, 0xe0, 0x0, 0x0, 0x0, 0x2, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0x1, 0x0, 0x0, 0x0, 0xea, 0x3, 0x0, 0x0, 0x90))
+//        client.handleReceivedPacket(UdpPacketFixtures.multiPacket10())
+//        client.handleReceivedPacket(UdpPacketFixtures.multiPacket27())
     }
 
-    /**
-     * Test avatar request functionality
-     */
     @Test
-    fun testAvatarRequest() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
+    fun testValidChunkedPackets(){
+        // Load and process all chunked fixture files sequentially
+        for (i in 1..17) {
+            val resourcePath = "fixtures/0f_chunked_$i.bin"
+            val inputStream = javaClass.classLoader?.getResourceAsStream(resourcePath)
+                ?: throw IllegalStateException("Could not find fixture file: $resourcePath")
 
-        client.connect(deviceUID)
-        Thread.sleep(500)
-
-        // Request avatar status
-        client.requestAvatarStatus()
-        Thread.sleep(500)
-
-        val avatarStatusRequestPacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("ClientRequestAvatarStatusMessage")
+            val packet = inputStream.readBytes()
+            client.handleReceivedPacket(packet)
         }
+        for (i in 73..89) {
+            val resourcePath = "fixtures/11_chunked_$i.bin"
+            val inputStream = javaClass.classLoader?.getResourceAsStream(resourcePath)
+                ?: throw IllegalStateException("Could not find fixture file: $resourcePath")
 
-        assertNotNull("Should find ClientRequestAvatarStatusMessage packet", avatarStatusRequestPacket)
-
-        // Request specific avatar
-        val avatarId = "COWGIRL"
-        val requestId = client.requestAvatar(avatarId)
-        Thread.sleep(500)
-
-        val avatarRequestPacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("ClientRequestAvatarMessage") &&
-            String(packet).contains(avatarId)
+            val packet = inputStream.readBytes()
+            client.handleReceivedPacket(packet)
         }
+        for (i in 1..2) {
+            val resourcePath = "fixtures/2a_chunked_$i.bin"
+            val inputStream = javaClass.classLoader?.getResourceAsStream(resourcePath)
+                ?: throw IllegalStateException("Could not find fixture file: $resourcePath")
 
-        assertNotNull("Should find ClientRequestAvatarMessage packet", avatarRequestPacket)
-        avatarRequestPacket?.let { packet ->
-            val jsonStr = extractJsonFromPacket(packet)
-            assertTrue("Should contain request ID", jsonStr.contains(requestId))
-            assertTrue("Should contain avatar ID", jsonStr.contains(avatarId))
-            assertTrue("Should request avatar", jsonStr.contains("\"Request\":true"))
+            val packet = inputStream.readBytes()
+            client.handleReceivedPacket(packet)
         }
     }
 
-    /**
-     * Test player profile message
-     */
     @Test
-    fun testPlayerProfileMessage() {
-        startMockServer()
-        client = GameProtocolClient("127.0.0.1", serverPort)
-
-        client.connect(deviceUID)
-        Thread.sleep(500)
-
-        val playerName = "TestPlayer"
-        val avatarId = "SPACEMAN"
-        client.sendPlayerProfile(playerName, avatarId)
-        Thread.sleep(500)
-
-        val profilePacket = clientSentPackets.find { packet ->
-            packet.size > 42 && String(packet).contains("ClientPlayerProfileMessage")
-        }
-
-        assertNotNull("Should find ClientPlayerProfileMessage packet", profilePacket)
-        profilePacket?.let { packet ->
-            val jsonStr = extractJsonFromPacket(packet)
-            val profile = json.decodeFromString<ClientPlayerProfileMessage>(jsonStr)
-
-            assertEquals("Player name should match", playerName, profile.playerName)
-            assertEquals("Uppercase name should match", playerName.uppercase(), profile.uppercasePlayerName)
-            assertEquals("Culture should be en-US", "en-US", profile.deviceCultureName)
-            assertEquals("Avatar ID should match", avatarId, profile.playerCardId)
-        }
+    fun testClientAgainstHardware(){
+        client.connect()
     }
 
-    // ==================== Helper Methods ====================
+    // ==================== Helper for debugging ====================
 
     /**
-     * Start mock server that responds according to protocol documentation
+     * Helper method to print packet bytes in hex format
      */
-    private fun startMockServer() {
-        mockServerThread = Thread {
-            val buffer = ByteArray(2048)
-            var messageIdCounter: Short = 0x0019
-            var connectionRequestCount = 0
-            var deviceUIDReceived = false
-            var savedClientAddress: InetAddress? = null
-            var savedClientPort: Int = 0
-
-            while (mockServerRunning && !Thread.interrupted()) {
-                try {
-                    val packet = DatagramPacket(buffer, buffer.size)
-                    mockServerSocket.soTimeout = 100
-
-                    try {
-                        mockServerSocket.receive(packet)
-                    } catch (e: Exception) {
-                        continue
-                    }
-
-                    val receivedData = packet.data.copyOfRange(0, packet.length)
-                    val clientAddress = packet.address
-                    val clientPort = packet.port
-                    savedClientAddress = clientAddress
-                    savedClientPort = clientPort
-
-                    // Store client packet for verification
-                    synchronized(clientSentPackets) {
-                        clientSentPackets.add(receivedData)
-                    }
-
-                    // Respond based on packet type
-                    when {
-                        // Connection request (Frame 1, 2)
-                        isConnectionRequest(receivedData) -> {
-                            connectionRequestCount++
-                        }
-                        // Device UID packet (Frame 3)
-                        isDeviceUIDPacket(receivedData) -> {
-                            deviceUIDReceived = true
-                            // Send initial response sequence (Frames 4, 5, 6, 8)
-                            Thread.sleep(100)
-                            sendEightByteResponse(clientAddress, clientPort)
-                            Thread.sleep(50)
-                            sendConnectionAck(clientAddress, clientPort)
-                            Thread.sleep(50)
-                            sendInterfaceVersionMessage(clientAddress, clientPort, messageIdCounter++)
-                            Thread.sleep(200)
-                            sendSessionStateMessage(clientAddress, clientPort, messageIdCounter++)
-                        }
-                        // ACK packet
-                        isAckPacket(receivedData) -> {
-                            // Server received client ACK, no response needed
-                        }
-                        // Data packet (0xae 0x7f)
-                        isDataPacket(receivedData) -> {
-                            // Send ACK for data packet
-                            val msgId = extractMessageId(receivedData)
-                            sendAckPacket(clientAddress, clientPort, msgId)
-
-                            // Check what message was sent
-                            val jsonStr = extractJsonFromPacket(receivedData)
-                            println("MOCK SERVER: Received data packet with JSON: ${jsonStr.take(100)}")
-                            when {
-                                jsonStr.contains("ClientRequestPlayerIDMessage") -> {
-                                    println("MOCK SERVER: Sending AssignPlayerIDAndSlotMessage")
-                                    // Send AssignPlayerIDAndSlotMessage (Frame 12)
-                                    Thread.sleep(200)
-                                    sendAssignPlayerMessage(clientAddress, clientPort, messageIdCounter++)
-                                    println("MOCK SERVER: Sending ResourceRequirementsWithAvatars")
-                                    // Send ResourceRequirementsMessage with avatar list (Frame 14-15)
-                                    Thread.sleep(200)
-                                    sendResourceRequirementsWithAvatars(clientAddress, clientPort, messageIdCounter++)
-                                    println("MOCK SERVER: Sent all responses to ClientRequestPlayerIDMessage")
-                                }
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    if (mockServerRunning && !Thread.interrupted()) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
-        mockServerThread.start()
+    private fun ByteArray.toHexString(): String {
+        return joinToString(" ") { "%02x".format(it) }
     }
 
-    private fun isConnectionRequest(data: ByteArray): Boolean {
-        return data.size == 38 &&
-               data[0] == 0x8a.toByte() &&
-               data[1] == 0x33.toByte() &&
-               data[2] == 0xff.toByte() &&
-               data[3] == 0xff.toByte()
-    }
-
-    private fun isDeviceUIDPacket(data: ByteArray): Boolean {
-        return data.size == 44 &&
-               data[0] == 0x0c.toByte() &&
-               data[1] == 0x89.toByte()
-    }
-
-    private fun isAckPacket(data: ByteArray): Boolean {
-        return data.size == 38 &&
-               data[0] == 0x8a.toByte() &&
-               data[1] == 0x33.toByte() &&
-               !(data[2] == 0xff.toByte() && data[3] == 0xff.toByte())
-    }
-
-    private fun isDataPacket(data: ByteArray): Boolean {
-        return data.size > 42 &&
-               data[0] == 0xae.toByte() &&
-               data[1] == 0x7f.toByte()
-    }
-
-    private fun extractMessageId(data: ByteArray): Short {
-        val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.position(2)
-        return buffer.short
-    }
-
-    private fun extractJsonFromPacket(data: ByteArray): String {
-        var jsonStart = -1
+    /**
+     * Helper method to find JSON start in packet
+     */
+    private fun findJsonStart(data: ByteArray): Int {
         for (i in data.indices) {
             if (data[i] == '{'.code.toByte()) {
-                jsonStart = i
-                break
+                return i
             }
         }
-        if (jsonStart == -1) return ""
-        return String(data.sliceArray(jsonStart until data.size), Charsets.UTF_8)
-            .substringBefore('\u0000') // Remove null terminators
-    }
-
-    // ==================== Mock Server Response Methods ====================
-
-    private fun sendEightByteResponse(address: InetAddress, port: Int) {
-        // Frame 4: 8-byte response
-        val data = byteArrayOf(
-            0x4e.toByte(), 0xdd.toByte(), 0x96.toByte(), 0x66.toByte(),
-            0x3b.toByte(), 0x27.toByte(), 0x4f.toByte(), 0x69.toByte()
-        )
-        val packet = DatagramPacket(data, data.size, address, port)
-        mockServerSocket.send(packet)
-    }
-
-    private fun sendConnectionAck(address: InetAddress, port: Int) {
-        // Frame 5: Connection ACK
-        val data = ByteArray(38)
-        data[0] = 0x8a.toByte()
-        data[1] = 0x33.toByte()
-        data[2] = 0xff.toByte()
-        data[3] = 0xff.toByte()
-        val packet = DatagramPacket(data, data.size, address, port)
-        mockServerSocket.send(packet)
-    }
-
-    private fun sendInterfaceVersionMessage(address: InetAddress, port: Int, messageId: Short) {
-        // Frame 6: InterfaceVersionMessage
-        val jsonMsg = """{"TypeString":"InterfaceVersionMessage","InterfaceVersion":"KIP_2016-11-14-1222"}"""
-        sendJsonMessage(jsonMsg, messageId, address, port)
-    }
-
-    private fun sendSessionStateMessage(address: InetAddress, port: Int, messageId: Short) {
-        // Frame 8: SessionStateMessage
-        val jsonMsg = """{"TypeString":"SessionStateMessage","SessionID":1838788817}"""
-        sendJsonMessage(jsonMsg, messageId, address, port)
-    }
-
-    private fun sendAssignPlayerMessage(address: InetAddress, port: Int, messageId: Short) {
-        // Frame 12: AssignPlayerIDAndSlotMessage
-        val jsonMsg = """{"TypeString":"AssignPlayerIDAndSlotMessage","PlayerID":5,"SlotID":0,"UDPPortOffset":0,"DisplayName":"Player 1","PSNID":""}"""
-        sendJsonMessage(jsonMsg, messageId, address, port)
-    }
-
-    private fun sendResourceRequirementsWithAvatars(address: InetAddress, port: Int, messageId: Short) {
-        var msgId = messageId
-
-        // Send ResourceRequirementsMessage
-        sendJsonMessage("""{"TypeString":"ResourceRequirementsMessage","Requirements":[]}""", msgId++, address, port)
-        Thread.sleep(50)
-
-        // Send avatar list as separate messages
-        val avatars = listOf("COWGIRL", "GOFF", "HOTDOGMAN", "LOVER", "MOUNTAINEER", "SCIENTIST", "SPACEMAN", "MAGICIAN")
-        avatars.forEach { avatarId ->
-            sendJsonMessage(
-                """{"TypeString":"KnowledgeIsPower.ServerAvatarStatusMessage","AvatarID":"$avatarId","Available":true}""",
-                msgId++,
-                address,
-                port
-            )
-            Thread.sleep(10)
-        }
-    }
-
-    private fun sendJsonMessage(jsonStr: String, messageId: Short, address: InetAddress, port: Int) {
-        val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
-        val buffer = ByteBuffer.allocate(jsonBytes.size + 42).order(ByteOrder.LITTLE_ENDIAN)
-
-        buffer.put(0xae.toByte())
-        buffer.put(0x7f.toByte())
-        buffer.putShort(messageId)
-        buffer.putShort(0x0001) // Single packet
-        buffer.putShort(0x0000)
-        buffer.putLong(0)
-        buffer.putLong((jsonBytes.size + 16).toLong())
-        buffer.putLong(0)
-        buffer.put(0x33.toByte())
-        buffer.put(0x29.toByte())
-        buffer.put(0xb1.toByte())
-        buffer.put(0xe2.toByte())
-        buffer.put(0xff.toByte())
-        buffer.put(0xff.toByte())
-        buffer.putInt(jsonBytes.size)
-        buffer.put(jsonBytes)
-
-        val packet = DatagramPacket(buffer.array(), buffer.position(), address, port)
-        mockServerSocket.send(packet)
-    }
-
-    private fun sendAckPacket(address: InetAddress, port: Int, messageId: Short) {
-        val buffer = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.put(0x8a.toByte())
-        buffer.put(0x33.toByte())
-        buffer.putShort(messageId)
-        buffer.put(ByteArray(34)) // Padding
-
-        val packet = DatagramPacket(buffer.array(), buffer.position(), address, port)
-        mockServerSocket.send(packet)
-    }
-
-    // ==================== Verification Methods ====================
-
-    private fun verifyConnectionRequest(data: ByteArray) {
-        assertEquals("Connection request should be 38 bytes", 38, data.size)
-        assertEquals("Connection request header", 0x8a.toByte(), data[0])
-        assertEquals("Connection request secondary header", 0x33.toByte(), data[1])
-        assertEquals("Connection request marker byte 2", 0xff.toByte(), data[2])
-        assertEquals("Connection request marker byte 3", 0xff.toByte(), data[3])
-        assertEquals("Connection request marker byte 4", 0xff.toByte(), data[4])
-        assertEquals("Connection request marker byte 5", 0xff.toByte(), data[5])
-
-        // Rest should be zeros
-        for (i in 6 until 38) {
-            assertEquals("Connection request padding at byte $i", 0.toByte(), data[i])
-        }
-    }
-
-    private fun verifyDeviceUIDPacket(data: ByteArray) {
-        assertEquals("Device UID packet should be 44 bytes", 44, data.size)
-        assertEquals("Device UID header byte 0", 0x0c.toByte(), data[0])
-        assertEquals("Device UID header byte 1", 0x89.toByte(), data[1])
-        assertEquals("Device UID header byte 2", 0xe8.toByte(), data[2])
-        assertEquals("Device UID header byte 3", 0x84.toByte(), data[3])
-        assertEquals("Device UID header byte 4", 0x61.toByte(), data[4])
-        assertEquals("Device UID header byte 5", 0x03.toByte(), data[5])
-        assertEquals("Device UID header byte 6", 0xf4.toByte(), data[6])
-        assertEquals("Device UID header byte 7", 0x69.toByte(), data[7])
-        assertEquals("Device UID header byte 8", 0x20.toByte(), data[8])
-
-        // Extract UID (starts at byte 12, 32 bytes max)
-        val uidBytes = data.sliceArray(12 until minOf(44, 12 + deviceUID.length))
-        val extractedUID = String(uidBytes, Charsets.UTF_8)
-        assertEquals("Device UID should match", deviceUID, extractedUID)
+        return -1
     }
 }

@@ -72,13 +72,13 @@ class NetworkManager private constructor() {
             currentPlayer = player
 
             // Create protocol client
-            protocolClient = GameProtocolClient(server.ipAddress, server.port)
+            protocolClient = GameProtocolClient(deviceUID, server.ipAddress, server.port)
 
             // Set up message handlers
             setupMessageHandlers()
 
             // Connect to server
-            protocolClient?.connect(deviceUID)
+            protocolClient?.connect()
 
             Log.d(TAG, "Connected to ${server.ipAddress}:${server.port} with UID: $deviceUID")
             true
@@ -116,7 +116,7 @@ class NetworkManager private constructor() {
             is InterfaceVersionMessage -> {
                 Log.d(TAG, "Server version: ${message.InterfaceVersion}")
                 _gameState.value = GameState.CONNECTED
-                protocolClient?.requestPlayerID(deviceUID)
+                protocolClient?.requestPlayerID()
             }
 
             is SessionStateMessage -> {
@@ -132,7 +132,6 @@ class NetworkManager private constructor() {
                 // Send required responses
                 protocolClient?.sendAllResourcesReceived()
                 protocolClient?.sendDeviceInfo(
-                    deviceUID,
                     android.os.Build.MODEL,
                     "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT}"
                 )
