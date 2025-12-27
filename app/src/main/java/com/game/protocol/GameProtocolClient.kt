@@ -143,15 +143,13 @@ data class AckPacket(
 // ==================== Protocol Client ====================
 private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
-class GameProtocolClient(
+public class GameProtocolClient(
     private val deviceUID: String,
     private val serverHostStr: String,
     private val serverPort: Int = 9066,
     private val listenHostStr: String = "0.0.0.0",
     private val listenPort: Int = 9060
     ) {
-
-    private val randomSeed: Byte = Random().nextInt(0, 255).toByte()
     private var isConnected: Boolean = false
     private var serverHost: InetAddress? = null
     private var serverSocket: DatagramSocket? = null
@@ -162,6 +160,7 @@ class GameProtocolClient(
         encodeDefaults = true
     }
     private var messageCounter: Byte = 0
+    private var lastRcvMessageId: Byte? = null
     private val fragmentBuffer = mutableMapOf<Byte, MutableMap<Int, ByteArray>>()
 
     var onMessageReceived: ((GameMessage) -> Unit)? = null
@@ -172,9 +171,13 @@ class GameProtocolClient(
     fun connect() {
         startListening()
         Thread {
-            while (!isConnected) {
-                sendConnectionRequest()
-                sendDeviceUID(deviceUID)
+            while (true) {
+                if (lastRcvMessageId == null) {
+                    sendConnectionRequest()
+                    sendDeviceUID(deviceUID)
+                } else {
+                    sendAck(lastRcvMessageId!!)
+                }
                 Thread.sleep(1000)
             }
         }.start()
@@ -204,7 +207,7 @@ class GameProtocolClient(
 
     // ==================== Session Management ====================
 
-    fun requestPlayerID(deviceUID: String) {
+    fun requestPlayerID() {
         val msg = ClientRequestPlayerIDMessage(UID = deviceUID)
         sendMessage(msg)
     }
@@ -214,7 +217,7 @@ class GameProtocolClient(
         sendMessage(msg)
     }
 
-    fun sendDeviceInfo(deviceUID: String, model: String, os: String) {
+    fun sendDeviceInfo(model: String, os: String) {
         val msg = DeviceInfoMessage(
             Response = 10,
             DeviceSize = 2,
@@ -293,22 +296,21 @@ class GameProtocolClient(
         println("> Sending message: $jsonStr")
         val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
 
-        val buffer = ByteBuffer.allocate(jsonBytes.size + 32).order(ByteOrder.LITTLE_ENDIAN)
+        val buffer = ByteBuffer.allocate(jsonBytes.size + 32).order(ByteOrder.BIG_ENDIAN)
 
         buffer.put(0xae.toByte())
         buffer.put(0x7f.toByte())
         buffer.put(messageCounter++)
         buffer.putInt(1) // one message in packet
         buffer.putInt(0) // packet idx = 0
-        buffer.putInt(jsonBytes.size + 16)
+        buffer.putInt(jsonBytes.size + 10)
         buffer.put(0) // simple packet flag
 
         buffer.putInt(0) // zeros
         buffer.put(bytes(0x00, 0x00, 0x33, 0x29)) // ???
         buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
-        buffer.putInt(jsonBytes.size)
+        buffer.order(ByteOrder.LITTLE_ENDIAN).putInt(jsonBytes.size)
         buffer.put(jsonBytes)
-
         sendRawUDP(buffer.array())
     }
 
@@ -327,7 +329,7 @@ class GameProtocolClient(
     }
 
     private fun sendRawUDP(data: ByteArray) {
-        println("> sending ${data.size}b: ${data.toHex()}")
+//        println("> sending ${data.size}b: ${data.toHex()}")
         val packet = DatagramPacket(
             data,
             data.size,
@@ -372,10 +374,10 @@ class GameProtocolClient(
                 handleDataPacket(data)
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
-                if(data.sliceArray(4 .. 6).equals(bytes(0xff, 0xff, 0xff, 0xff))){
+                if(data.sliceArray(2 .. 5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))){
                     isConnected = true;
                 }else {
-                    println("< ACK for ${data[3]}")
+                    println("< ACK for ${data[3].toHexString()}")
                 }
             }
             else -> {
@@ -397,7 +399,7 @@ class GameProtocolClient(
         val totalLength = buffer.int // length of this packet
         val flags = buffer.get() // 16th byte
 
-        sendAck(messageId)
+        lastRcvMessageId = messageId
 
         if (packetNum>1) { //chunked transmission
             val h1 = buffer.short
@@ -407,7 +409,6 @@ class GameProtocolClient(
                 // TODO: the last packet arrives with flags = 0, so maybe that's the one that's triggering reassembly and processing.
                 //  so we shuoldn't have to do the following hacks:
                 byteArrayOf(0x00, 0x00, 0x00, 0x01).copyInto(data, 3) // begin reassembling buffer with packetNum=1
-                data[15] = 0x00; //reset flags to trigger simple packet parsing
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data);
             }else{
                 // push the rest after without the header for gluing after the first packet
@@ -422,21 +423,17 @@ class GameProtocolClient(
         val payloadType = buffer.order(ByteOrder.LITTLE_ENDIAN).int
         val payloadLength = buffer.order(ByteOrder.LITTLE_ENDIAN).int
 
-        println("RPC ${messageId}, flags=${flags}: h1=$h1, h2=$h2, type=${payloadType.toHexString()}, len=${payloadLength}")
-
+        println("RPC ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=$h2, type=${payloadType.toHexString()}, len=${payloadLength}")
         if (flags == 0.toByte()) { // simple payload
             val fragment = data.sliceArray(32 until data.size)
             if(payloadType == -7503 ) { // 0xB1, 0xE2, 0xFF, 0xFF = json
                 return parseJsonPayload(fragment)
-            }else if (payloadType < 10){
-                val jpeg = data.sliceArray(buffer.position() until data.size)
-                val file = File("$messageId.jpeg")
-                file.writeBytes(jpeg)
-                println("^ wrote ${file.absolutePath}")
             }else{
+                println("payloadType ${payloadType.toHexString()} is not implemented:")
+                println(data.toHex())
                 throw NotImplementedError();
             }
-        } else if(flags == 1.toByte()) { // multi-payload
+        } else if(flags > 1.toByte()) { // multi-payload
             val datatype = buffer.int
             if (datatype == -297790844) { //0x84, 0x12, 0x40, 0xEE = multijson
                 var processed = 4 // advance for read datatype var
@@ -448,11 +445,14 @@ class GameProtocolClient(
                     buffer.position(buffer.position() + doclen)
                 }
                 buffer.get() // 0x32 finish
+            } else if(datatype < 10) { //jpeg?
+                val jpeg = data.sliceArray(buffer.position() until data.size)
+                val file = File("$messageId.jpeg")
+                file.writeBytes(jpeg)
+                println("^ wrote ${file.absolutePath}")
             } else {
                 throw NotImplementedError();
             }
-        } else if(flags == 3.toByte()) {
-            // mostly jpegs here, which are always chunked, so the reassembled packets are handled under simple case
         }
     }
 
@@ -500,7 +500,7 @@ class GameProtocolClient(
 
         try {
             val jsonStr = String(data.sliceArray(jsonStart until data.size), Charsets.UTF_8)
-            println(jsonStr)
+//            println(jsonStr)
 
             val jsonElement = json.parseToJsonElement(jsonStr).jsonObject
             val typeString = jsonElement["TypeString"]?.jsonPrimitive?.content ?: return
@@ -521,6 +521,8 @@ class GameProtocolClient(
                 else -> null
             }
 
+
+
             message?.let { onMessageReceived?.invoke(it) }
             if(message == null){
                 println("Unknown type: $typeString")
@@ -537,68 +539,6 @@ class GameProtocolClient(
     // ==================== Utilities ====================
 
     private fun ByteArray.toHex(): String =
-        HexFormat.ofDelimiter(",").formatHex(this)
+        joinToString(", ") { "0x%x".format(it) }
 
-}
-
-// ==================== Usage Example ====================
-
-fun main() {
-//    val client = GameProtocolClient("b2f3f8eb0cf4ef4b2359871d35495225","192.168.0.14")
-    val client = GameProtocolClient("5ca923a0193251c3b24c46546829519a","192.168.0.14")
-    println("Game protocol started")
-
-    client.onMessageReceived = { message ->
-        when (message) {
-            is InterfaceVersionMessage -> {
-                println("Connected to server version: ${message.InterfaceVersion}")
-            }
-            is SessionStateMessage -> {
-                println("Session ID: ${message.SessionID}")
-                client.requestPlayerID()
-            }
-            is AssignPlayerIDAndSlotMessage -> {
-                println("Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
-                println("Display Name: ${message.DisplayName}")
-//                client.sendAllResourcesReceived()
-//                client.sendDeviceInfo(
-//                    deviceUID,
-//                    "Genymobile Pixel 9",
-//                    "Android OS 11 / API-30 (RQ1A.210105.003/857)"
-//                )
-//                client.requestAvatarStatus()
-            }
-            is ServerAvatarRequestResponseMessage -> {
-                println("< Avatar ${message.AvatarID} - Available: ${message.Available}")
-                if (message.Available) {
-                    // Avatar acquired, send profile
-//                    client.sendPlayerProfile("test", message.AvatarID)
-                }
-            }
-            else -> {
-                println("< Received: $message")
-            }
-        }
-    }
-
-    client.onAvatarListReceived = { avatars ->
-        println("Available avatars:")
-        avatars.forEach { avatar ->
-            println("  - ${avatar.AvatarID}: ${if (avatar.Available) "Available" else "Taken"}")
-        }
-
-        // Request first available avatar
-        val available = avatars.firstOrNull { it.Available }
-        available?.let {
-            println("Requesting avatar: ${it.AvatarID}")
-            client.requestAvatar(it.AvatarID)
-        }
-    }
-
-    // Connect to server
-    client.connect()
-
-    // Keep running
-    Thread.sleep(30000)
-    client.close()
 }
