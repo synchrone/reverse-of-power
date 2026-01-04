@@ -90,9 +90,42 @@ class ServerDiscoveryFragment : Fragment() {
     }
 
     private fun onServerSelected(server: GameServer) {
-        // Navigate to name entry screen
-        val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry(server.ipAddress)
-        findNavController().navigate(action)
+        // Disable interaction during connection attempt
+        binding.connectButton.isEnabled = false
+        binding.scanningProgress.visibility = View.VISIBLE
+        binding.scanningText.text = "Connecting to server..."
+        binding.scanningText.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            try {
+                val success = server.handshake()
+
+                binding.scanningProgress.visibility = View.GONE
+                binding.scanningText.visibility = View.GONE
+                binding.connectButton.isEnabled = true
+
+                if (success) {
+                    // Navigate to name entry screen
+                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry(server.ipAddress)
+                    findNavController().navigate(action)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Failed to connect to ${server.fullAddress}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                binding.scanningProgress.visibility = View.GONE
+                binding.scanningText.visibility = View.GONE
+                binding.connectButton.isEnabled = true
+                Toast.makeText(
+                    requireContext(),
+                    "Connection error: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onDestroyView() {

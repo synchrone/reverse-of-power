@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew test:*)",
+      "Bash(./gradlew:*)",
+      "Bash(java -version:*)",
+      "Bash(JAVA_HOME=/opt/jetbrains/android-studio/jbr/ ./gradlew:*)",
+      "Bash(cat:*)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(JAVA_HOME=/opt/jetbrains/android-studio/jbr ./gradlew:*)",
+      "Bash(ls:*)",
+      "Bash(wc:*)"
+    ]
+  }
+}
