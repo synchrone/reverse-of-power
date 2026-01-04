@@ -16,4 +16,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "GameRemoteClient"
 include(":app")
-include(":protocol-cli")

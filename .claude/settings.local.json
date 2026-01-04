@@ -11,7 +11,9 @@
       "Bash(cp:*)",
       "Bash(JAVA_HOME=/opt/jetbrains/android-studio/jbr ./gradlew:*)",
       "Bash(ls:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(mv:*)",
+      "Bash(git status:*)"
     ]
   }
 }
