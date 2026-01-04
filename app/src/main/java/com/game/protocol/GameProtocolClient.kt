@@ -141,7 +141,7 @@ data class AckPacket(
 )
 
 // ==================== Protocol Client ====================
-private fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
+public fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
 public class GameProtocolClient(
     private val deviceUID: String,
@@ -416,7 +416,7 @@ public class GameProtocolClient(
         if (packetNum>1) { //chunked transmission
             val h1 = buffer.short
             val h2 = buffer.int
-            println("< fragmented packet $messageId (${packetIdx+1}/$packetNum) l=$totalLength: h1=$h1, h2=${h2.toHexString()}")
+            println("< fragmented packet ${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength: h1=$h1, h2=${h2.toHexString()}")
             if(packetIdx == 0){ // buffer first packet
                 // drag Flags
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(15 until data.size));
@@ -470,44 +470,37 @@ public class GameProtocolClient(
         var payloadLength = buffer.int
         println("RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=$h2, type=${payloadType.toHexString()}, len=${payloadLength}")
 
-        // 0xB1, 0xE2, 0xFF, 0xFF // JSON
+        val peek4 = data.sliceArray(buffer.position() until buffer.position() + 4);
 
-        if (flags == 0) {
-            val fragment = data.sliceArray(buffer.position() until data.size)
-            if(payloadType == -7503 ) { // 0xB1, 0xE2, 0xFF, 0xFF = json
-                return parseJsonPayload(fragment)
-            } else {
-                throw NotImplementedError("payloadType ${payloadType.toHexString()} is not implemented");
-            }
-        } else if(flags == 1) { // mutli-document has an extra header
-            payloadType == buffer.int // typically 0x84, 0x12, 0x40, 0xEE = multijson
-            var processed = 4 // advance for read datatype var
+        if(payloadType == -7503){ // 0xB1, 0xE2, 0xFF, 0xFF // JSON
+            return parseJsonPayload(data.sliceArray(buffer.position() until data.size));
+        }
+        else if(peek4.contentEquals(bytes(0x84, 0x12, 0x40, 0xEE)))
+        {
+            val sh1 = buffer.int
+            var processed = 4 // advance for read sh1
             while (processed < payloadLength-3) { // TODO: there's some byte counting error here ...
                 var doclen = buffer.int;
                 var doctype = buffer.int; // 0xB1, 0xE2, 0xFF, 0xFF for json
                 if(doctype == -7503) {
                     parseJsonPayload(data.sliceArray(buffer.position() until buffer.position() + doclen))
                 }else {
-                    throw NotImplementedError("payloadType ${payloadType.toHexString()} is not implemented");
+                    throw NotImplementedError("sh1=${sh1.toHexString()}, doctype ${doctype.toHexString()} is not implemented");
                 }
                 processed += doclen + 8;
                 buffer.position(buffer.position() + doclen)
             }
             buffer.get() // 0x32 finish
-        } else if(flags == 3) { // multi-payload
-            if(payloadType == -7503){
-                return parseJsonPayload(data.sliceArray(buffer.position() until data.size));
-            }
+        }
+        else if(peek4.sliceArray(0..1).contentEquals(bytes(0xFF, 0xD8))) // JPEG
+        {
             val imageId = payloadType;
-            if(!data.sliceArray(buffer.position() until buffer.position() +2).contentEquals(bytes(0xFF, 0xD8))){
-                throw NotImplementedError("This does not look like JPEG")
-            }
             val jpeg = data.sliceArray(buffer.position() until data.size)
             val file = File("$messageId.jpeg")
             file.writeBytes(jpeg)
             println("^ wrote ${file.absolutePath}")
-        } else {
-            throw NotImplementedError("flags ${flags.toHexString()} not implemented");
+        }else{
+            throw NotImplementedError("flags ${flags.toHexString()}, payloadType ${payloadType.toHexString()} not implemented");
         }
     }
 
