@@ -3,9 +3,7 @@ package com.game.protocol
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import com.game.protocol.GameProtocolClient
 
-fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
 /**
  * Focused unit test for GameProtocolClient packet parsing using UdpPacketFixtures.
@@ -44,7 +42,6 @@ class GameProtocolClientTest {
 
     @Test
     fun testConnect(){
-        return; // WIP
         val client = GameProtocolClient("5ca923a0193251c3b24c46546829519a", "192.168.0.14")
         client.onMessageReceived = { message ->
             when (message) {
