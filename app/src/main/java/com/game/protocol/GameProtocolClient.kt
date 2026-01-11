@@ -271,9 +271,8 @@ public class GameProtocolClient(
         )
         sendMessage(msg)
 
-        val payloadBuffer = ByteBuffer.allocate(imageData.size + 16).order(ByteOrder.LITTLE_ENDIAN)
-        payloadBuffer.putInt(0)
-        payloadBuffer.put(bytes(0x00, 0x00, 0x33, 0x29))
+        val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
+        payloadBuffer.put(bytes(0x33, 0x29))
         payloadBuffer.putInt(transferId)
         payloadBuffer.putInt(imageData.size)
         payloadBuffer.put(imageData)
@@ -301,14 +300,14 @@ public class GameProtocolClient(
 
     // ==================== Core Messaging ====================
     private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, flags: Byte = 0x0, length: Int = 0){
-        val buffer = ByteBuffer.allocate(length+16).order(ByteOrder.BIG_ENDIAN)
-        buffer.put(0xae.toByte())
-        buffer.put(0x7f.toByte())
+        val buffer = ByteBuffer.allocate(payload.size+22).order(ByteOrder.BIG_ENDIAN)
+        buffer.put(bytes(0xAE, 0x7F))
         buffer.put(messageCounter++)
         buffer.putInt(packetNum)
         buffer.putInt(packetIdx)
-        buffer.putInt(if (flags == 3.toByte()) 234 else if (length > 0) length else payload.size) // 234 is 0xEA which seems to be a placeholder for flags=3
+        buffer.putInt(if (flags == 3.toByte()) 234 else if (length > 0) length else payload.size) // 234 is 0xEA which seems to be a placeholder when flags=3
         buffer.put(flags)
+        buffer.put(bytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00))
         buffer.put(payload)
         sendRawUDP(buffer.array())
     }
@@ -318,13 +317,12 @@ public class GameProtocolClient(
         println("> Sending message: $jsonStr")
         val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
 
-        val buffer = ByteBuffer.allocate(jsonBytes.size + 16).order(ByteOrder.BIG_ENDIAN)
-        buffer.putInt(0) // zeros
-        buffer.put(bytes(0x00, 0x00, 0x33, 0x29)) // ???
+        val buffer = ByteBuffer.allocate(jsonBytes.size + 10).order(ByteOrder.LITTLE_ENDIAN)
+        buffer.put(bytes(0x33, 0x29)) // ???
         buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
-        buffer.order(ByteOrder.LITTLE_ENDIAN).putInt(jsonBytes.size)
+        buffer.putInt(jsonBytes.size)
         buffer.put(jsonBytes)
-        sendRawUDP(buffer.array()) // send a simple packet, non chunked
+        send(buffer.array()) // send a simple packet, non chunked
     }
 
     private fun sendAck(messageId: Byte) {
@@ -342,7 +340,7 @@ public class GameProtocolClient(
     }
 
     private fun sendRawUDP(data: ByteArray) {
-//        println("> sending ${data.size}b: ${data.toHex()}")
+        println("> sending ${data.size}b: ${data.toHex()}")
         val packet = DatagramPacket(
             data,
             data.size,
@@ -388,6 +386,7 @@ public class GameProtocolClient(
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
                 if(data.sliceArray(2 .. 5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))){
+                    println("< 0x8a, 0x33, 0xFF (4)")
                     isConnected = true;
                 }else {
                     println("< ACK for ${data[3].toHexString()}")
@@ -468,7 +467,7 @@ public class GameProtocolClient(
         val h2 = buffer.int // always 0x00, 0x00, 0x33, 0x29
         var payloadType = buffer.int
         var payloadLength = buffer.int
-        println("RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=$h2, type=${payloadType.toHexString()}, len=${payloadLength}")
+        println("RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
 
         val peek4 = data.sliceArray(buffer.position() until buffer.position() + 4);
 
@@ -505,20 +504,9 @@ public class GameProtocolClient(
     }
 
     private fun parseJsonPayload(data: ByteArray) {
-        // Skip protocol headers to find JSON
-        var jsonStart = -1
-        for (i in data.indices) {
-            if (data[i] == '{'.code.toByte()) {
-                jsonStart = i
-                break
-            }
-        }
-
-        if (jsonStart == -1) return
-
-        try {
-            val jsonStr = String(data.sliceArray(jsonStart until data.size), Charsets.UTF_8)
-//            println(jsonStr)
+       try {
+            val jsonStr = data.decodeToString()
+            println(" < parseJsonPayload: $jsonStr" )
 
             val jsonElement = json.parseToJsonElement(jsonStr).jsonObject
             val typeString = jsonElement["TypeString"]?.jsonPrimitive?.content ?: return
@@ -539,14 +527,12 @@ public class GameProtocolClient(
                 else -> null
             }
 
-
-
             message?.let { onMessageReceived?.invoke(it) }
             if(message == null){
                 println("Unknown type: $typeString")
             }
         } catch (e: Exception) {
-            println("Error parsing JSON: ${e.message}")
+            println("Error parsing JSON: ${data.toHexString()}: $e")
         }
     }
 
