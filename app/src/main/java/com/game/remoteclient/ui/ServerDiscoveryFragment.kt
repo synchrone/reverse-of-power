@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentServerDiscoveryBinding
+import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.models.GameServer
-import com.game.remoteclient.network.NetworkManager
 import kotlinx.coroutines.launch
 
 class ServerDiscoveryFragment : Fragment() {
@@ -20,7 +20,7 @@ class ServerDiscoveryFragment : Fragment() {
     private var _binding: FragmentServerDiscoveryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var networkManager: NetworkManager
+    private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
     private lateinit var serverAdapter: ServerAdapter
 
     override fun onCreateView(
@@ -35,7 +35,6 @@ class ServerDiscoveryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        networkManager = NetworkManager.getInstance()
         setupRecyclerView()
         setupListeners()
         startServerScan()
@@ -98,7 +97,7 @@ class ServerDiscoveryFragment : Fragment() {
 
         lifecycleScope.launch {
             try {
-                val success = server.handshake()
+                val success = networkManager.connectToServer(server)
 
                 binding.scanningProgress.visibility = View.GONE
                 binding.scanningText.visibility = View.GONE

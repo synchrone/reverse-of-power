@@ -60,16 +60,14 @@ class NetworkManager private constructor() {
 
     suspend fun scanForServers(subnet: String = "192.168.1"): List<GameServer> = withContext(Dispatchers.IO) {
         val servers = mutableListOf<GameServer>()
-        val port = 8080
-
+        // TODO: scan using UPnP
         servers
     }
 
-    suspend fun connectToServer(server: GameServer, player: Player): Boolean = withContext(Dispatchers.IO) {
+    suspend fun connectToServer(server: GameServer): Boolean = withContext(Dispatchers.IO) {
         try {
             _gameState.value = GameState.CONNECTING
             currentServer = server
-            currentPlayer = player
 
             // Create protocol client
             protocolClient = GameProtocolClient(deviceUID, server.ipAddress, server.port)
@@ -77,11 +75,19 @@ class NetworkManager private constructor() {
             // Set up message handlers
             setupMessageHandlers()
 
-            // Connect to server
-            protocolClient?.connect()
+            // Connect to server and wait for response
+            val connected = protocolClient?.connect() ?: false
 
-            Log.d(TAG, "Connected to ${server.ipAddress}:${server.port} with UID: $deviceUID")
-            true
+            if (connected) {
+                Log.d(TAG, "Connected to ${server.ipAddress}:${server.port} with UID: $deviceUID")
+            } else {
+                Log.e(TAG, "Connection timed out to ${server.ipAddress}:${server.port}")
+                _connectionError.value = "Connection timed out"
+                _gameState.value = GameState.DISCONNECTED
+                protocolClient?.close()
+                protocolClient = null
+            }
+            connected
         } catch (e: Exception) {
             Log.e(TAG, "Failed to connect", e)
             _connectionError.value = e.message ?: "Failed to connect"

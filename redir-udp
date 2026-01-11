@@ -1,7 +1,8 @@
 #!/bin/bash
+PORT="${1:-9060}"
 token="$(cat ~/.emulator_console_auth_token)"
-# expose android 6060 to listen on
-echo "cat $token\nredir add udp:9060:9060\nredir list" | telnet localhost 5554
+# expose android emulator port to localhost
+printf "auth $token\nredir add udp:${PORT}:${PORT}\nredir list\nexit\n" | nc localhost 5554
 
-# proxy local 6066 to PS4'
-sudo socat -d -v UDP4-LISTEN:9066,reuseaddr,fork UDP4:192.168.0.14:9066
+# listen all intefaces and proxy localhost, since that's where the server responds to
+socat -d -v UDP4-LISTEN:${PORT},reuseaddr,fork UDP4:127.0.0.1:${PORT}
