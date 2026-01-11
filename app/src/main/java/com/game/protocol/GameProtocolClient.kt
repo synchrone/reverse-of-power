@@ -2,6 +2,9 @@
 
 package com.game.protocol
 
+import android.util.Log
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import java.io.File
@@ -150,6 +153,7 @@ public class GameProtocolClient(
     private val listenHostStr: String = "0.0.0.0",
     private val listenPort: Int = 9060
     ) {
+    private val TAG = "GameProtocolClient"
     private var isConnected: Boolean = false
     private var serverHost: InetAddress? = null
     private var serverSocket: DatagramSocket? = null
@@ -162,16 +166,18 @@ public class GameProtocolClient(
     private var messageCounter: Byte = 0
     private var lastRcvMessageId: Byte? = null
     private val fragmentBuffer = mutableMapOf<Byte, MutableMap<Int, ByteArray>>()
+    private var connectionDeferred: CompletableDeferred<Unit>? = null
 
     var onMessageReceived: ((GameMessage) -> Unit)? = null
     var onAvatarListReceived: ((List<ServerAvatarStatusMessage>) -> Unit)? = null
 
     // ==================== Connection ====================
 
-    fun connect() {
+    suspend fun connect(timeoutMs: Long = 5000): Boolean {
+        connectionDeferred = CompletableDeferred()
         startListening()
         Thread {
-            while (true) {
+            while (serverSocket?.isClosed == false) {
                 if (lastRcvMessageId == null) {
                     sendConnectionRequest()
                     sendDeviceUID(deviceUID)
@@ -181,6 +187,15 @@ public class GameProtocolClient(
                 Thread.sleep(1000)
             }
         }.start()
+
+        return awaitConnection(timeoutMs)
+    }
+
+    suspend fun awaitConnection(timeoutMs: Long = 5000): Boolean {
+        if (lastRcvMessageId != null) return true
+        return withTimeoutOrNull(timeoutMs) {
+            connectionDeferred?.await()
+        } != null
     }
 
     private fun sendConnectionRequest() {
@@ -314,7 +329,7 @@ public class GameProtocolClient(
 
     private inline fun <reified T : GameMessage> sendMessage(msg: T) {
         val jsonStr = json.encodeToString(msg)
-        println("> Sending message: $jsonStr")
+        Log.d(TAG, "> Sending message: $jsonStr")
         val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
 
         val buffer = ByteBuffer.allocate(jsonBytes.size + 10).order(ByteOrder.LITTLE_ENDIAN)
@@ -340,7 +355,7 @@ public class GameProtocolClient(
     }
 
     private fun sendRawUDP(data: ByteArray) {
-        println("> sending ${data.size}b: ${data.toHex()}")
+        Log.d(TAG, "> sending ${data.size}b: ${data.toHex()}")
         val packet = DatagramPacket(
             data,
             data.size,
@@ -362,7 +377,7 @@ public class GameProtocolClient(
 
         Thread {
             val buffer = ByteArray(2048)
-            while (true) {
+            while (clientSocket?.isClosed == false) {
                 try {
                     val packet = DatagramPacket(buffer, buffer.size)
                     clientSocket?.receive(packet)
@@ -386,15 +401,15 @@ public class GameProtocolClient(
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
                 if(data.sliceArray(2 .. 5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))){
-                    println("< 0x8a, 0x33, 0xFF (4)")
+                    Log.d(TAG, "< 0x8a, 0x33, 0xFF (4)")
                     isConnected = true;
                 }else {
-                    println("< ACK for ${data[3].toHexString()}")
+                    Log.d(TAG, "< ACK for ${data[3].toHexString()}")
                 }
             }
             else -> {
                 // Unknown p8a,et type
-                println("Unknown packet type: ${data.toHexString()}")
+                Log.d(TAG, "Unknown packet type: ${data.toHexString()}")
             }
         }
     }
@@ -411,11 +426,12 @@ public class GameProtocolClient(
         val totalLength = buffer.int // length of this packet
 
         lastRcvMessageId = messageId
+        connectionDeferred?.complete(Unit)
 
         if (packetNum>1) { //chunked transmission
             val h1 = buffer.short
             val h2 = buffer.int
-            println("< fragmented packet ${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength: h1=$h1, h2=${h2.toHexString()}")
+            Log.d(TAG, "< fragmented packet ${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength: h1=$h1, h2=${h2.toHexString()}")
             if(packetIdx == 0){ // buffer first packet
                 // drag Flags
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(15 until data.size));
@@ -467,7 +483,7 @@ public class GameProtocolClient(
         val h2 = buffer.int // always 0x00, 0x00, 0x33, 0x29
         var payloadType = buffer.int
         var payloadLength = buffer.int
-        println("RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
+        Log.d(TAG, "RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
 
         val peek4 = data.sliceArray(buffer.position() until buffer.position() + 4);
 
@@ -497,7 +513,7 @@ public class GameProtocolClient(
             val jpeg = data.sliceArray(buffer.position() until data.size)
             val file = File("$messageId.jpeg")
             file.writeBytes(jpeg)
-            println("^ wrote ${file.absolutePath}")
+            Log.d(TAG, "^ wrote ${file.absolutePath}")
         }else{
             throw NotImplementedError("flags ${flags.toHexString()}, payloadType ${payloadType.toHexString()} not implemented");
         }
@@ -506,7 +522,7 @@ public class GameProtocolClient(
     private fun parseJsonPayload(data: ByteArray) {
        try {
             val jsonStr = data.decodeToString()
-            println(" < parseJsonPayload: $jsonStr" )
+            Log.d(TAG, " < parseJsonPayload: $jsonStr" )
 
             val jsonElement = json.parseToJsonElement(jsonStr).jsonObject
             val typeString = jsonElement["TypeString"]?.jsonPrimitive?.content ?: return
@@ -529,15 +545,18 @@ public class GameProtocolClient(
 
             message?.let { onMessageReceived?.invoke(it) }
             if(message == null){
-                println("Unknown type: $typeString")
+                Log.d(TAG, "Unknown type: $typeString")
             }
         } catch (e: Exception) {
-            println("Error parsing JSON: ${data.toHexString()}: $e")
+            Log.d(TAG, "Error parsing JSON: ${data.toHexString()}: $e")
         }
     }
 
     fun close() {
         serverSocket?.close()
+        serverSocket = null
+        clientSocket?.close()
+        clientSocket = null
     }
 
     // ==================== Utilities ====================

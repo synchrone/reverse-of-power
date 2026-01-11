@@ -41,7 +41,6 @@ class WaitingRoomFragment : Fragment() {
         networkManager = NetworkManager.getInstance()
         setupRecyclerView()
         setupListeners()
-        connectToServer()
         observeGameState()
     }
 
@@ -57,19 +56,6 @@ class WaitingRoomFragment : Fragment() {
     private fun setupListeners() {
         binding.startGameButton.setOnClickListener {
             networkManager.startGame()
-        }
-    }
-
-    private fun connectToServer() {
-        val player = Player(name = args.playerName)
-        val server = GameServer(args.serverIp)
-
-        lifecycleScope.launch {
-            val connected = networkManager.connectToServer(server, player)
-            if (!connected) {
-                // Handle connection failure
-                binding.waitingText.text = "Failed to connect to server"
-            }
         }
     }
 

@@ -8,14 +8,10 @@ import java.net.Socket
 
 data class GameServer(
     val ipAddress: String,
-    val port: Int = 8080,
+    val port: Int = 9066, // fixed server port
     val name: String? = null,
     val playerCount: Int = 0
 ) {
     val fullAddress: String
         get() = "$ipAddress:$port"
-
-    suspend fun handshake(): Boolean = withContext(Dispatchers.IO) {
-        false
-    }
 }
