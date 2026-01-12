@@ -17,13 +17,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.game.protocol.ServerAvatarStatusMessage
+import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentAvatarSelectionBinding
-import com.game.remoteclient.models.GameServer
-import com.game.remoteclient.models.Player
-import com.game.remoteclient.network.NetworkManager
 import com.game.remoteclient.utils.PermissionHelper
 import java.io.ByteArrayOutputStream
+import java.util.UUID
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -33,10 +34,14 @@ class AvatarSelectionFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: AvatarSelectionFragmentArgs by navArgs()
+    private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
 
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
     private var capturedBitmap: Bitmap? = null
+    private var capturedImageGuid: String = UUID.randomUUID().toString()
+    private lateinit var avatarAdapter: AvatarAdapter
+    private var selectedAvatar: ServerAvatarStatusMessage? = null
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -65,24 +70,74 @@ class AvatarSelectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+        setupAvatarList()
         setupListeners()
+        observeAvatars()
+        initializeCamera()
     }
 
-    private fun setupListeners() {
-        binding.useCameraButton.setOnClickListener {
-            if (PermissionHelper.hasCameraPermission(requireContext())) {
-                startCamera()
-            } else {
-                cameraPermissionLauncher.launch(PermissionHelper.CAMERA_PERMISSION)
+    private fun initializeCamera() {
+        if (PermissionHelper.hasCameraPermission(requireContext())) {
+            startCamera()
+        } else {
+            cameraPermissionLauncher.launch(PermissionHelper.CAMERA_PERMISSION)
+        }
+    }
+
+    private fun setupAvatarList() {
+        avatarAdapter = AvatarAdapter { avatar ->
+            onAvatarSelected(avatar)
+        }
+
+        binding.avatarRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = avatarAdapter
+        }
+    }
+
+    private fun observeAvatars() {
+        binding.loadingProgress.visibility = View.VISIBLE
+        binding.emptyText.visibility = View.GONE
+
+        networkManager.onAvatarsChanged = {
+            activity?.runOnUiThread {
+                updateAvatarList()
             }
         }
 
-        binding.chooseAvatarButton.setOnClickListener {
-            // For now, use a default avatar
-            capturedBitmap = createDefaultAvatar()
-            showCapturedPhoto()
+        // Initial load
+        updateAvatarList()
+    }
+
+    private fun updateAvatarList() {
+        val avatars = networkManager.availableAvatars
+
+        binding.loadingProgress.visibility = View.GONE
+
+        if (avatars.isEmpty()) {
+            binding.emptyText.visibility = View.VISIBLE
+            binding.avatarRecyclerView.visibility = View.GONE
+        } else {
+            binding.emptyText.visibility = View.GONE
+            binding.avatarRecyclerView.visibility = View.VISIBLE
+            avatarAdapter.submitList(avatars.toList())
         }
 
+        updateContinueButton()
+    }
+
+    private fun onAvatarSelected(avatar: ServerAvatarStatusMessage) {
+        selectedAvatar = avatar
+        avatarAdapter.setSelectedAvatar(avatar.AvatarID)
+        networkManager.requestAvatar(avatar.AvatarID)
+        updateContinueButton()
+    }
+
+    private fun updateContinueButton() {
+        binding.continueButton.visibility = if (selectedAvatar != null) View.VISIBLE else View.GONE
+    }
+
+    private fun setupListeners() {
         binding.captureButton.setOnClickListener {
             capturePhoto()
         }
@@ -92,16 +147,11 @@ class AvatarSelectionFragment : Fragment() {
         }
 
         binding.continueButton.setOnClickListener {
-            connectToServer()
+            proceedToWaitingRoom()
         }
     }
 
     private fun startCamera() {
-        binding.cameraPreview.visibility = View.VISIBLE
-        binding.avatarImage.visibility = View.GONE
-        binding.cameraControls.visibility = View.VISIBLE
-        binding.actionButtons.visibility = View.GONE
-
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
@@ -165,39 +215,33 @@ class AvatarSelectionFragment : Fragment() {
         binding.cameraPreview.visibility = View.GONE
         binding.avatarImage.visibility = View.VISIBLE
         binding.avatarImage.setImageBitmap(capturedBitmap)
-        binding.cameraControls.visibility = View.VISIBLE
         binding.captureButton.visibility = View.GONE
         binding.retakeButton.visibility = View.VISIBLE
-        binding.actionButtons.visibility = View.VISIBLE
-        binding.useCameraButton.visibility = View.GONE
-        binding.chooseAvatarButton.visibility = View.GONE
-        binding.continueButton.visibility = View.VISIBLE
     }
 
     private fun retakePhoto() {
         capturedBitmap = null
-        startCamera()
+        binding.cameraPreview.visibility = View.VISIBLE
+        binding.avatarImage.visibility = View.GONE
         binding.captureButton.visibility = View.VISIBLE
         binding.retakeButton.visibility = View.GONE
     }
 
-    private fun createDefaultAvatar(): Bitmap {
-        // Create a simple colored bitmap as placeholder
-        val bitmap = Bitmap.createBitmap(200, 200, Bitmap.Config.ARGB_8888)
-        val canvas = android.graphics.Canvas(bitmap)
-        val paint = android.graphics.Paint()
-        paint.color = android.graphics.Color.parseColor("#2196F3")
-        canvas.drawCircle(100f, 100f, 100f, paint)
-        return bitmap
-    }
+    private fun proceedToWaitingRoom() {
+        // Send captured image if available
+        capturedBitmap?.let { bitmap ->
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, true)
+            val outputStream = ByteArrayOutputStream()
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+            val imageData = outputStream.toByteArray()
+            networkManager.sendImage(imageData, capturedImageGuid)
+            if (scaledBitmap != bitmap) {
+                scaledBitmap.recycle()
+            }
+        }
 
-    private fun connectToServer() {
-        val player = Player(
-            name = args.playerName,
-            avatarBitmap = capturedBitmap
-        )
-
-        val server = GameServer(args.serverIp)
+        // Send player profile with chosen name and avatar
+        networkManager.sendPlayerProfile(args.playerName)
 
         // Navigate to waiting room
         val action = AvatarSelectionFragmentDirections.actionAvatarSelectionToWaitingRoom(
@@ -209,6 +253,7 @@ class AvatarSelectionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        networkManager.onAvatarsChanged = null
         cameraExecutor.shutdown()
         _binding = null
     }

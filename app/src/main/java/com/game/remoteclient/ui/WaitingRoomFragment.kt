@@ -5,17 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentWaitingRoomBinding
-import com.game.remoteclient.models.GameServer
-import com.game.remoteclient.models.GameState
-import com.game.remoteclient.models.Player
-import com.game.remoteclient.network.NetworkManager
-import kotlinx.coroutines.launch
 
 class WaitingRoomFragment : Fragment() {
 
@@ -23,8 +17,11 @@ class WaitingRoomFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: WaitingRoomFragmentArgs by navArgs()
-    private lateinit var networkManager: NetworkManager
-    private lateinit var playerAdapter: PlayerAdapter
+    private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
+
+    companion object {
+        private const val ACTION_SHOW_READY_BUTTON = 14
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,61 +35,51 @@ class WaitingRoomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        networkManager = NetworkManager.getInstance()
-        setupRecyclerView()
         setupListeners()
-        observeGameState()
-    }
-
-    private fun setupRecyclerView() {
-        playerAdapter = PlayerAdapter()
-
-        binding.playersRecyclerView.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = playerAdapter
-        }
+        observeQuizCommands()
     }
 
     private fun setupListeners() {
-        binding.startGameButton.setOnClickListener {
-            networkManager.startGame()
+        binding.circularStartButton.onProgressComplete = {
+            networkManager.sendStartGameButtonPressed()
         }
     }
 
-    private fun observeGameState() {
-        lifecycleScope.launch {
-            networkManager.gameState.collect { state ->
-                when (state) {
-                    GameState.LOBBY -> {
-                        // Show start button if host
-                        // For now, always show it for testing
-                        binding.startGameButton.visibility = View.VISIBLE
-                    }
-                    GameState.GET_READY -> {
-                        navigateToGetReady()
-                    }
-                    else -> {}
-                }
+    private fun observeQuizCommands() {
+        networkManager.onQuizCommand = { action ->
+            activity?.runOnUiThread {
+                handleQuizCommand(action)
             }
         }
 
-        lifecycleScope.launch {
-            networkManager.players.collect { players ->
-                playerAdapter.submitList(players)
-                if (players.isNotEmpty()) {
-                    binding.waitingProgress.visibility = View.GONE
-                }
+        networkManager.onHoldingScreenMessage = { message ->
+            activity?.runOnUiThread {
+                navigateToHoldingScreen()
             }
         }
     }
 
-    private fun navigateToGetReady() {
-        val action = WaitingRoomFragmentDirections.actionWaitingRoomToGetReady()
-        findNavController().navigate(action)
+    private fun navigateToHoldingScreen() {
+        findNavController().navigate(R.id.action_waitingRoom_to_holdingScreen)
+    }
+
+    private fun handleQuizCommand(action: Int) {
+        when (action) {
+            ACTION_SHOW_READY_BUTTON -> {
+                showReadyState()
+            }
+        }
+    }
+
+    private fun showReadyState() {
+        binding.waitingContainer.visibility = View.GONE
+        binding.readyContainer.visibility = View.VISIBLE
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        networkManager.onQuizCommand = null
+        networkManager.onHoldingScreenMessage = null
         _binding = null
     }
 }
