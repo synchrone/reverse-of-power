@@ -53,7 +53,24 @@
         <action
             android:id="@+id/action_waitingRoom_to_getReady"
             app:destination="@id/getReadyFragment" />
+        <action
+            android:id="@+id/action_waitingRoom_to_holdingScreen"
+            app:destination="@id/holdingScreenFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/holdingScreenFragment"
+        android:name="com.game.remoteclient.ui.HoldingScreenFragment"
+        android:label="Holding Screen">
+        <action
+            android:id="@+id/action_holdingScreen_to_categorySelection"
+            app:destination="@id/categorySelectionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categorySelectionFragment"
+        android:name="com.game.remoteclient.ui.CategorySelectionFragment"
+        android:label="Category Selection" />
 
     <fragment
         android:id="@+id/getReadyFragment"
