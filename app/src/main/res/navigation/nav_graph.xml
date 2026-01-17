@@ -17,9 +17,6 @@
         android:id="@+id/nameEntryFragment"
         android:name="com.game.remoteclient.ui.NameEntryFragment"
         android:label="Name Entry">
-        <argument
-            android:name="serverIp"
-            app:argType="string" />
         <action
             android:id="@+id/action_nameEntry_to_avatarSelection"
             app:destination="@id/avatarSelectionFragment" />
@@ -29,9 +26,6 @@
         android:id="@+id/avatarSelectionFragment"
         android:name="com.game.remoteclient.ui.AvatarSelectionFragment"
         android:label="Avatar Selection">
-        <argument
-            android:name="serverIp"
-            app:argType="string" />
         <argument
             android:name="playerName"
             app:argType="string" />
@@ -44,15 +38,6 @@
         android:id="@+id/waitingRoomFragment"
         android:name="com.game.remoteclient.ui.WaitingRoomFragment"
         android:label="Waiting Room">
-        <argument
-            android:name="serverIp"
-            app:argType="string" />
-        <argument
-            android:name="playerName"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_waitingRoom_to_getReady"
-            app:destination="@id/getReadyFragment" />
         <action
             android:id="@+id/action_waitingRoom_to_holdingScreen"
             app:destination="@id/holdingScreenFragment" />
@@ -71,23 +56,5 @@
         android:id="@+id/categorySelectionFragment"
         android:name="com.game.remoteclient.ui.CategorySelectionFragment"
         android:label="Category Selection" />
-
-    <fragment
-        android:id="@+id/getReadyFragment"
-        android:name="com.game.remoteclient.ui.GetReadyFragment"
-        android:label="Get Ready">
-        <action
-            android:id="@+id/action_getReady_to_quiz"
-            app:destination="@id/quizFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/quizFragment"
-        android:name="com.game.remoteclient.ui.QuizFragment"
-        android:label="Quiz">
-        <action
-            android:id="@+id/action_quiz_to_getReady"
-            app:destination="@id/getReadyFragment" />
-    </fragment>
 
 </navigation>

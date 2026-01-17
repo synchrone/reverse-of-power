@@ -217,6 +217,70 @@ data class ClientCategorySelectChoice(
     val ChosenCategoryIndex: Int
 ) : GameMessage()
 
+@Serializable
+data class ServerBeginCategorySelectOverride(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginCategorySelectOverride",
+    val DurationSeconds: Double,
+    val InitialCategorySelectChoice: String,
+    val DoorIndex: Int
+) : GameMessage()
+
+@Serializable
+data class ClientCategorySelectOverride(
+    override val TypeString: String = "KnowledgeIsPower.ClientCategorySelectOverride",
+    val DurationSeconds: Double
+) : GameMessage()
+
+@Serializable
+data class ServerStopCategorySelectOverride(
+    override val TypeString: String = "KnowledgeIsPower.ServerStopCategorySelectOverride"
+) : GameMessage()
+
+@Serializable
+data class ClientStopCategorySelectOverrideResponse(
+    override val TypeString: String = "KnowledgeIsPower.ClientStopCategorySelectOverrideResponse",
+    val OverrideSent: Boolean
+) : GameMessage()
+
+@Serializable
+data class ServerCategorySelectOverrideSuccess(
+    override val TypeString: String = "KnowledgeIsPower.ServerCategorySelectOverrideSuccess",
+    val CategorySelectOverrideSuccess: Boolean,
+    val CategorySelectOverridePlayerName: String
+) : GameMessage()
+
+@Serializable
+data class TriviaAnswer(
+    val DisplayIndex: Int,
+    val DisplayText: String,
+    val IsCorrect: Boolean
+)
+
+@Serializable
+data class PowerPlayPlayer(
+    val SlotIndex: Int,
+    val Name: String,
+    val ImageGUID: String,
+    val Colour: ColorTint,
+    val Self: Boolean,
+    val Away: Boolean
+)
+
+@Serializable
+data class ServerBeginTriviaAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginTriviaAnsweringPhase",
+    val QuestionID: String,
+    val QuestionText: String,
+    val QuestionDuration: Double,
+    val Answers: List<TriviaAnswer>,
+    val PowerPlays: List<String>,
+    val PowerPlayPlayers: List<PowerPlayPlayer>,
+    val RoundType: Int,
+    val BackgroundTint: ColorTint,
+    val PrimaryTint: ColorTint,
+    val SecondaryTint: ColorTint
+) : GameMessage()
+
 // ==================== Protocol Packet Classes ====================
 
 data class ProtocolPacket(
@@ -475,8 +539,9 @@ public class GameProtocolClient(
 
     private fun sendRawUDP(data: ByteArray) {
         if(!(data[0]== 0x8a.toByte() && data[1] == 0x33.toByte())) {
-
-            Log.d(TAG, "> ${data.size}b: ${data.toHex()}")
+            data.asIterable().chunked(800).forEachIndexed { i, chunk ->
+                Log.d(TAG, "> ${data.size}b [$i]: ${chunk.toByteArray().toHex()}")
+            }
         }
         val packet = DatagramPacket(
             data,
@@ -539,7 +604,7 @@ public class GameProtocolClient(
                     isConnected = true;
                     connectionDeferred?.complete(Unit)
                 }else {
-//                    Log.d(TAG, "< ACK for ${data[2].toHexString()}")
+                    Log.d(TAG, "< ACK for ${data[2].toHexString()}")
                 }
             }
             else -> {
@@ -647,8 +712,10 @@ public class GameProtocolClient(
             val pendingGuid = pendingImageControls.remove(transferId)
             if (pendingGuid != null) {
                 Log.d(TAG, "^ matched JPEG for transferId=$transferId with waiting control (${jpeg.size} bytes)")
-                val base64 = android.util.Base64.encodeToString(jpeg, android.util.Base64.NO_WRAP)
-                Log.d(TAG, "JPEG Base64 (${jpeg.size} bytes): $base64")
+                for (i in jpeg.indices step 800) {
+                    val chunk = jpeg.copyOfRange(i, minOf(i + 800, jpeg.size))
+                    Log.d(TAG, "JPEG[$i]: ${Base64.getEncoder().encodeToString(chunk)}")
+                }
                 onImageReceived?.invoke(pendingGuid, jpeg)
             } else {
                 pendingImages[transferId] = jpeg
@@ -696,6 +763,14 @@ public class GameProtocolClient(
                     json.decodeFromString<ServerCategorySelectChoices>(jsonStr)
                 typeString.contains("ServerRequestCategorySelectChoice") ->
                     json.decodeFromString<ServerRequestCategorySelectChoice>(jsonStr)
+                typeString.contains("ServerBeginCategorySelectOverride") ->
+                    json.decodeFromString<ServerBeginCategorySelectOverride>(jsonStr)
+                typeString.contains("ServerStopCategorySelectOverride") ->
+                    json.decodeFromString<ServerStopCategorySelectOverride>(jsonStr)
+                typeString.contains("ServerCategorySelectOverrideSuccess") ->
+                    json.decodeFromString<ServerCategorySelectOverrideSuccess>(jsonStr)
+                typeString.contains("ServerBeginTriviaAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginTriviaAnsweringPhase>(jsonStr)
                 typeString == "ImageResourceContentTransferMessage" ->
                     json.decodeFromString<ImageResourceContentTransferMessage>(jsonStr)
                 else -> null
@@ -706,16 +781,18 @@ public class GameProtocolClient(
                 val pendingJpeg = pendingImages.remove(message.TransferID)
                 if (pendingJpeg != null) {
                     Log.d(TAG, "Matched JPEG for transferId=${message.TransferID}, imageGuid=${message.ImageGUID}")
-                    message.image = pendingJpeg
-                    val base64 = android.util.Base64.encodeToString(pendingJpeg, android.util.Base64.NO_WRAP)
-                    Log.d(TAG, "JPEG Base64 (${pendingJpeg.size} bytes): $base64")
+                    for (i in pendingJpeg.indices step 800) {
+                        val chunk = pendingJpeg.copyOfRange(i, minOf(i + 800, pendingJpeg.size))
+                        Log.d(TAG, "JPEG[$i]: ${Base64.getEncoder().encodeToString(chunk)}")
+                    }
+                    onImageReceived?.invoke(message.ImageGUID, pendingJpeg)
                 } else {
                     Log.d(TAG, "No pending JPEG for transferId=${message.TransferID}, storing control to wait for JPEG")
                     pendingImageControls[message.TransferID] = message.ImageGUID
                 }
+            }else{
+                message?.let { onMessageReceived?.invoke(it) }
             }
-
-            message?.let { onMessageReceived?.invoke(it) }
 
             if(message == null){
                 Log.d(TAG, "Unknown type: $typeString")
