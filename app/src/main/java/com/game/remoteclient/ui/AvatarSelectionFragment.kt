@@ -228,6 +228,9 @@ class AvatarSelectionFragment : Fragment() {
     }
 
     private fun proceedToWaitingRoom() {
+        // Send player profile with chosen name and avatar
+        networkManager.sendPlayerProfile(args.playerName)
+
         // Send captured image if available
         capturedBitmap?.let { bitmap ->
             val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 512, 512, true)
@@ -240,14 +243,8 @@ class AvatarSelectionFragment : Fragment() {
             }
         }
 
-        // Send player profile with chosen name and avatar
-        networkManager.sendPlayerProfile(args.playerName)
-
         // Navigate to waiting room
-        val action = AvatarSelectionFragmentDirections.actionAvatarSelectionToWaitingRoom(
-            serverIp = args.serverIp,
-            playerName = args.playerName
-        )
+        val action = AvatarSelectionFragmentDirections.actionAvatarSelectionToWaitingRoom()
         findNavController().navigate(action)
     }
 

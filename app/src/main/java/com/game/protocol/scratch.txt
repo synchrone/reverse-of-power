@@ -6,7 +6,7 @@
 
 {"TypeString":"PlayerNameQuizStateMessage","PlayerName":"test2","PlayerID":6}
 
-{
+< {
     "TypeString":"KnowledgeIsPower.ServerColourMessage",
     "BackgroundTint": {"r":0.75,"g":0.6926470398902893,"b":0.5900735259056091,"a":1.0},
     "PrimaryTint": {"r":0.7132352590560913,"g":0.5721794366836548,"b":0.319907009601593,"a":1.0},
@@ -14,10 +14,13 @@
     "Rainbow":false,
     "RoundType":-1
 }
-{"TypeString":"ImageResourceContentTransferMessage","TransferID":200,"ImageGUID":"23ac0dfa-da65-4b2a-94d9-75e870eeec4d","Acknowledge":true}
 
-{"TypeString":"StartGameButtonPressedResponseMessage","Response":9}
-{"TypeString":"AllResourcesReceivedMessage","Requirements":[]}
+<> {"TypeString":"ImageResourceContentTransferMessage","TransferID":200,"ImageGUID":"23ac0dfa-da65-4b2a-94d9-75e870eeec4d","Acknowledge":true}
+
+> {"TypeString":"StartGameButtonPressedResponseMessage","Response":9}
+
+< {"TypeString":"ResourceRequirementsMessage","Requirements":[]}
+> {"TypeString":"AllResourcesReceivedMessage","Requirements":[]}
 
 
 {"TypeString":"KnowledgeIsPower.ServerCategorySelectChoices","CategoryChoices":[{"DisplayText":"Movies","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":7,"ChoiceType":8},{"DisplayText":"Music","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":1,"ChoiceType":8},{"DisplayText":"Myths & Legends","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":4,"ChoiceType":8},{"DisplayText":"Competitive Sports","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":0,"ChoiceType":8}],"BackgroundTint":{"r":0.75,"g":0.6926470398902893,"b":0.5900735259056091,"a":1.0},"PrimaryTint":{"r":0.7132352590560913,"g":0.5721794366836548,"b":0.319907009601593,"a":1.0},"SecondaryTint":{"r":0.8014705777168274,"g":0.6470289826393127,"b":0.2416197955608368,"a":1.0}}

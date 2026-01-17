@@ -1,46 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Waiting State -->
-    <LinearLayout
-        android:id="@+id/waitingContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="visible">
-
-        <ProgressBar
-            android:id="@+id/waitingProgress"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:indeterminate="true" />
-
-        <TextView
-            android:id="@+id/waitingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Waiting for other players..."
-            android:textSize="20sp"
-            android:textColor="@color/text_primary"
-            android:layout_marginTop="24dp" />
-
-    </LinearLayout>
-
-    <!-- Ready State with Start Button -->
     <LinearLayout
         android:id="@+id/readyContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:gravity="center">
 
         <TextView
             android:id="@+id/readyText"

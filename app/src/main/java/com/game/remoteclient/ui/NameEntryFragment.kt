@@ -16,8 +16,6 @@ class NameEntryFragment : Fragment() {
     private var _binding: FragmentNameEntryBinding? = null
     private val binding get() = _binding!!
 
-    private val args: NameEntryFragmentArgs by navArgs()
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,7 +47,6 @@ class NameEntryFragment : Fragment() {
 
             // Navigate to avatar selection
             val action = NameEntryFragmentDirections.actionNameEntryToAvatarSelection(
-                serverIp = args.serverIp,
                 playerName = name
             )
             findNavController().navigate(action)

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.game.protocol.CategoryChoice
+import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ColorTint
 import com.game.protocol.ServerCategorySelectChoices
 import com.game.remoteclient.GameRemoteClientApplication
@@ -82,6 +83,16 @@ class CategorySelectionFragment : Fragment() {
                 enableSelection()
             }
         }
+
+        networkManager.onHoldingScreenMessage = { message ->
+            activity?.runOnUiThread {
+                handleHoldingScreenMessage(message)
+            }
+        }
+    }
+
+    private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
+        binding.titleText.text = message.HoldingScreenText.replace("\\n", "\n")
     }
 
     private fun updateCategoryChoices(message: ServerCategorySelectChoices) {
@@ -146,6 +157,7 @@ class CategorySelectionFragment : Fragment() {
         super.onDestroyView()
         networkManager.onCategoryChoicesMessage = null
         networkManager.onCategorySelectRequest = null
+        networkManager.onHoldingScreenMessage = null
         _binding = null
     }
 }

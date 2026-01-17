@@ -15,13 +15,7 @@ class WaitingRoomFragment : Fragment() {
 
     private var _binding: FragmentWaitingRoomBinding? = null
     private val binding get() = _binding!!
-
-    private val args: WaitingRoomFragmentArgs by navArgs()
     private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
-
-    companion object {
-        private const val ACTION_SHOW_READY_BUTTON = 14
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +30,7 @@ class WaitingRoomFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupListeners()
-        observeQuizCommands()
+        observeMessages()
     }
 
     private fun setupListeners() {
@@ -45,14 +39,8 @@ class WaitingRoomFragment : Fragment() {
         }
     }
 
-    private fun observeQuizCommands() {
-        networkManager.onQuizCommand = { action ->
-            activity?.runOnUiThread {
-                handleQuizCommand(action)
-            }
-        }
-
-        networkManager.onHoldingScreenMessage = { message ->
+    private fun observeMessages() {
+        networkManager.onHoldingScreenMessage = { _ ->
             activity?.runOnUiThread {
                 navigateToHoldingScreen()
             }
@@ -63,22 +51,8 @@ class WaitingRoomFragment : Fragment() {
         findNavController().navigate(R.id.action_waitingRoom_to_holdingScreen)
     }
 
-    private fun handleQuizCommand(action: Int) {
-        when (action) {
-            ACTION_SHOW_READY_BUTTON -> {
-                showReadyState()
-            }
-        }
-    }
-
-    private fun showReadyState() {
-        binding.waitingContainer.visibility = View.GONE
-        binding.readyContainer.visibility = View.VISIBLE
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        networkManager.onQuizCommand = null
         networkManager.onHoldingScreenMessage = null
         _binding = null
     }

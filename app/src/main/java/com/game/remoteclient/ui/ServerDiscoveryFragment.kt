@@ -105,7 +105,7 @@ class ServerDiscoveryFragment : Fragment() {
 
                 if (success) {
                     // Navigate to name entry screen
-                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry(server.ipAddress)
+                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
                     findNavController().navigate(action)
                 } else {
                     Toast.makeText(

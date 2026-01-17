@@ -3,7 +3,6 @@ package com.game.remoteclient.network
 import android.util.Log
 import com.game.protocol.AssignPlayerIDAndSlotMessage
 import com.game.protocol.ClientHoldingScreenCommandMessage
-import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.GameMessage
 import com.game.protocol.GameProtocolClient
 import com.game.protocol.InterfaceVersionMessage
@@ -17,7 +16,6 @@ import com.game.protocol.SessionStateMessage
 import com.game.remoteclient.models.GameServer
 import com.game.remoteclient.models.GameState
 import com.game.remoteclient.models.Player
-import com.game.remoteclient.models.QuizQuestion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,15 +43,11 @@ class NetworkManager private constructor() {
     private val _players = MutableStateFlow<List<Player>>(emptyList())
     val players: StateFlow<List<Player>> = _players
 
-    private val _currentQuestion = MutableStateFlow<QuizQuestion?>(null)
-    val currentQuestion: StateFlow<QuizQuestion?> = _currentQuestion
-
     private val _connectionError = MutableStateFlow<String?>(null)
     val connectionError: StateFlow<String?> = _connectionError
 
     val availableAvatars = mutableListOf<ServerAvatarStatusMessage>()
     var onAvatarsChanged: (() -> Unit)? = null
-    var onQuizCommand: ((Int) -> Unit)? = null
     var onHoldingScreenMessage: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
     var onColourMessage: ((ServerColourMessage) -> Unit)? = null
     var onCategoryChoicesMessage: ((ServerCategorySelectChoices) -> Unit)? = null
@@ -155,6 +149,9 @@ class NetworkManager private constructor() {
 
             is ResourceRequirementsMessage -> {
                 Log.d(TAG, "Resources required: ${message.Requirements}")
+                if(message.Requirements.isEmpty()){
+                    protocolClient?.sendAllResourcesReceived()
+                }
             }
 
             is ServerAvatarStatusMessage -> {
@@ -164,11 +161,6 @@ class NetworkManager private constructor() {
 
             is ServerAvatarRequestResponseMessage -> {
                 Log.d(TAG, "Avatar ${message.AvatarID} request response - Available: ${message.Available}")
-            }
-
-            is ClientQuizCommandMessage -> {
-                Log.d(TAG, "Quiz command: action=${message.action}")
-                onQuizCommand?.invoke(message.action)
             }
 
             is ClientHoldingScreenCommandMessage -> {
@@ -220,18 +212,6 @@ class NetworkManager private constructor() {
             availableAvatars.add(avatar)
         }
         onAvatarsChanged?.invoke()
-    }
-
-    fun sendAnswer(answerIndex: Int) {
-        protocolClient?.let { client ->
-            val msg = ClientQuizCommandMessage(
-                action = answerIndex,
-                time = System.currentTimeMillis() / 1000.0
-            )
-            // Note: ClientQuizCommandMessage would need to be sent via the client
-            // This requires adding a generic sendMessage method to GameProtocolClient
-            Log.d(TAG, "Sending answer: $answerIndex")
-        }
     }
 
     fun sendStartGameButtonPressed() {
