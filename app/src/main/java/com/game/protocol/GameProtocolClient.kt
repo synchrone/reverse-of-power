@@ -48,21 +48,27 @@ data class AssignPlayerIDAndSlotMessage(
 ) : GameMessage()
 
 @Serializable
+data class ResourceRequirement(
+    val GUID: String,
+    val Rqrmnt: Int
+)
+
+@Serializable
 data class ResourceRequirementsMessage(
     override val TypeString: String = "ResourceRequirementsMessage",
-    val Requirements: List<String>
+    val Requirements: List<ResourceRequirement>
 ) : GameMessage()
 
 @Serializable
 data class AllResourcesReceivedMessage(
     override val TypeString: String = "AllResourcesReceivedMessage",
-    val Requirements: List<String>
+    val Requirements: List<ResourceRequirement>
 ) : GameMessage()
 
 @Serializable
 data class ClientQuizCommandMessage(
     override val TypeString: String = "ClientQuizCommandMessage",
-    val action: Int, // 14 = show ready button; 31 = go back to name selection screen; 29, 30 = something around game being exited
+    val action: Int, // 14 = show ready button; 31 = go back to name selection screen; 29, 30, 15 = something around game being exited
     val time: Double
 ) : GameMessage()
 
@@ -142,10 +148,10 @@ data class ClientGameIDMessage(
 @Serializable
 data class ClientHoldingScreenCommandMessage(
     override val TypeString: String = "ClientHoldingScreenCommandMessage",
-    val action: Int, // 5 = look at the TV
+    val action: Int, // 5 = look at the TV;
     val time: Double,
     val HoldingScreenText: String,
-    val HoldingScreenType: Int,
+    val HoldingScreenType: Int, // 4 = look at the tv;  9 = get ready
     val OtherPlayerIndex: Int,
     val ShowPortraitPhotoControls: Boolean
 ) : GameMessage()
@@ -329,11 +335,23 @@ public class GameProtocolClient(
     var onMessageReceived: ((GameMessage) -> Unit)? = null
     var onAvatarListReceived: ((List<ServerAvatarStatusMessage>) -> Unit)? = null
     var onImageReceived: ((imageGuid: String, imageData: ByteArray) -> Unit)? = null
+    var onPacketSend: ((ByteArray) -> Unit)? = null
+    var testMode: Boolean = false
+
+    // Protocol state
+    var assignedPlayerId: Int? = null
+        private set
+    var assignedSlotId: Int? = null
+        private set
+    val availableAvatars = mutableListOf<ServerAvatarStatusMessage>()
 
     // Temporary storage for incoming JPEG payloads, keyed by TransferID
     private val pendingImages = mutableMapOf<Int, ByteArray>()
     // Pending control messages when they arrive before the JPEG
     private val pendingImageControls = mutableMapOf<Int, String>() // TransferID -> ImageGUID
+
+    // Lock to prevent interleaved UDP packets when sending chunked data
+    private val sendLock = Any()
 
     // ==================== Connection ====================
 
@@ -342,7 +360,7 @@ public class GameProtocolClient(
         connectionError = null
         startListening()
         Thread {
-            while (serverSocket?.isClosed == false) {
+            while (testMode || serverSocket?.isClosed == false) {
                 if (lastRcvMessageId == null && connectionError == null) {
                     sendConnectionRequest()
                     sendDeviceUID(deviceUID)
@@ -366,7 +384,7 @@ public class GameProtocolClient(
         return completed && connectionError == null
     }
 
-    private fun sendConnectionRequest() {
+    private fun sendConnectionRequest() = synchronized(sendLock){
         val data = ByteArray(38)
         data[0] = 0x8a.toByte()
         data[1] = 0x33.toByte()
@@ -377,7 +395,7 @@ public class GameProtocolClient(
         sendRawUDP(data)
     }
 
-    public fun sendDeviceUID(uid: String, theByte: Byte = 0x00) {
+    public fun sendDeviceUID(uid: String, theByte: Byte = 0x63) = synchronized(sendLock){
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
         val data = ByteBuffer.allocate(12+uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
         data.put(bytes(0xc, 0x89, 0xe8, 0x84))
@@ -395,8 +413,8 @@ public class GameProtocolClient(
         sendMessage(msg)
     }
 
-    fun sendAllResourcesReceived() {
-        val msg = AllResourcesReceivedMessage(Requirements = emptyList())
+    fun sendAllResourcesReceived(requirements: List<ResourceRequirement>) {
+        val msg = AllResourcesReceivedMessage(Requirements = requirements)
         sendMessage(msg)
     }
 
@@ -462,41 +480,68 @@ public class GameProtocolClient(
         val msg = ClientImageResourceContentTransferMessage(
             TransferID = transferId,
             ImageGUID = imageGuid,
-            ImgType = imgType
+            ImgType = imgType // 2 = player photo
         )
         sendMessage(msg)
 
-        Log.i(TAG, "> Sending transfer ID: $transferId for $imageGuid (${imageData.size}b)")
-        val payloadBuffer = ByteBuffer.allocate(imageData.size + 16).order(ByteOrder.LITTLE_ENDIAN)
-        payloadBuffer.put(bytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x29))
-        payloadBuffer.putInt(transferId)
-        payloadBuffer.putInt(imageData.size)
+
+        val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
+        payloadBuffer.put(bytes(0x33, 0x29))  // magic
+        payloadBuffer.putInt(transferId - 1)  // zero-based transfer ID
+        payloadBuffer.putInt(imageData.size)  // total JPEG length
+        Log.i(TAG, "> Sending transfer ID: $transferId for $imageGuid (${imageData.size}b): ${payloadBuffer.array().slice(0 until 10).toByteArray().toHex()}")
         payloadBuffer.put(imageData)
         sendChunked(payloadBuffer.array())
     }
 
-    private fun sendChunked(payload: ByteArray) {
+    private fun sendChunked(payload: ByteArray) = synchronized(sendLock) {
         // Fragment and send image data
-        val fragmentSize = 1008
+        val fragmentSize = 1002  // Max payload per chunk (1024 total - 22 byte header)
         val totalFragments = ((payload.size + fragmentSize - 1) / fragmentSize)
-        val messageId = messageCounter++
+        val messageId = ++messageCounter
 
+        var byteOffset = 0
         for (i in 0 until totalFragments) {
             val start = i * fragmentSize
             val end = minOf(start + fragmentSize, payload.size)
             val fragment = payload.sliceArray(start until end)
 
-            if (i < totalFragments-1){
-                send(fragment, totalFragments, i, 0x03, messageId)
-            } else {
-                send(fragment, totalFragments, i, 0x00, messageId)
-            }
-            Thread.sleep(10) // Small delay between fragments
+            sendChunkedPacket(fragment, totalFragments, i, byteOffset, messageId)
+            byteOffset += fragment.size
         }
     }
 
     // ==================== Core Messaging ====================
-    private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, flags: Byte = 0x0, messageId: Byte? = null, length: Int = 0){
+
+    /**
+     * Send a chunked packet with proper header format:
+     * - bytes 0-1: magic (0xAE, 0x7F)
+     * - byte 2: messageId
+     * - bytes 3-6: total chunks (big-endian)
+     * - bytes 7-10: chunk index (big-endian)
+     * - bytes 11-13: static 0x00, 0x00, 0x00
+     * - bytes 14-17: chunk length (little-endian u32)
+     * - bytes 18-21: byte offset (little-endian u32)
+     * - bytes 22+: payload
+     */
+    private fun sendChunkedPacket(payload: ByteArray, totalChunks: Int, chunkIdx: Int, byteOffset: Int, messageId: Byte) = synchronized(sendLock) {
+        val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.BIG_ENDIAN)
+        buffer.put(bytes(0xAE, 0x7F))
+        buffer.put(messageId)
+        buffer.putInt(totalChunks)
+        buffer.putInt(chunkIdx)
+
+        // 3 static bytes + chunk length (LE) + byte offset (LE)
+        buffer.put(bytes(0x00, 0x00, 0x00))
+        buffer.order(ByteOrder.LITTLE_ENDIAN)
+        buffer.putInt(payload.size)
+        buffer.putInt(byteOffset)
+
+        buffer.put(payload)
+        sendRawUDP(buffer.array())
+    }
+
+    private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, flags: Byte = 0x0, messageId: Byte? = null, length: Int = 0) = synchronized(sendLock){
         val buffer = ByteBuffer.allocate(payload.size+16).order(ByteOrder.BIG_ENDIAN)
         buffer.put(bytes(0xAE, 0x7F))
         if(messageId != null){
@@ -506,13 +551,13 @@ public class GameProtocolClient(
         }
         buffer.putInt(packetNum)
         buffer.putInt(packetIdx)
-        buffer.putInt(if (flags == 3.toByte()) 234 else if (length > 0) length else payload.size) // 234 is 0xEA which seems to be a placeholder when flags=3
+        buffer.putInt(if (length > 0) length else payload.size)
         buffer.put(flags)
         buffer.put(payload)
         sendRawUDP(buffer.array())
     }
 
-    private inline fun <reified T : GameMessage> sendMessage(msg: T) {
+    private inline fun <reified T : GameMessage> sendMessage(msg: T) = synchronized(sendLock) {
         val jsonStr = json.encodeToString(msg)
         Log.i(TAG, "> Sending message: $jsonStr")
         val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
@@ -526,8 +571,8 @@ public class GameProtocolClient(
         send(payload, length = payload.size - 6) // send a simple packet, non chunked, and don't count the zeros towards payload size
     }
 
-    private fun sendAck(messageId: Byte) {
-//        Log.d(TAG, "> ACK for $messageId")
+    private fun sendAck(messageId: Byte) = synchronized(sendLock) {
+        Log.d(TAG, "> ACK 0x${messageId.toHexString()}")
         val ack = AckPacket(messageId = messageId)
         val buffer = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
         buffer.put(ack.header)
@@ -539,10 +584,13 @@ public class GameProtocolClient(
 
     private fun sendRawUDP(data: ByteArray) {
         if(!(data[0]== 0x8a.toByte() && data[1] == 0x33.toByte())) {
-            data.asIterable().chunked(800).forEachIndexed { i, chunk ->
-                Log.d(TAG, "> ${data.size}b [$i]: ${chunk.toByteArray().toHex()}")
-            }
+            Log.d(TAG, "> ${data.size}b: ${data.slice(0 until 22).toByteArray().toHex()} ...")
+//            data.asIterable().chunked(800).forEachIndexed { i, chunk ->
+//                Log.d(TAG, "> ${data.size}b [$i]: ${chunk.toByteArray().toHex()}")
+//            }
         }
+        onPacketSend?.invoke(data)
+        if (testMode) return
         val packet = DatagramPacket(
             data,
             data.size,
@@ -555,6 +603,9 @@ public class GameProtocolClient(
     // ==================== Receiving ====================
 
     private fun startListening() {
+        if(testMode){
+            return // will be fed packets via handleReceivedPacket()
+        }
         // Force Java to prefer IPv4 stack to avoid IPv6 binding issues
         System.setProperty("java.net.preferIPv4Stack", "true")
 
@@ -604,7 +655,7 @@ public class GameProtocolClient(
                     isConnected = true;
                     connectionDeferred?.complete(Unit)
                 }else {
-                    Log.d(TAG, "< ACK for ${data[2].toHexString()}")
+                    Log.d(TAG, "< ACK 0x${data[2].toHexString()}: ${data.sliceArray(3 until data.size).toHexString()}")
                 }
             }
             else -> {
@@ -625,7 +676,7 @@ public class GameProtocolClient(
         val totalLength = buffer.int // length of this packet
 
         if (packetNum>1) { //chunked transmission
-            Log.d(TAG, "< fragmented packet ${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength")
+            Log.d(TAG, "< fragmented packet 0x${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength")
             if(packetIdx == 0){ // buffer first packet
                 // drag Flags
                 handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(15 until data.size));
@@ -679,7 +730,7 @@ public class GameProtocolClient(
         val h2 = buffer.int // always 0x00, 0x00, 0x33, 0x29
         var payloadType = buffer.int
         var payloadLength = buffer.int
-        Log.d(TAG, "RCV ${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
+        Log.d(TAG, "< RCV 0x${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
 
         val peek4 = data.sliceArray(buffer.position() until buffer.position() + 4);
 
@@ -723,6 +774,53 @@ public class GameProtocolClient(
             }
         }else{
             throw NotImplementedError("flags ${flags.toHexString()}, payloadType ${payloadType.toHexString()} not implemented");
+        }
+    }
+
+    private fun handleProtocolMessage(message: GameMessage) {
+        when (message) {
+            is InterfaceVersionMessage -> {
+                Log.d(TAG, "Server version: ${message.InterfaceVersion}")
+            }
+
+            is SessionStateMessage -> {
+                Log.d(TAG, "Session ID: ${message.SessionID}")
+                requestPlayerID()
+            }
+
+            is AssignPlayerIDAndSlotMessage -> {
+                assignedPlayerId = message.PlayerID
+                assignedSlotId = message.SlotID
+                Log.d(TAG, "Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
+                Log.d(TAG, "Display Name: ${message.DisplayName}")
+
+                sendDeviceInfo(
+                    "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
+                    "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT} (${android.os.Build.ID})"
+                )
+                requestAvatarStatus()
+            }
+
+            is ServerAvatarStatusMessage -> {
+                Log.d(TAG, "Avatar ${message.AvatarID}: Available=${message.Available}")
+                val existingIndex = availableAvatars.indexOfFirst { it.AvatarID == message.AvatarID }
+                if (existingIndex >= 0) {
+                    availableAvatars[existingIndex] = message
+                } else {
+                    availableAvatars.add(message)
+                }
+            }
+
+            is ServerAvatarRequestResponseMessage -> {
+                Log.d(TAG, "Avatar ${message.AvatarID} request response - Available: ${message.Available}")
+            }
+
+            is ResourceRequirementsMessage -> {
+                Log.d(TAG, "Resources required: ${message.Requirements}")
+                // report we have them all, since they're not implemented yet
+                // they're typically used as faint background on frozen buttons, maybe other PowerPlay woes
+                sendAllResourcesReceived(message.Requirements)
+            }
         }
     }
 
@@ -790,8 +888,11 @@ public class GameProtocolClient(
                     Log.d(TAG, "No pending JPEG for transferId=${message.TransferID}, storing control to wait for JPEG")
                     pendingImageControls[message.TransferID] = message.ImageGUID
                 }
-            }else{
-                message?.let { onMessageReceived?.invoke(it) }
+            } else {
+                message?.let {
+                    handleProtocolMessage(it)
+                    onMessageReceived?.invoke(it)
+                }
             }
 
             if(message == null){

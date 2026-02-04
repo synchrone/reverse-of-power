@@ -5,12 +5,38 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <!-- Waiting state -->
+    <LinearLayout
+        android:id="@+id/waitingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ProgressBar
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/waitingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waiting for other players..."
+            android:textSize="20sp"
+            android:textColor="@color/text_primary" />
+
+    </LinearLayout>
+
+    <!-- Ready state (hidden by default) -->
     <LinearLayout
         android:id="@+id/readyContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/readyText"

@@ -14,7 +14,11 @@
       "Bash(wc:*)",
       "Bash(mv:*)",
       "Bash(git status:*)",
-      "Bash(kotlinc -script:*)"
+      "Bash(kotlinc -script:*)",
+      "Bash(node generate-integration-tests.js:*)",
+      "Bash(git checkout:*)",
+      "Bash(xxd:*)",
+      "Bash(base64:*)"
     ]
   }
 }

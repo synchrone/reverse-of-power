@@ -40,11 +40,24 @@ class WaitingRoomFragment : Fragment() {
     }
 
     private fun observeMessages() {
+        networkManager.onQuizCommand = { message ->
+            if (message.action == 14) {
+                activity?.runOnUiThread {
+                    showReadyButton()
+                }
+            }
+        }
+
         networkManager.onHoldingScreenMessage = { _ ->
             activity?.runOnUiThread {
                 navigateToHoldingScreen()
             }
         }
+    }
+
+    private fun showReadyButton() {
+        binding.waitingContainer.visibility = View.GONE
+        binding.readyContainer.visibility = View.VISIBLE
     }
 
     private fun navigateToHoldingScreen() {
@@ -53,6 +66,7 @@ class WaitingRoomFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        networkManager.onQuizCommand = null
         networkManager.onHoldingScreenMessage = null
         _binding = null
     }
