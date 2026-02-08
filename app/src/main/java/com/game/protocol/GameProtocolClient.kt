@@ -2,6 +2,7 @@
 
 package com.game.protocol
 
+import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.withTimeoutOrNull
@@ -72,14 +73,19 @@ data class ClientQuizCommandMessage(
     val time: Double
 ) : GameMessage()
 
-@Serializable
+@Serializable // 1
+data class ClientRequestAvatarStatusMessage(
+    override val TypeString: String = "KnowledgeIsPower.ClientRequestAvatarStatusMessage"
+) : GameMessage()
+
+@Serializable // 2
 data class ServerAvatarStatusMessage(
     override val TypeString: String = "KnowledgeIsPower.ServerAvatarStatusMessage",
     val AvatarID: String,
     val Available: Boolean
 ) : GameMessage()
 
-@Serializable
+@Serializable // 3
 data class ClientRequestAvatarMessage(
     override val TypeString: String = "KnowledgeIsPower.ClientRequestAvatarMessage",
     val RequestID: String,
@@ -87,7 +93,7 @@ data class ClientRequestAvatarMessage(
     val Request: Boolean
 ) : GameMessage()
 
-@Serializable
+@Serializable // 4
 data class ServerAvatarRequestResponseMessage(
     override val TypeString: String = "KnowledgeIsPower.ServerAvatarRequestResponseMessage",
     val RequestID: String,
@@ -95,10 +101,6 @@ data class ServerAvatarRequestResponseMessage(
     val Available: Boolean
 ) : GameMessage()
 
-@Serializable
-data class ClientRequestAvatarStatusMessage(
-    override val TypeString: String = "KnowledgeIsPower.ClientRequestAvatarStatusMessage"
-) : GameMessage()
 
 @Serializable
 data class ClientPlayerProfileMessage(
@@ -135,7 +137,7 @@ data class ImageResourceContentTransferMessage(
     val TransferID: Int,
     val ImageGUID: String,
     val Acknowledge: Boolean,
-    @kotlinx.serialization.Transient
+    @Transient
     var image: ByteArray? = null
 ) : GameMessage()
 
@@ -162,6 +164,12 @@ data class PlayerJoinedMessage(
     val CurrentPlayerID: Int,
     val OldPlayerID: Int,
     val SlotID: Int
+) : GameMessage()
+
+@Serializable
+data class PlayerLeftMessage(
+    override val TypeString: String = "PlayerLeftMessage",
+    val PlayerID: Int
 ) : GameMessage()
 
 @Serializable
@@ -400,7 +408,7 @@ public class GameProtocolClient(
         val data = ByteBuffer.allocate(12+uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
         data.put(bytes(0xc, 0x89, 0xe8, 0x84))
         data.put(bytes(0x61, 0x3, 0xf4))
-        data.put(theByte)
+        data.put(theByte) // random is ok
         data.putInt(uidBytes.size)
         data.put(uidBytes)
         sendRawUDP(data.array())
@@ -413,7 +421,7 @@ public class GameProtocolClient(
         sendMessage(msg)
     }
 
-    fun sendAllResourcesReceived(requirements: List<ResourceRequirement>) {
+    fun sendAllResourcesReceived(requirements: List<ResourceRequirement> = listOf()) {
         val msg = AllResourcesReceivedMessage(Requirements = requirements)
         sendMessage(msg)
     }
@@ -489,12 +497,12 @@ public class GameProtocolClient(
         payloadBuffer.put(bytes(0x33, 0x29))  // magic
         payloadBuffer.putInt(transferId - 1)  // zero-based transfer ID
         payloadBuffer.putInt(imageData.size)  // total JPEG length
-        Log.i(TAG, "> Sending transfer ID: $transferId for $imageGuid (${imageData.size}b): ${payloadBuffer.array().slice(0 until 10).toByteArray().toHex()}")
+        Log.i(TAG, "> Sending transfer ID: $transferId (${imageData.size}b): ${payloadBuffer.array().slice(0 until 10).toByteArray().toHex()}")
         payloadBuffer.put(imageData)
         sendChunked(payloadBuffer.array())
     }
 
-    private fun sendChunked(payload: ByteArray) = synchronized(sendLock) {
+    private fun sendChunked(payload: ByteArray) {
         // Fragment and send image data
         val fragmentSize = 1002  // Max payload per chunk (1024 total - 22 byte header)
         val totalFragments = ((payload.size + fragmentSize - 1) / fragmentSize)
@@ -506,69 +514,83 @@ public class GameProtocolClient(
             val end = minOf(start + fragmentSize, payload.size)
             val fragment = payload.sliceArray(start until end)
 
-            sendChunkedPacket(fragment, totalFragments, i, byteOffset, messageId)
+            send(fragment, totalFragments, i, messageId = messageId, byteOffset = byteOffset)
             byteOffset += fragment.size
+            Thread.sleep(30)
         }
     }
 
     // ==================== Core Messaging ====================
 
     /**
-     * Send a chunked packet with proper header format:
+     * Send a protocol packet. Header layout:
      * - bytes 0-1: magic (0xAE, 0x7F)
      * - byte 2: messageId
-     * - bytes 3-6: total chunks (big-endian)
-     * - bytes 7-10: chunk index (big-endian)
+     * - bytes 3-6: total packets (big-endian)
+     * - bytes 7-10: packet index (big-endian)
+     *
+     * Standard (byteOffset == null): 16-byte header
+     * - bytes 11-14: payload length (big-endian)
+     * - byte 15: flags
+     *
+     * Chunked (byteOffset != null): 22-byte header
      * - bytes 11-13: static 0x00, 0x00, 0x00
-     * - bytes 14-17: chunk length (little-endian u32)
-     * - bytes 18-21: byte offset (little-endian u32)
-     * - bytes 22+: payload
+     * - bytes 14-17: chunk length (little-endian)
+     * - bytes 18-21: byte offset (little-endian)
      */
-    private fun sendChunkedPacket(payload: ByteArray, totalChunks: Int, chunkIdx: Int, byteOffset: Int, messageId: Byte) = synchronized(sendLock) {
+    private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, messageId: Byte? = null, byteOffset: Int = 0) = synchronized(sendLock){
         val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.BIG_ENDIAN)
         buffer.put(bytes(0xAE, 0x7F))
-        buffer.put(messageId)
-        buffer.putInt(totalChunks)
-        buffer.putInt(chunkIdx)
-
-        // 3 static bytes + chunk length (LE) + byte offset (LE)
+        buffer.put(messageId ?: ++messageCounter)
+        buffer.putInt(packetNum)
+        buffer.putInt(packetIdx)
         buffer.put(bytes(0x00, 0x00, 0x00))
         buffer.order(ByteOrder.LITTLE_ENDIAN)
         buffer.putInt(payload.size)
         buffer.putInt(byteOffset)
-
         buffer.put(payload)
-        sendRawUDP(buffer.array())
+        val packet = buffer.array()
+        sendRawUDP(packet)
     }
 
-    private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, flags: Byte = 0x0, messageId: Byte? = null, length: Int = 0) = synchronized(sendLock){
-        val buffer = ByteBuffer.allocate(payload.size+16).order(ByteOrder.BIG_ENDIAN)
-        buffer.put(bytes(0xAE, 0x7F))
-        if(messageId != null){
-            buffer.put(messageId)
-        }else{
-            buffer.put(++messageCounter)
-        }
-        buffer.putInt(packetNum)
-        buffer.putInt(packetIdx)
-        buffer.putInt(if (length > 0) length else payload.size)
-        buffer.put(flags)
-        buffer.put(payload)
-        sendRawUDP(buffer.array())
-    }
-
-    private inline fun <reified T : GameMessage> sendMessage(msg: T) = synchronized(sendLock) {
-        val jsonStr = json.encodeToString(msg)
+    @Suppress("UNCHECKED_CAST")
+    private fun encodeJson(msg: GameMessage): ByteArray {
+        val serializer = msg::class.serializer() as KSerializer<GameMessage>
+        val jsonStr = json.encodeToString(serializer, msg)
         Log.i(TAG, "> Sending message: $jsonStr")
-        val jsonBytes = jsonStr.toByteArray(Charsets.UTF_8)
+        return jsonStr.toByteArray(Charsets.UTF_8)
+    }
 
-        val buffer = ByteBuffer.allocate(jsonBytes.size + 16).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.put(bytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x33, 0x29)) // ???
+    private fun sendMessage(msg: GameMessage) {
+        val jsonBytes = encodeJson(msg)
+
+        val buffer = ByteBuffer.allocate(jsonBytes.size + 10).order(ByteOrder.LITTLE_ENDIAN)
+        buffer.put(bytes(0x33, 0x29)) // magic
         buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
         buffer.putInt(jsonBytes.size)
         buffer.put(jsonBytes)
-        val payload = buffer.array()
-        send(payload, length = payload.size - 6) // send a simple packet, non chunked, and don't count the zeros towards payload size
+        send(buffer.array())
+    }
+
+    private fun sendMessageMulti(vararg msgs: GameMessage) {
+        val jsonBytesList = msgs.map { encodeJson(it) }
+        val entriesSize = jsonBytesList.sumOf { 8 + it.size } // len 4b + type 4b each
+        val bodyLength = entriesSize + 6 // multijson type 4b + footer 2b
+
+        val buffer = ByteBuffer.allocate(10 + bodyLength).order(ByteOrder.LITTLE_ENDIAN)
+        buffer.put(bytes(0x33, 0x29)) // magic
+        buffer.putInt(nextTransferId++)
+        buffer.putInt(bodyLength)
+        buffer.put(bytes(0x84, 0x12, 0x40, 0xEE)) // multijson type
+
+        for (jsonBytes in jsonBytesList) {
+            buffer.putInt(jsonBytes.size)
+            buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
+            buffer.put(jsonBytes)
+        }
+        buffer.put(bytes(0x32, 0x90)) // footer
+
+        send(buffer.array())
     }
 
     private fun sendAck(messageId: Byte) = synchronized(sendLock) {
@@ -647,7 +669,11 @@ public class GameProtocolClient(
 
         when {
             header == 0xae.toByte() && secondaryHeader == 0x7f.toByte() -> {
-                handleDataPacket(data)
+                try {
+                    handleDataPacket(data)
+                }catch (e: Exception){
+                    Log.e(TAG, "Error handling data packet ${data.toHex()}", e)
+                }
             }
             header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
                 if(data.sliceArray(2 .. 5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))){
@@ -655,7 +681,10 @@ public class GameProtocolClient(
                     isConnected = true;
                     connectionDeferred?.complete(Unit)
                 }else {
-                    Log.d(TAG, "< ACK 0x${data[2].toHexString()}: ${data.sliceArray(3 until data.size).toHexString()}")
+                    val payload = data.sliceArray(3 until data.size)
+                    if (payload.any { it != 0.toByte() }) {
+                        Log.e(TAG, "< NACK 0x${data[2].toHexString()}: ${payload.toHexString()}")
+                    }
                 }
             }
             else -> {
@@ -673,22 +702,20 @@ public class GameProtocolClient(
         val messageId = buffer.get()
         val packetNum = buffer.int // packets for this message ID
         val packetIdx = buffer.int // packet idx
-        val totalLength = buffer.int // length of this packet
+        buffer.get()
+        buffer.get() // 3x zero
+        buffer.get()
+        buffer.order(ByteOrder.LITTLE_ENDIAN)
+        val packetLen = buffer.int // length of this packet
+        val offset = buffer.int
 
         if (packetNum>1) { //chunked transmission
-            Log.d(TAG, "< fragmented packet 0x${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$totalLength")
-            if(packetIdx == 0){ // buffer first packet
-                // drag Flags
-                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(15 until data.size));
-            }else{
-                // push the rest after without the header for gluing after the first packet
-                // continuation packets only have a 16-byte header and a 6-byte subheader, totaling 22b
-                handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(22 until data.size))
-            }
+            Log.d(TAG, "< FRAG 0x${messageId.toHexString()} (${packetIdx+1}/$packetNum) l=$packetLen, offset=$offset")
+            handleFragmentedPacket(messageId, packetIdx, packetNum, data.sliceArray(22 until data.size))
             return
         }
 
-        return handleData(messageId, data.sliceArray(15 until data.size))
+        return handleData(messageId, data.sliceArray(22 until data.size))
     }
 
     private fun handleFragmentedPacket(messageId: Byte, packetNum: Int, totalPackets: Int, fragment: ByteArray) {
@@ -725,38 +752,37 @@ public class GameProtocolClient(
         lastRcvMessageId = messageId
 
         val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
-        val flags = buffer.get().toInt()
-        val h1 = buffer.int // always zeros
-        val h2 = buffer.int // always 0x00, 0x00, 0x33, 0x29
+        buffer.getShort() // static 0x33, 0x29
         var payloadType = buffer.int
-        var payloadLength = buffer.int
-        Log.d(TAG, "< RCV 0x${messageId.toHexString()}, flags=${flags}: h1=$h1, h2=${h2.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
-
-        val peek4 = data.sliceArray(buffer.position() until buffer.position() + 4);
-
+        val payloadLength = buffer.int
+        var transferId = -1
+        if(payloadType > 0){
+            transferId = payloadType
+            payloadType = buffer.int
+        }
+        Log.d(TAG, "< RCV 0x${messageId.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
         if(payloadType == -7503){ // 0xB1, 0xE2, 0xFF, 0xFF // JSON
             return parseJsonPayload(data.sliceArray(buffer.position() until data.size));
         }
-        else if(peek4.contentEquals(bytes(0x84, 0x12, 0x40, 0xEE)))
+        else if(payloadType == -297790844) // 0x84, 0x12, 0x40, 0xEE // multijson
         {
-            val sh1 = buffer.int
-            var processed = 4 // advance for read sh1
-            while (processed < payloadLength-3) { // TODO: there's some byte counting error here ...
-                var doclen = buffer.int;
-                var doctype = buffer.int; // 0xB1, 0xE2, 0xFF, 0xFF for json
+            var processed = 15;
+            while (processed < payloadLength-2) {
+                val doclen = buffer.int
+                val doctype = buffer.int; // 0xB1, 0xE2, 0xFF, 0xFF for json
                 if(doctype == -7503) {
                     parseJsonPayload(data.sliceArray(buffer.position() until buffer.position() + doclen))
                 }else {
-                    throw NotImplementedError("sh1=${sh1.toHexString()}, doctype ${doctype.toHexString()} is not implemented");
+                    throw NotImplementedError("doctype ${doctype.toHexString()} (${doclen}b) is not implemented")
                 }
                 processed += doclen + 8;
                 buffer.position(buffer.position() + doclen)
             }
             buffer.get() // 0x32 finish
+            buffer.get() // 0x90 finish
         }
-        else if(peek4.sliceArray(0..1).contentEquals(bytes(0xFF, 0xD8))) // JPEG
+        else if(payloadType == -520103681) // 0xFF, 0xD8, 0xFF, 0xE0 // JPEG SOI marker + JFIF APP0
         {
-            val transferId = payloadType
             val jpeg = data.sliceArray(buffer.position() until data.size)
 
             // Check if we already have a control message waiting for this JPEG
@@ -773,7 +799,7 @@ public class GameProtocolClient(
                 Log.d(TAG, "^ stored JPEG for transferId=$transferId (${jpeg.size} bytes)")
             }
         }else{
-            throw NotImplementedError("flags ${flags.toHexString()}, payloadType ${payloadType.toHexString()} not implemented");
+            throw NotImplementedError("payloadType ${payloadType.toHexString()} not implemented");
         }
     }
 
@@ -853,6 +879,8 @@ public class GameProtocolClient(
                     json.decodeFromString<ClientHoldingScreenCommandMessage>(jsonStr)
                 typeString == "PlayerJoinedMessage" ->
                     json.decodeFromString<PlayerJoinedMessage>(jsonStr)
+                typeString == "PlayerLeftMessage" ->
+                    json.decodeFromString<PlayerLeftMessage>(jsonStr)
                 typeString == "PlayerNameQuizStateMessage" ->
                     json.decodeFromString<PlayerNameQuizStateMessage>(jsonStr)
                 typeString.contains("ServerColourMessage") ->
