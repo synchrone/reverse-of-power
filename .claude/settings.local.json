@@ -18,7 +18,11 @@
       "Bash(node generate-integration-tests.js:*)",
       "Bash(git checkout:*)",
       "Bash(xxd:*)",
-      "Bash(base64:*)"
+      "Bash(base64:*)",
+      "Bash(tshark:*)",
+      "Bash(python3:*)",
+      "Bash(echo \"=== SUCCESSFUL: C->S packet doubling check ===\" tshark -r docs/successful-game-start-messages.pcapng -T fields -e frame.number -e frame.time_relative -e ip.src -e ip.dst -e data.data)",
+      "Bash(/tmp/claude-1000/-home-syn-code-reverse-of-power/be60f532-b5cc-468b-9241-3cba1c39889b/scratchpad/extract_pcap.py:*)"
     ]
   }
 }
