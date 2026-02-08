@@ -170,7 +170,6 @@ class GameProtocolClient(
     // ==================== Game Control ====================
 
     fun sendStartGameButtonPressed() {
-        sendAllResourcesReceived()
         val msg = StartGameButtonPressedResponseMessage()
         sendMessage(msg)
     }
@@ -182,7 +181,7 @@ class GameProtocolClient(
 
     // ==================== Image Transfer ====================
 
-    fun sendImage(imageData: ByteArray, imageGuid: String, transferId: Int, imgType: Int = 2) {
+    fun sendImage(imageData: ByteArray, imageGuid: String, transferId: Int, imgType: Int = 2) = synchronized(sendLock) {
         // Send image transfer message first
         val msg = ClientImageResourceContentTransferMessage(
             TransferID = transferId,
@@ -190,7 +189,6 @@ class GameProtocolClient(
             ImgType = imgType // 2 = player photo
         )
         sendMessage(msg)
-
 
         val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
         payloadBuffer.put(bytes(0x33, 0x29))  // magic
@@ -221,20 +219,14 @@ class GameProtocolClient(
     // ==================== Core Messaging ====================
 
     /**
-     * Send a protocol packet. Header layout:
-     * - bytes 0-1: magic (0xAE, 0x7F)
-     * - byte 2: messageId
+     * Send a protocol packet. Always 22-byte header + payload.
+     * - bytes 0-1: magic (0xAE, 0x7F) big-endian
+     * - byte 2: messageId (auto-incremented if not provided)
      * - bytes 3-6: total packets (big-endian)
      * - bytes 7-10: packet index (big-endian)
-     *
-     * Standard (byteOffset == null): 16-byte header
-     * - bytes 11-14: payload length (big-endian)
-     * - byte 15: flags
-     *
-     * Chunked (byteOffset != null): 22-byte header
      * - bytes 11-13: static 0x00, 0x00, 0x00
-     * - bytes 14-17: chunk length (little-endian)
-     * - bytes 18-21: byte offset (little-endian)
+     * - bytes 14-17: payload length (little-endian)
+     * - bytes 18-21: byte offset (little-endian, 0 for single-packet messages)
      */
     private fun send(payload: ByteArray, packetNum: Int = 1, packetIdx: Int = 0, messageId: Byte? = null, byteOffset: Int = 0) = synchronized(sendLock){
         val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.BIG_ENDIAN)
@@ -383,6 +375,8 @@ class GameProtocolClient(
                     val payload = data.sliceArray(3 until data.size)
                     if (payload.any { it != 0.toByte() }) {
                         Log.e(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] NACK 0x${data[2].toHexString()}: ${payload.toHex()}")
+                    }else{
+                        Log.e(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] ACK 0x${data[2].toHexString()}")
                     }
                 }
             }

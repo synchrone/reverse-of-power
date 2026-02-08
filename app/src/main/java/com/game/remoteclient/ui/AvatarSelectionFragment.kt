@@ -275,9 +275,7 @@ class AvatarSelectionFragment : Fragment() {
 
         val transferId = 2
         val imageGuid = UUID.randomUUID().toString()
-        networkManager.sendImage(imageData, imageGuid, transferId)
-        networkManager.sendPlayerProfile(args.playerName)
-        networkManager.sendImage(imageData, imageGuid, transferId+1)
+        networkManager.sendImageProfileImage(imageData, imageGuid, transferId, args.playerName)
 
         // Navigate to waiting room
         val action = AvatarSelectionFragmentDirections.actionAvatarSelectionToWaitingRoom()
