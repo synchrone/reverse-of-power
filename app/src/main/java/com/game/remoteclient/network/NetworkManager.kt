@@ -201,6 +201,16 @@ class NetworkManager private constructor() {
         }
     }
 
+    fun sendImageProfileImage(imageData: ByteArray, imageGuid: String, transferId: Int, playerName: String, culture: String = "en-US") {
+        val avatarId = selectedAvatarId ?: return
+        Log.d(TAG, "Sending image+profile+image: $playerName with avatar $avatarId")
+        scope.launch {
+            protocolClient?.sendImage(imageData, imageGuid, transferId)
+            protocolClient?.sendPlayerProfile(name = playerName, avatarId = avatarId, culture = culture)
+            protocolClient?.sendImage(imageData, imageGuid, transferId + 1)
+        }
+    }
+
     fun disconnect() {
         protocolClient?.close()
         protocolClient = null
