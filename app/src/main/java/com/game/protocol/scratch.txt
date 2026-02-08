@@ -1,5 +1,17 @@
 {"TypeString":"ClientGameIDMessage","GameID":"2dd946595-dace-4283-9d55-22ff62b01fad"}
 
+> {"TypeString":"DeviceInfoMessage","Response":10,"DeviceSize":2,"DeviceOS":1,"DeviceModel":"Genymobile Pixel 9","DeviceType":"Handheld","DeviceUID":"b2f3f8eb0cf4ef4b2359871d35495225","DeviceOperatingSystem":"Android OS 11 / API-30 (RQ1A.210105.003/857)"}
+
+> {"TypeString":"KnowledgeIsPower.ClientRequestAvatarMessage","RequestID":"b67c9407-a4d9-463c-b63b-f96a1246e71f","AvatarID":"MAGICIAN","Request":true}
+> {"TypeString":"ClientImageResourceContentTransferMessage","TransferID":2,"ImageGUID":"7551b16c-ac64-49db-86cd-ea2f3c446a04","ImgType":2}
+> {"TypeString":"ClientPlayerProfileMessage","playerName":"player","uppercasePlayerName":"PLAYER","deviceCultureName":"en-US","playerCardId":"MAGICIAN"}
+> {"TypeString":"ClientImageResourceContentTransferMessage","TransferID":3,"ImageGUID":"7551b16c-ac64-49db-86cd-ea2f3c446a04","ImgType":2}
+
+< {"TypeString":"ImageResourceContentTransferMessage","TransferID":90,"ImageGUID":"cfe52c9b-47e0-404f-877c-1c3f687f61df","Acknowledge":true}
+< "img transfer id = 90"
+> {"TypeString":"AllResourcesReceivedMessage","Requirements":[]}
+
+
 {"TypeString":"ClientHoldingScreenCommandMessage","action":5,"time":0.0,"HoldingScreenText":"","HoldingScreenType":4,"OtherPlayerIndex":-1,"ShowPortraitPhotoControls":false}
 
 {"TypeString":"PlayerJoinedMessage","CurrentPlayerID":6,"OldPlayerID":6,"SlotID":1}
