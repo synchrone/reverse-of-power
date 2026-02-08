@@ -1,0 +1,22 @@
+0xAE, 0x7F
+message id (1b)
+total packets (int, big endian, 1-based)
+packet idx (int, big endian, zero-based)
+0x00,0x00,0x00
+packet length (int, little endian)
+packet offset (in case of multi-packet, int, little endian)
+body:
+    0x33, 0x29
+    transfer id (int, little endian) OR data type if simple JSON body
+    body length, not counting the first 6 bytes, (int, little endian)
+    payload (JPEG directly or JSON, or multijson)
+
+
+multijson is:
+    0x84, 0x12, 0x40, 0xEE (type = multijson)
+    repeatedly:
+        length (int, little-endian)
+        0xB1, 0xE2, 0xFF, 0xFF (JSON)
+            JSON directly
+    0x32, 0x90 (static footer, 2b)
+

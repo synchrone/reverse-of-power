@@ -2,7 +2,6 @@
 
 package com.game.protocol
 
-import android.os.Build
 import android.util.Log
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.withTimeoutOrNull
@@ -13,311 +12,10 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.*
 
-// ==================== Message Models ====================
-
-@Serializable
-abstract class GameMessage {
-    abstract val TypeString: String
-}
-
-@Serializable
-data class InterfaceVersionMessage(
-    override val TypeString: String = "InterfaceVersionMessage",
-    val InterfaceVersion: String
-) : GameMessage()
-
-@Serializable
-data class SessionStateMessage(
-    override val TypeString: String = "SessionStateMessage",
-    val SessionID: Long
-) : GameMessage()
-
-@Serializable
-data class ClientRequestPlayerIDMessage(
-    override val TypeString: String = "ClientRequestPlayerIDMessage",
-    val UID: String
-) : GameMessage()
-
-@Serializable
-data class AssignPlayerIDAndSlotMessage(
-    override val TypeString: String = "AssignPlayerIDAndSlotMessage",
-    val PlayerID: Int,
-    val SlotID: Int,
-    val UDPPortOffset: Int,
-    val DisplayName: String,
-    val PSNID: String
-) : GameMessage()
-
-@Serializable
-data class ResourceRequirement(
-    val GUID: String,
-    val Rqrmnt: Int
-)
-
-@Serializable
-data class ResourceRequirementsMessage(
-    override val TypeString: String = "ResourceRequirementsMessage",
-    val Requirements: List<ResourceRequirement>
-) : GameMessage()
-
-@Serializable
-data class AllResourcesReceivedMessage(
-    override val TypeString: String = "AllResourcesReceivedMessage",
-    val Requirements: List<ResourceRequirement>
-) : GameMessage()
-
-@Serializable
-data class ClientQuizCommandMessage(
-    override val TypeString: String = "ClientQuizCommandMessage",
-    val action: Int, // 14 = show ready button; 31 = go back to name selection screen; 29, 30, 15 = something around game being exited
-    val time: Double
-) : GameMessage()
-
-@Serializable // 1
-data class ClientRequestAvatarStatusMessage(
-    override val TypeString: String = "KnowledgeIsPower.ClientRequestAvatarStatusMessage"
-) : GameMessage()
-
-@Serializable // 2
-data class ServerAvatarStatusMessage(
-    override val TypeString: String = "KnowledgeIsPower.ServerAvatarStatusMessage",
-    val AvatarID: String,
-    val Available: Boolean
-) : GameMessage()
-
-@Serializable // 3
-data class ClientRequestAvatarMessage(
-    override val TypeString: String = "KnowledgeIsPower.ClientRequestAvatarMessage",
-    val RequestID: String,
-    val AvatarID: String,
-    val Request: Boolean
-) : GameMessage()
-
-@Serializable // 4
-data class ServerAvatarRequestResponseMessage(
-    override val TypeString: String = "KnowledgeIsPower.ServerAvatarRequestResponseMessage",
-    val RequestID: String,
-    val AvatarID: String,
-    val Available: Boolean
-) : GameMessage()
-
-
-@Serializable
-data class ClientPlayerProfileMessage(
-    override val TypeString: String = "ClientPlayerProfileMessage",
-    val playerName: String,
-    val uppercasePlayerName: String,
-    val deviceCultureName: String,
-    val playerCardId: String
-) : GameMessage()
-
-@Serializable
-data class DeviceInfoMessage(
-    override val TypeString: String = "DeviceInfoMessage",
-    val Response: Int,
-    val DeviceSize: Int,
-    val DeviceOS: Int,
-    val DeviceModel: String,
-    val DeviceType: String,
-    val DeviceUID: String,
-    val DeviceOperatingSystem: String
-) : GameMessage()
-
-@Serializable
-data class ClientImageResourceContentTransferMessage(
-    override val TypeString: String = "ClientImageResourceContentTransferMessage",
-    val TransferID: Int,
-    val ImageGUID: String,
-    val ImgType: Int
-) : GameMessage()
-
-@Serializable
-data class ImageResourceContentTransferMessage(
-    override val TypeString: String = "ImageResourceContentTransferMessage",
-    val TransferID: Int,
-    val ImageGUID: String,
-    val Acknowledge: Boolean,
-    @Transient
-    var image: ByteArray? = null
-) : GameMessage()
-
-@Serializable
-data class ClientGameIDMessage(
-    override val TypeString: String = "ClientGameIDMessage",
-    val GameID: String
-) : GameMessage()
-
-@Serializable
-data class ClientHoldingScreenCommandMessage(
-    override val TypeString: String = "ClientHoldingScreenCommandMessage",
-    val action: Int, // 5 = look at the TV;
-    val time: Double,
-    val HoldingScreenText: String,
-    val HoldingScreenType: Int, // 4 = look at the tv;  9 = get ready
-    val OtherPlayerIndex: Int,
-    val ShowPortraitPhotoControls: Boolean
-) : GameMessage()
-
-@Serializable
-data class PlayerJoinedMessage(
-    override val TypeString: String = "PlayerJoinedMessage",
-    val CurrentPlayerID: Int,
-    val OldPlayerID: Int,
-    val SlotID: Int
-) : GameMessage()
-
-@Serializable
-data class PlayerLeftMessage(
-    override val TypeString: String = "PlayerLeftMessage",
-    val PlayerID: Int
-) : GameMessage()
-
-@Serializable
-data class PlayerNameQuizStateMessage(
-    override val TypeString: String = "PlayerNameQuizStateMessage",
-    val PlayerName: String,
-    val PlayerID: Int
-) : GameMessage()
-
-@Serializable
-data class ColorTint(
-    val r: Float,
-    val g: Float,
-    val b: Float,
-    val a: Float
-)
-
-@Serializable
-data class ServerColourMessage(
-    override val TypeString: String = "KnowledgeIsPower.ServerColourMessage",
-    val BackgroundTint: ColorTint,
-    val PrimaryTint: ColorTint,
-    val SecondaryTint: ColorTint,
-    val Rainbow: Boolean,
-    val RoundType: Int = -1
-) : GameMessage()
-
-@Serializable
-data class StartGameButtonPressedResponseMessage(
-    override val TypeString: String = "StartGameButtonPressedResponseMessage",
-    val Response: Int = 9
-) : GameMessage()
-
-@Serializable
-data class CategoryChoice(
-    val DisplayText: String,
-    val Colour: ColorTint,
-    val DoorIndex: Int,
-    val ChoiceType: Int
-)
-
-@Serializable
-data class ServerCategorySelectChoices(
-    override val TypeString: String = "KnowledgeIsPower.ServerCategorySelectChoices",
-    val CategoryChoices: List<CategoryChoice>,
-    val BackgroundTint: ColorTint,
-    val PrimaryTint: ColorTint,
-    val SecondaryTint: ColorTint
-) : GameMessage()
-
-@Serializable
-data class ServerRequestCategorySelectChoice(
-    override val TypeString: String = "KnowledgeIsPower.ServerRequestCategorySelectChoice"
-) : GameMessage()
-
-@Serializable
-data class ClientCategorySelectChoice(
-    override val TypeString: String = "KnowledgeIsPower.ClientCategorySelectChoice",
-    val ChosenCategoryIndex: Int
-) : GameMessage()
-
-@Serializable
-data class ServerBeginCategorySelectOverride(
-    override val TypeString: String = "KnowledgeIsPower.ServerBeginCategorySelectOverride",
-    val DurationSeconds: Double,
-    val InitialCategorySelectChoice: String,
-    val DoorIndex: Int
-) : GameMessage()
-
-@Serializable
-data class ClientCategorySelectOverride(
-    override val TypeString: String = "KnowledgeIsPower.ClientCategorySelectOverride",
-    val DurationSeconds: Double
-) : GameMessage()
-
-@Serializable
-data class ServerStopCategorySelectOverride(
-    override val TypeString: String = "KnowledgeIsPower.ServerStopCategorySelectOverride"
-) : GameMessage()
-
-@Serializable
-data class ClientStopCategorySelectOverrideResponse(
-    override val TypeString: String = "KnowledgeIsPower.ClientStopCategorySelectOverrideResponse",
-    val OverrideSent: Boolean
-) : GameMessage()
-
-@Serializable
-data class ServerCategorySelectOverrideSuccess(
-    override val TypeString: String = "KnowledgeIsPower.ServerCategorySelectOverrideSuccess",
-    val CategorySelectOverrideSuccess: Boolean,
-    val CategorySelectOverridePlayerName: String
-) : GameMessage()
-
-@Serializable
-data class TriviaAnswer(
-    val DisplayIndex: Int,
-    val DisplayText: String,
-    val IsCorrect: Boolean
-)
-
-@Serializable
-data class PowerPlayPlayer(
-    val SlotIndex: Int,
-    val Name: String,
-    val ImageGUID: String,
-    val Colour: ColorTint,
-    val Self: Boolean,
-    val Away: Boolean
-)
-
-@Serializable
-data class ServerBeginTriviaAnsweringPhase(
-    override val TypeString: String = "KnowledgeIsPower.ServerBeginTriviaAnsweringPhase",
-    val QuestionID: String,
-    val QuestionText: String,
-    val QuestionDuration: Double,
-    val Answers: List<TriviaAnswer>,
-    val PowerPlays: List<String>,
-    val PowerPlayPlayers: List<PowerPlayPlayer>,
-    val RoundType: Int,
-    val BackgroundTint: ColorTint,
-    val PrimaryTint: ColorTint,
-    val SecondaryTint: ColorTint
-) : GameMessage()
-
-// ==================== Protocol Packet Classes ====================
-
-data class ProtocolPacket(
-    val header: Byte,
-    val secondaryHeader: Byte,
-    val messageId: Short,
-    val packetNumber: Short,
-    val totalPackets: Short,
-    val dataLength: Long,
-    val payload: ByteArray
-)
-
-data class AckPacket(
-    val header: Byte = 0x8a.toByte(),
-    val secondaryHeader: Byte = 0x33.toByte(),
-    val messageId: Byte,
-    val padding: ByteArray = ByteArray(34)
-)
-
 // ==================== Protocol Client ====================
-public fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
+fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
 
-public class GameProtocolClient(
+class GameProtocolClient(
     private val deviceUID: String,
     private val serverHostStr: String,
     private val serverPort: Int = 9066,
@@ -334,7 +32,7 @@ public class GameProtocolClient(
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
-    public var messageCounter: Byte = 0
+    var messageCounter: Byte = 0
     private var lastRcvMessageId: Byte? = null
     private val fragmentBuffer = mutableMapOf<Byte, MutableMap<Int, ByteArray>>()
     private var connectionDeferred: CompletableDeferred<Unit>? = null
@@ -403,7 +101,7 @@ public class GameProtocolClient(
         sendRawUDP(data)
     }
 
-    public fun sendDeviceUID(uid: String, theByte: Byte = 0x63) = synchronized(sendLock){
+    fun sendDeviceUID(uid: String, theByte: Byte = 0x63) = synchronized(sendLock){
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
         val data = ByteBuffer.allocate(12+uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
         data.put(bytes(0xc, 0x89, 0xe8, 0x84))
@@ -447,7 +145,7 @@ public class GameProtocolClient(
     }
 
     fun requestAvatar(avatarId: String): String {
-        val requestId = UUID.randomUUID().toString()
+        val requestId = UUID.randomUUID().toString() // e.g "35858af1-bc80-4870-9f4e-189d4a0f38f8"
         val msg = ClientRequestAvatarMessage(
             RequestID = requestId,
             AvatarID = avatarId,
@@ -472,6 +170,7 @@ public class GameProtocolClient(
     // ==================== Game Control ====================
 
     fun sendStartGameButtonPressed() {
+        sendAllResourcesReceived()
         val msg = StartGameButtonPressedResponseMessage()
         sendMessage(msg)
     }
@@ -516,7 +215,6 @@ public class GameProtocolClient(
 
             send(fragment, totalFragments, i, messageId = messageId, byteOffset = byteOffset)
             byteOffset += fragment.size
-            Thread.sleep(30)
         }
     }
 
@@ -572,14 +270,14 @@ public class GameProtocolClient(
         send(buffer.array())
     }
 
-    private fun sendMessageMulti(vararg msgs: GameMessage) {
+    private fun sendMessageMulti(vararg msgs: GameMessage, transferId: Int) {
         val jsonBytesList = msgs.map { encodeJson(it) }
         val entriesSize = jsonBytesList.sumOf { 8 + it.size } // len 4b + type 4b each
         val bodyLength = entriesSize + 6 // multijson type 4b + footer 2b
 
         val buffer = ByteBuffer.allocate(10 + bodyLength).order(ByteOrder.LITTLE_ENDIAN)
         buffer.put(bytes(0x33, 0x29)) // magic
-        buffer.putInt(nextTransferId++)
+        buffer.putInt(transferId)
         buffer.putInt(bodyLength)
         buffer.put(bytes(0x84, 0x12, 0x40, 0xEE)) // multijson type
 
@@ -594,7 +292,7 @@ public class GameProtocolClient(
     }
 
     private fun sendAck(messageId: Byte) = synchronized(sendLock) {
-        Log.d(TAG, "> ACK 0x${messageId.toHexString()}")
+        Log.d(TAG, "> ACK [t${Thread.currentThread().id} ${System.currentTimeMillis()}] 0x${messageId.toHexString()}")
         val ack = AckPacket(messageId = messageId)
         val buffer = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
         buffer.put(ack.header)
@@ -606,9 +304,9 @@ public class GameProtocolClient(
 
     private fun sendRawUDP(data: ByteArray) {
         if(!(data[0]== 0x8a.toByte() && data[1] == 0x33.toByte())) {
-            Log.d(TAG, "> ${data.size}b: ${data.slice(0 until 22).toByteArray().toHex()} ...")
+            Log.d(TAG, "> [t${Thread.currentThread().id} ${System.currentTimeMillis()}] ${data.size}b: ${data.slice(0 until 22).toByteArray().toHex()} ...")
 //            data.asIterable().chunked(800).forEachIndexed { i, chunk ->
-//                Log.d(TAG, "> ${data.size}b [$i]: ${chunk.toByteArray().toHex()}")
+//                Log.d(TAG, "> [t${Thread.currentThread().id} ${System.currentTimeMillis()}] ${data.size}b [$i]: ${chunk.toByteArray().toHex()}")
 //            }
         }
         onPacketSend?.invoke(data)
@@ -649,10 +347,11 @@ public class GameProtocolClient(
         }.start()
     }
 
-    public fun handleReceivedPacket(data: ByteArray) {
+    fun handleReceivedPacket(data: ByteArray) {
         if (data.size < 8) return
 
-        // 4edd96663b274f00 means "available"
+        // 4edd96663b274f[00] means "available"
+        // when 4edd96663b274f[63] is active - packetNum has first byte = 1 ?
         // Check for "game in progress" magic packet: e558fc895c8df001
         if (data.sliceArray(0..7).contentEquals(
                 bytes(0xe5, 0x58, 0xfc, 0x89, 0x5c, 0x8d, 0xf0, 0x01)
@@ -683,7 +382,7 @@ public class GameProtocolClient(
                 }else {
                     val payload = data.sliceArray(3 until data.size)
                     if (payload.any { it != 0.toByte() }) {
-                        Log.e(TAG, "< NACK 0x${data[2].toHexString()}: ${payload.toHexString()}")
+                        Log.e(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] NACK 0x${data[2].toHexString()}: ${payload.toHex()}")
                     }
                 }
             }
@@ -696,11 +395,12 @@ public class GameProtocolClient(
 
     private fun handleDataPacket(data: ByteArray) {
         val buffer = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN)
-        // read first header, 16 bytes
         buffer.get() // 0xae
         buffer.get() // 0x7f
         val messageId = buffer.get()
-        val packetNum = buffer.int // packets for this message ID
+        val unk1 = buffer.get() // sometimes 1 but mostly 0
+        val unk2 = buffer.get()
+        val packetNum = buffer.short.toInt() // packets for this message ID (sometimes first byte is 1 -- broken state?)
         val packetIdx = buffer.int // packet idx
         buffer.get()
         buffer.get() // 3x zero
@@ -760,7 +460,7 @@ public class GameProtocolClient(
             transferId = payloadType
             payloadType = buffer.int
         }
-        Log.d(TAG, "< RCV 0x${messageId.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
+        Log.d(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] 0x${messageId.toHexString()}, type=${payloadType.toHexString()}, len=${payloadLength}")
         if(payloadType == -7503){ // 0xB1, 0xE2, 0xFF, 0xFF // JSON
             return parseJsonPayload(data.sliceArray(buffer.position() until data.size));
         }
@@ -828,7 +528,7 @@ public class GameProtocolClient(
             }
 
             is ServerAvatarStatusMessage -> {
-                Log.d(TAG, "Avatar ${message.AvatarID}: Available=${message.Available}")
+//                Log.d(TAG, "Avatar ${message.AvatarID}: Available=${message.Available}")
                 val existingIndex = availableAvatars.indexOfFirst { it.AvatarID == message.AvatarID }
                 if (existingIndex >= 0) {
                     availableAvatars[existingIndex] = message
@@ -838,12 +538,11 @@ public class GameProtocolClient(
             }
 
             is ServerAvatarRequestResponseMessage -> {
-                Log.d(TAG, "Avatar ${message.AvatarID} request response - Available: ${message.Available}")
+//                Log.d(TAG, "Avatar ${message.AvatarID} request response - Available: ${message.Available}")
             }
 
             is ResourceRequirementsMessage -> {
-                Log.d(TAG, "Resources required: ${message.Requirements}")
-                // report we have them all, since they're not implemented yet
+//                Log.d(TAG, "Resources required: ${message.Requirements}")
                 // they're typically used as faint background on frozen buttons, maybe other PowerPlay woes
                 sendAllResourcesReceived(message.Requirements)
             }

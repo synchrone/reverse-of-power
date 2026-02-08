@@ -28,7 +28,7 @@ class NetworkManager private constructor() {
 
     private var protocolClient: GameProtocolClient? = null
     private var currentServer: GameServer? = null
-    private var deviceUID: String = UUID.randomUUID().toString().replace("-", "")
+    private var deviceUID: String = UUID.randomUUID().toString().replace("-", "") // e.g: "b2f3f8eb0cf4ef4b2359871d35495225"
     private var selectedAvatarId: String? = null
 
     private val _gameState = MutableStateFlow(GameState.DISCONNECTED)

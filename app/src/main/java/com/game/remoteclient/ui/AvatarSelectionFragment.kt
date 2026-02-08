@@ -273,11 +273,11 @@ class AvatarSelectionFragment : Fragment() {
 
         // dunno why is it being sent twice by official client, but something to try i guess. Maybe it should just be also before profile data, not only after?
 
-        val transferId = (Math.random() * 200).toInt()
-        val imageGuid = "7551b16c-ac64-49db-86cd-ea2f3c446a04"
+        val transferId = 2
+        val imageGuid = UUID.randomUUID().toString()
         networkManager.sendImage(imageData, imageGuid, transferId)
         networkManager.sendPlayerProfile(args.playerName)
-        networkManager.sendImage(imageData, imageGuid, transferId)
+        networkManager.sendImage(imageData, imageGuid, transferId+1)
 
         // Navigate to waiting room
         val action = AvatarSelectionFragmentDirections.actionAvatarSelectionToWaitingRoom()
