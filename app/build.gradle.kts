@@ -41,6 +41,9 @@ configure<ApplicationExtension> {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.all {
+            it.systemProperty("pcap.file", System.getProperty("pcap.file") ?: "")
+        }
     }
 }
 
