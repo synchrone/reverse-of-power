@@ -2,16 +2,18 @@ package com.game.remoteclient.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.game.protocol.CategoryChoice
-import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ColorTint
 import com.game.protocol.ServerCategorySelectChoices
 import com.game.remoteclient.GameRemoteClientApplication
+import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentCategorySelectionBinding
+import androidx.navigation.fragment.findNavController
 
 class CategorySelectionFragment : Fragment() {
 
@@ -26,6 +28,11 @@ class CategorySelectionFragment : Fragment() {
     // Default colors
     private var backgroundColor = Color.parseColor("#C4B8A8")
     private var backgroundSecondary = Color.parseColor("#D4C8B8")
+
+    private var categoryCb: ((ServerCategorySelectChoices) -> Unit)? = null
+    private var categorySelectCb: (() -> Unit)? = null
+    private var holdingScreenCb: ((com.game.protocol.ClientHoldingScreenCommandMessage) -> Unit)? = null
+    private var triviaCb: ((com.game.protocol.ServerBeginTriviaAnsweringPhase) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,13 +64,12 @@ class CategorySelectionFragment : Fragment() {
     }
 
     private fun setupDoorClickListeners() {
-        val doors = listOf(binding.door0, binding.door1, binding.door2, binding.door3)
-        doors.forEachIndexed { index, doorView ->
-            doorView.setOnClickListener {
+        val columns = listOf(binding.doorColumn0, binding.doorColumn1, binding.doorColumn2, binding.doorColumn3)
+        columns.forEachIndexed { index, column ->
+            column.setOnClickListener {
+                Log.d("CategorySelection", "Door $index tapped, selectionEnabled=$selectionEnabled, choices=${categoryChoices.size}")
                 if (selectionEnabled && index < categoryChoices.size) {
-                    val choice = categoryChoices[index]
-                    // Send the ChosenCategoryIndex from the CategoryChoice
-                    networkManager.sendCategorySelection(choice.DoorIndex)
+                    networkManager.sendCategorySelection(index)
                     selectionEnabled = false
                     highlightSelectedDoor(index)
                 }
@@ -72,27 +78,31 @@ class CategorySelectionFragment : Fragment() {
     }
 
     private fun observeMessages() {
-        networkManager.onCategoryChoicesMessage = { message ->
-            activity?.runOnUiThread {
-                updateCategoryChoices(message)
-            }
+        categoryCb = { message ->
+            activity?.runOnUiThread { updateCategoryChoices(message) }
+        }
+        categorySelectCb = {
+            activity?.runOnUiThread { enableSelection() }
+        }
+        holdingScreenCb = { _ ->
+            activity?.runOnUiThread { navigateToHoldingScreen() }
+        }
+        triviaCb = { _ ->
+            activity?.runOnUiThread { navigateToTriviaAnswering() }
         }
 
-        networkManager.onCategorySelectRequest = {
-            activity?.runOnUiThread {
-                enableSelection()
-            }
-        }
-
-        networkManager.onHoldingScreenMessage = { message ->
-            activity?.runOnUiThread {
-                handleHoldingScreenMessage(message)
-            }
-        }
+        networkManager.onCategoryChoicesMessage = categoryCb
+        networkManager.onCategorySelectRequest = categorySelectCb
+        networkManager.onHoldingScreenMessage = holdingScreenCb
+        networkManager.onTriviaMessage = triviaCb
     }
 
-    private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
-        binding.titleText.text = message.HoldingScreenText.replace("\\n", "\n")
+    private fun navigateToHoldingScreen() {
+        findNavController().popBackStack(R.id.holdingScreenFragment, false)
+    }
+
+    private fun navigateToTriviaAnswering() {
+        findNavController().navigate(R.id.action_categorySelection_to_triviaAnswering)
     }
 
     private fun updateCategoryChoices(message: ServerCategorySelectChoices) {
@@ -102,41 +112,38 @@ class CategorySelectionFragment : Fragment() {
 
         applyBackgroundColors()
 
+        val columns = listOf(binding.doorColumn0, binding.doorColumn1, binding.doorColumn2, binding.doorColumn3)
         val doors = listOf(binding.door0, binding.door1, binding.door2, binding.door3)
         val labels = listOf(binding.label0, binding.label1, binding.label2, binding.label3)
 
-        doors.forEachIndexed { index, doorView ->
+        // Enable selection immediately — the ServerRequestCategorySelectChoice
+        // message may arrive before or after, but we should be ready to tap
+        selectionEnabled = true
+
+        columns.forEachIndexed { index, column ->
             if (index < categoryChoices.size) {
                 val choice = categoryChoices[index]
-                doorView.visibility = View.VISIBLE
-                doorView.doorIndex = index
-                doorView.setDoorColor(colorTintToInt(choice.Colour))
-                doorView.alpha = 0.7f // Dim until selection is enabled
-
-                labels[index].visibility = View.VISIBLE
-                labels[index].text = choice.DisplayText
+                column.visibility = View.VISIBLE
+                column.alpha = 1.0f
+                doors[index].doorIndex = index
+                doors[index].setDoorColor(colorTintToInt(choice.Colour))
+                labels[index].text = "${choice.DisplayText}($index)"
             } else {
-                doorView.visibility = View.INVISIBLE
-                labels[index].visibility = View.INVISIBLE
+                column.visibility = View.INVISIBLE
             }
         }
     }
 
     private fun enableSelection() {
         selectionEnabled = true
-        val doors = listOf(binding.door0, binding.door1, binding.door2, binding.door3)
-        doors.forEach { it.alpha = 1.0f }
+        val columns = listOf(binding.doorColumn0, binding.doorColumn1, binding.doorColumn2, binding.doorColumn3)
+        columns.forEach { it.alpha = 1.0f }
     }
 
     private fun highlightSelectedDoor(selectedIndex: Int) {
-        val doors = listOf(binding.door0, binding.door1, binding.door2, binding.door3)
-        val labels = listOf(binding.label0, binding.label1, binding.label2, binding.label3)
-
-        doors.forEachIndexed { index, doorView ->
-            doorView.alpha = if (index == selectedIndex) 1.0f else 0.3f
-        }
-        labels.forEachIndexed { index, label ->
-            label.alpha = if (index == selectedIndex) 1.0f else 0.3f
+        val columns = listOf(binding.doorColumn0, binding.doorColumn1, binding.doorColumn2, binding.doorColumn3)
+        columns.forEachIndexed { index, column ->
+            column.alpha = if (index == selectedIndex) 1.0f else 0.3f
         }
     }
 
@@ -155,9 +162,10 @@ class CategorySelectionFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        networkManager.onCategoryChoicesMessage = null
-        networkManager.onCategorySelectRequest = null
-        networkManager.onHoldingScreenMessage = null
+        if (networkManager.onCategoryChoicesMessage === categoryCb) networkManager.onCategoryChoicesMessage = null
+        if (networkManager.onCategorySelectRequest === categorySelectCb) networkManager.onCategorySelectRequest = null
+        if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
+        if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
         _binding = null
     }
 }

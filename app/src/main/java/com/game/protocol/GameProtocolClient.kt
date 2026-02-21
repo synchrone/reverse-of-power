@@ -24,12 +24,11 @@ class GameProtocolClient(
 
     private val encoder = ProtocolEncoder()
     private val decoder = ProtocolDecoder()
-    private var lastRcvMessageId: Byte? = null
+    private var lastRcvMessageId: Int? = null
     private var connectionDeferred: CompletableDeferred<Unit>? = null
     var connectionError: String? = null
 
-    var onMessageReceived: ((GameMessage) -> Unit)? = null
-    var onAvatarListReceived: ((List<ServerAvatarStatusMessage>) -> Unit)? = null
+    var onMessageReceived: ((GameMessage) -> Boolean)? = null
     var onImageReceived: ((imageGuid: String, imageData: ByteArray) -> Unit)? = null
     var onPacketSend: ((ByteArray) -> Unit)? = null
     var testMode: Boolean = false
@@ -39,8 +38,6 @@ class GameProtocolClient(
         private set
     var assignedSlotId: Int? = null
         private set
-    val availableAvatars = mutableListOf<ServerAvatarStatusMessage>()
-
     // Temporary storage for incoming JPEG payloads, keyed by TransferID
     private val pendingImages = mutableMapOf<Int, ByteArray>()
     // Pending control messages when they arrive before the JPEG
@@ -88,73 +85,6 @@ class GameProtocolClient(
         sendRawUDP(encoder.encodeDeviceUID(uid, theByte))
     }
 
-    // ==================== Session Management ====================
-
-    fun requestPlayerID() {
-        val msg = ClientRequestPlayerIDMessage(UID = deviceUID)
-        sendMessage(msg)
-    }
-
-    fun sendAllResourcesReceived(requirements: List<ResourceRequirement> = listOf()) {
-        val msg = AllResourcesReceivedMessage(Requirements = requirements)
-        sendMessage(msg)
-    }
-
-    fun sendDeviceInfo(model: String, os: String) {
-        val msg = DeviceInfoMessage(
-            Response = 10,
-            DeviceSize = 2,
-            DeviceOS = 1,
-            DeviceModel = model,
-            DeviceType = "Handheld",
-            DeviceUID = deviceUID,
-            DeviceOperatingSystem = os
-        )
-        sendMessage(msg)
-    }
-
-    // ==================== Avatar Management ====================
-
-    fun requestAvatarStatus() {
-        val msg = ClientRequestAvatarStatusMessage()
-        sendMessage(msg)
-    }
-
-    fun requestAvatar(avatarId: String): String {
-        val requestId = UUID.randomUUID().toString() // e.g "35858af1-bc80-4870-9f4e-189d4a0f38f8"
-        val msg = ClientRequestAvatarMessage(
-            RequestID = requestId,
-            AvatarID = avatarId,
-            Request = true
-        )
-        sendMessage(msg)
-        return requestId
-    }
-
-    // ==================== Player Profile ====================
-
-    fun sendPlayerProfile(name: String, avatarId: String, culture: String = "en-US") {
-        val msg = ClientPlayerProfileMessage(
-            playerName = name,
-            uppercasePlayerName = name.uppercase(),
-            deviceCultureName = culture,
-            playerCardId = avatarId
-        )
-        sendMessage(msg)
-    }
-
-    // ==================== Game Control ====================
-
-    fun sendStartGameButtonPressed() {
-        val msg = StartGameButtonPressedResponseMessage()
-        sendMessage(msg)
-    }
-
-    fun sendCategorySelection(doorIndex: Int) {
-        val msg = ClientCategorySelectChoice(ChosenCategoryIndex = doorIndex)
-        sendMessage(msg)
-    }
-
     // ==================== Image Transfer ====================
 
     fun sendImage(imageData: ByteArray, imageGuid: String, transferId: Int, imgType: Int = 2) = synchronized(sendLock) {
@@ -165,13 +95,13 @@ class GameProtocolClient(
 
     // ==================== Core Messaging ====================
 
-    private fun sendMessage(msg: GameMessage) {
+    fun sendMessage(msg: GameMessage) {
         Log.i(TAG, "> Sending message: ${msg.TypeString}")
         sendRawUDP(encoder.encodeMessage(msg))
     }
 
-    private fun sendAck(messageId: Byte) = synchronized(sendLock) {
-        Log.d(TAG, "> ACK [t${Thread.currentThread().id} ${System.currentTimeMillis()}] 0x${messageId.toHexString()}")
+    private fun sendAck(messageId: Int) = synchronized(sendLock) {
+        Log.d(TAG, "> ACK $messageId")
         sendRawUDP(encoder.encodeAck(messageId))
     }
 
@@ -231,42 +161,49 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.Ack -> {
-                Log.e(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] ACK 0x${decoded.messageId.toHexString()}")
+                Log.d(TAG, "< ACK ${decoded.messageId}")
             }
 
             is DecodedPacket.Nack -> {
-                Log.e(TAG, "< [t${Thread.currentThread().id} ${System.currentTimeMillis()}] NACK 0x${decoded.messageId.toHexString()}: ${decoded.payload.toHex()}")
+                Log.e(TAG, "< NACK ${decoded.messageId}: ${decoded.payload.toHex()}")
             }
 
             is DecodedPacket.Fragment -> {
-                Log.d(TAG, "< FRAG 0x${decoded.messageId.toHexString()} (${decoded.idx}/${decoded.total}) l=${decoded.size}")
+                Log.d(TAG, "< FRAG ${decoded.messageId} (${decoded.idx+1}/${decoded.total}) l=${decoded.size}")
             }
 
             is DecodedPacket.DataMessage -> {
-                lastRcvMessageId = decoded.messageId
+                Log.d(TAG, "< DataMessage ${decoded.messageId}: ${decoded.messages.size} messages")
+
                 for (message in decoded.messages) {
                     if (message is ImageResourceContentTransferMessage) {
                         handleImageControl(message)
                     } else {
-                        handleProtocolMessage(message)
-                        onMessageReceived?.invoke(message)
+                        val handledByProtocol = handleProtocolMessage(message)
+                        val handledByUI = onMessageReceived?.invoke(message) ?: false
+                        if (!handledByProtocol && !handledByUI) {
+                            Log.w(TAG, "< Unhandled message: ${message.TypeString}")
+                        }
                     }
                 }
+
+                lastRcvMessageId = decoded.messageId
             }
 
             is DecodedPacket.ImageData -> {
-                lastRcvMessageId = decoded.messageId
                 handleImageData(decoded.transferId, decoded.jpeg)
+                lastRcvMessageId = decoded.messageId
             }
 
-            is DecodedPacket.TooShort -> {}
-            is DecodedPacket.Unknown -> {
-                Log.d(TAG, "Unknown packet type: ${data.toHexString()}")
-            }
             is DecodedPacket.Error -> {
                 Log.e(TAG, "Error decoding packet: ${decoded.message}")
             }
-            is DecodedPacket.DeviceUID -> {}
+            is DecodedPacket.Unknown -> {
+                Log.d(TAG, "Unknown packet type: ${data.toHexString()}")
+            }
+            else -> {
+                Log.e(TAG, "Unhandled packet type: $decoded: ${data.toHexString()}")
+            }
         }
     }
 
@@ -296,7 +233,7 @@ class GameProtocolClient(
 
     // ==================== Protocol Responses ====================
 
-    private fun handleProtocolMessage(message: GameMessage) {
+    private fun handleProtocolMessage(message: GameMessage): Boolean {
         when (message) {
             is InterfaceVersionMessage -> {
                 Log.d(TAG, "Server version: ${message.InterfaceVersion}")
@@ -304,7 +241,7 @@ class GameProtocolClient(
 
             is SessionStateMessage -> {
                 Log.d(TAG, "Session ID: ${message.SessionID}")
-                requestPlayerID()
+                sendMessage(ClientRequestPlayerIDMessage(UID = deviceUID))
             }
 
             is AssignPlayerIDAndSlotMessage -> {
@@ -313,28 +250,25 @@ class GameProtocolClient(
                 Log.d(TAG, "Assigned Player ID: ${message.PlayerID}, Slot: ${message.SlotID}")
                 Log.d(TAG, "Display Name: ${message.DisplayName}")
 
-                sendDeviceInfo(
-                    "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
-                    "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT} (${android.os.Build.ID})"
-                )
-                requestAvatarStatus()
+                sendMessage(DeviceInfoMessage(
+                    Response = 10,
+                    DeviceSize = 2,
+                    DeviceOS = 1,
+                    DeviceModel = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}",
+                    DeviceType = "Handheld",
+                    DeviceUID = deviceUID,
+                    DeviceOperatingSystem = "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT} (${android.os.Build.ID})"
+                ))
+                sendMessage(ClientRequestAvatarStatusMessage())
             }
-
-            is ServerAvatarStatusMessage -> {
-                val existingIndex = availableAvatars.indexOfFirst { it.AvatarID == message.AvatarID }
-                if (existingIndex >= 0) {
-                    availableAvatars[existingIndex] = message
-                } else {
-                    availableAvatars.add(message)
-                }
-            }
-
-            is ServerAvatarRequestResponseMessage -> {}
 
             is ResourceRequirementsMessage -> {
-                sendAllResourcesReceived(message.Requirements)
+                sendMessage(AllResourcesReceivedMessage(Requirements = message.Requirements))
             }
+
+            else -> return false
         }
+        return true
     }
 
     fun close() {

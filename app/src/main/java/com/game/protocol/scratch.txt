@@ -35,14 +35,30 @@
 > {"TypeString":"AllResourcesReceivedMessage","Requirements":[]}
 
 
-{"TypeString":"KnowledgeIsPower.ServerCategorySelectChoices","CategoryChoices":[{"DisplayText":"Movies","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":7,"ChoiceType":8},{"DisplayText":"Music","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":1,"ChoiceType":8},{"DisplayText":"Myths & Legends","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":4,"ChoiceType":8},{"DisplayText":"Competitive Sports","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":0,"ChoiceType":8}],"BackgroundTint":{"r":0.75,"g":0.6926470398902893,"b":0.5900735259056091,"a":1.0},"PrimaryTint":{"r":0.7132352590560913,"g":0.5721794366836548,"b":0.319907009601593,"a":1.0},"SecondaryTint":{"r":0.8014705777168274,"g":0.6470289826393127,"b":0.2416197955608368,"a":1.0}}
-{"TypeString":"KnowledgeIsPower.ServerRequestCategorySelectChoice"}
-{"TypeString":"KnowledgeIsPower.ClientCategorySelectChoice","ChosenCategoryIndex":0}
-{"TypeString":"KnowledgeIsPower.ServerBeginCategorySelectOverride","DurationSeconds":15.0,"InitialCategorySelectChoice":"Hobbies","DoorIndex":4}
-{"TypeString":"KnowledgeIsPower.ClientCategorySelectOverride","DurationSeconds":1.1601758003234864}
-{"TypeString":"KnowledgeIsPower.ServerStopCategorySelectOverride"}
-{"TypeString":"KnowledgeIsPower.ClientStopCategorySelectOverrideResponse","OverrideSent":true}
-{"TypeString":"KnowledgeIsPower.ServerCategorySelectOverrideSuccess","CategorySelectOverrideSuccess":true,"CategorySelectOverridePlayerName":"test"}
+< {"TypeString":"KnowledgeIsPower.ServerCategorySelectChoices","CategoryChoices":[{"DisplayText":"Movies","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":7,"ChoiceType":8},{"DisplayText":"Music","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":1,"ChoiceType":8},{"DisplayText":"Myths & Legends","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":4,"ChoiceType":8},{"DisplayText":"Competitive Sports","Colour":{"r":1.0,"g":0.7839999794960022,"b":0.47099998593330386,"a":1.0},"DoorIndex":0,"ChoiceType":8}],"BackgroundTint":{"r":0.75,"g":0.6926470398902893,"b":0.5900735259056091,"a":1.0},"PrimaryTint":{"r":0.7132352590560913,"g":0.5721794366836548,"b":0.319907009601593,"a":1.0},"SecondaryTint":{"r":0.8014705777168274,"g":0.6470289826393127,"b":0.2416197955608368,"a":1.0}}
+
+> {"TypeString":"KnowledgeIsPower.ClientCategorySelectChoice","ChosenCategoryIndex":0}
+< {"TypeString":"KnowledgeIsPower.ServerRequestCategorySelectChoice"}
+< {"TypeString":"KnowledgeIsPower.ServerBeginCategorySelectOverride","DurationSeconds":15.0,"InitialCategorySelectChoice":"Hobbies","DoorIndex":4}
+
+// if we're using the category selection override, immediatelly:
+    > {"TypeString":"KnowledgeIsPower.ClientCategorySelectOverride","DurationSeconds":1.2216854095458985}
+    < {"TypeString":"KnowledgeIsPower.ServerStopCategorySelectOverride"}
+    < {"TypeString":"KnowledgeIsPower.ServerCategorySelectOverrideSuccess","CategorySelectOverrideSuccess":true,"CategorySelectOverridePlayerName":"test"}
+// OR if not, eventually just:
+    < {"TypeString":"KnowledgeIsPower.ServerStopCategorySelectOverride"}
+
+// and finally, depending on the result, boolean:
+    < {"TypeString":"KnowledgeIsPower.ClientStopCategorySelectOverrideResponse","OverrideSent":false}
 
 
 {"TypeString":"KnowledgeIsPower.ServerBeginTriviaAnsweringPhase","QuestionID":"TRV05071","QuestionText":"Everyone wanted a pair in the 00s. What are they?","QuestionDuration":15.0,"Answers":[{"DisplayIndex":0,"DisplayText":"EGGOs","IsCorrect":false},{"DisplayIndex":1,"DisplayText":"UGGs","IsCorrect":true},{"DisplayIndex":2,"DisplayText":"OWLs","IsCorrect":false},{"DisplayIndex":3,"DisplayText":"ARGHs","IsCorrect":false}],"PowerPlays":[],"PowerPlayPlayers":[{"SlotIndex":0,"Name":"Player","ImageGUID":"00000000-0000-0000-0000-000000000000","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":true,"Away":false},{"SlotIndex":1,"Name":"tablet","ImageGUID":"00000000-0000-0000-0000-000000000000","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":false,"Away":false}],"RoundType":1,"BackgroundTint":{"r":0.9647058844566345,"g":0.8235294222831726,"b":0.3450980484485626,"a":1.0},"PrimaryTint":{"r":1.0,"g":0.7529411911964417,"b":0.27450981736183169,"a":1.0},"SecondaryTint":{"r":0.7921568751335144,"g":0.658823549747467,"b":0.20000000298023225,"a":1.0}}
+
+
+{"TypeString":"KnowledgeIsPower.ClientTriviaAnswer","ChosenAnswerDisplayIndex":3,"AnswerTime":8.359296798706055,"NumBombsExploded":0,"PaintCleared":false,"IceCleared":false,"NumWrongAnswers":1,"TotalPaintLayersPerAnswer":0,"PaintLayersClearedAnswer0":0,"PaintLayersClearedAnswer1":0,"PaintLayersClearedAnswer2":0,"PaintLayersClearedAnswer3":0,"TotalIceLayersPerAnswer":5,"IceLayersClearedAnswer0":0,"IceLayersClearedAnswer1":0,"IceLayersClearedAnswer2":0,"IceLayersClearedAnswer3":5}
+
+
+{"TypeString":"KnowledgeIsPower.ServerBeginPowerPlayPhase","PowerPlays":[{"DisplayIndex":0,"PowerType":5,"PowerTarget":2,"PowerPlayTargets":[0],"New":false,"TargetCount":1},{"DisplayIndex":1,"PowerType":4,"PowerTarget":2,"PowerPlayTargets":[0],"New":false,"TargetCount":1},{"DisplayIndex":2,"PowerType":7,"PowerTarget":2,"PowerPlayTargets":[0],"New":false,"TargetCount":1}],"PowerPlayPlayers":[{"SlotIndex":0,"Name":"t","ImageGUID":"cfe52c9b-47e0-404f-877c-1c3f687f61df","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":false,"Away":false},{"SlotIndex":1,"Name":"player","ImageGUID":"7551b16c-ac64-49db-86cd-ea2f3c446a04","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":true,"Away":false}],"RoundType":1}
+
+
+{"TypeString":"KnowledgeIsPower.ServerBeginTriviaAnsweringPhase","QuestionID":"TRV01620","QuestionText":"Which Russian composer created Swan Lake, Sleeping Beauty, and The Nutcracker?","QuestionDuration":15.0,"Answers":[{"DisplayIndex":0,"DisplayText":"Tchaikovsky","IsCorrect":true},{"DisplayIndex":1,"DisplayText":"Borodin","IsCorrect":false},{"DisplayIndex":2,"DisplayText":"Sibelius","IsCorrect":false},{"DisplayIndex":3,"DisplayText":"Wagner","IsCorrect":false}],"PowerPlays":[{"PowerType":5,"Count":1,"Culprits":[0]}],"PowerPlayPlayers":[{"SlotIndex":0,"Name":"t","ImageGUID":"cfe52c9b-47e0-404f-877c-1c3f687f61df","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":false,"Away":false},{"SlotIndex":1,"Name":"player","ImageGUID":"7551b16c-ac64-49db-86cd-ea2f3c446a04","Colour":{"r":255,"g":255,"b":255,"a":255},"Self":true,"Away":false}],"RoundType":1,"BackgroundTint":{"r":1.0,"g":0.5607843399047852,"b":0.615686297416687,"a":1.0},"PrimaryTint":{"r":1.0,"g":0.3960784375667572,"b":0.4745098054409027,"a":1.0},"SecondaryTint":{"r":1.0,"g":0.3294117748737335,"b":0.40784314274787905,"a":1.0}}
