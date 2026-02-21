@@ -53,7 +53,7 @@ A Kotlin-based Android application that serves as a remote control client for a 
 - **Architecture**: MVVM pattern with repository pattern
 - **Navigation**: Jetpack Navigation Component with Safe Args
 - **UI**: Material Design 3, View Binding
-- **Networking**: OkHttp, WebSocket, Retrofit
+- **Networking**: OkHttp, Retrofit
 - **Async**: Kotlin Coroutines & Flow
 - **Camera**: CameraX
 - **Image Loading**: Coil
@@ -123,41 +123,6 @@ cd reverse-of-power
    - Click Run (▶️) in Android Studio
    - Or: `./gradlew installDebug`
 
-## 🔌 Network Communication
-
-The app uses WebSocket for real-time communication with the game server.
-
-### Expected Server Endpoints
-
-- **WebSocket**: `ws://<server-ip>:8080/game`
-
-### Message Format
-
-The app sends/receives JSON messages:
-
-**Join Game:**
-```json
-{
-  "type": "join",
-  "name": "PlayerName"
-}
-```
-
-**Submit Answer:**
-```json
-{
-  "type": "answer",
-  "answer": 0
-}
-```
-
-**Start Game (Host only):**
-```json
-{
-  "type": "start_game"
-}
-```
-
 ## 📋 Permissions
 
 The app requires the following permissions:
@@ -186,21 +151,6 @@ All user-facing text is in `app/src/main/res/values/strings.xml` for easy locali
 
 ## 🔧 Development Notes
 
-### Network Manager
-
-The `NetworkManager` is a singleton that handles:
-- Server discovery via network scanning
-- WebSocket connection management
-- Real-time state updates via Kotlin Flow
-- Message parsing and event handling
-
-### State Management
-
-Game state is managed using Kotlin StateFlow:
-- `gameState: StateFlow<GameState>` - Current game state
-- `players: StateFlow<List<Player>>` - Connected players
-- `currentQuestion: StateFlow<QuizQuestion?>` - Current quiz question
-
 ### Navigation
 
 Safe Args generates type-safe navigation classes:
@@ -219,30 +169,9 @@ Run instrumented tests:
 ./gradlew connectedAndroidTest
 ```
 
-## 📝 TODO / Future Enhancements
-
-- [ ] Implement JSON message parsing in NetworkManager
-- [ ] Add server discovery via mDNS/Bonjour
-- [ ] Implement avatar upload to server
-- [ ] Add sound effects and haptic feedback
-- [ ] Implement score tracking and leaderboard
-- [ ] Add game results screen
-- [ ] Support landscape orientation
-- [ ] Add dark theme support
-- [ ] Implement reconnection logic
-- [ ] Add more avatar customization options
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the GPLv3 License - see the LICENSE file for details.
 
 ## 👥 Authors
 
