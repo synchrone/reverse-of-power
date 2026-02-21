@@ -192,7 +192,7 @@ class GameProtocolClient(
 
         val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
         payloadBuffer.put(bytes(0x33, 0x29))  // magic
-        payloadBuffer.putInt(transferId - 1)  // zero-based transfer ID
+        payloadBuffer.putInt(transferId)  // transfer ID as-is
         payloadBuffer.putInt(imageData.size)  // total JPEG length
         Log.i(TAG, "> Sending transfer ID: $transferId (${imageData.size}b): ${payloadBuffer.array().slice(0 until 10).toByteArray().toHex()}")
         payloadBuffer.put(imageData)
