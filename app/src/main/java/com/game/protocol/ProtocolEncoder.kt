@@ -15,7 +15,7 @@ class ProtocolEncoder {
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
-    var messageCounter: Byte = 0
+    var messageCounter: Int = 0
 
     // ==================== Raw Packets (no 0xAE7F header) ====================
 
@@ -41,12 +41,12 @@ class ProtocolEncoder {
         return data.array()
     }
 
-    fun encodeAck(messageId: Byte): ByteArray {
+    fun encodeAck(messageId: Int): ByteArray {
         val buffer = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
         buffer.put(0x8a.toByte())
         buffer.put(0x33.toByte())
-        buffer.put(messageId)
-        buffer.put(ByteArray(35))
+        buffer.putInt(messageId) // ACK uses low byte only
+        buffer.put(ByteArray(32))
         return buffer.array()
     }
 
@@ -120,7 +120,7 @@ class ProtocolEncoder {
     /**
      * Wrap a payload with the 22-byte protocol header as a single packet.
      */
-    private fun wrapPayload(payload: ByteArray, messageId: Byte = ++messageCounter): ByteArray {
+    private fun wrapPayload(payload: ByteArray, messageId: Int = ++messageCounter): ByteArray {
         return buildPacket(payload, packetNum = 1, packetIdx = 0, messageId = messageId, byteOffset = 0)
     }
 
@@ -147,14 +147,12 @@ class ProtocolEncoder {
     /**
      * Build a single protocol packet: 22-byte header + payload.
      */
-    private fun buildPacket(payload: ByteArray, packetNum: Int, packetIdx: Int, messageId: Byte, byteOffset: Int): ByteArray {
-        val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.BIG_ENDIAN)
+    private fun buildPacket(payload: ByteArray, packetNum: Int, packetIdx: Int, messageId: Int, byteOffset: Int): ByteArray {
+        val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.LITTLE_ENDIAN)
         buffer.put(bytes(0xAE, 0x7F))
-        buffer.put(messageId)
+        buffer.putInt(messageId)
         buffer.putInt(packetNum)
         buffer.putInt(packetIdx)
-        buffer.put(bytes(0x00, 0x00, 0x00))
-        buffer.order(ByteOrder.LITTLE_ENDIAN)
         buffer.putInt(payload.size)
         buffer.putInt(byteOffset)
         buffer.put(payload)

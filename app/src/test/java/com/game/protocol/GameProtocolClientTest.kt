@@ -19,7 +19,6 @@ class GameProtocolClientTest {
 
     private lateinit var client: GameProtocolClient
     private val receivedMessages = mutableListOf<GameMessage>()
-    private val receivedAvatarLists = mutableListOf<List<ServerAvatarStatusMessage>>()
 
     @Before
     fun setup() {
@@ -32,14 +31,8 @@ class GameProtocolClientTest {
             receivedMessages.add(message)
         }
 
-        client.onAvatarListReceived = { avatars ->
-            println("Parsed avatar list with ${avatars.size} avatars")
-            receivedAvatarLists.add(avatars)
-        }
-
         // Clear state
         receivedMessages.clear()
-        receivedAvatarLists.clear()
     }
 
     // ==================== Single Packet Tests ====================

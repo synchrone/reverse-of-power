@@ -18,7 +18,19 @@
         android:name="com.game.remoteclient.ui.NameEntryFragment"
         android:label="Name Entry">
         <action
-            android:id="@+id/action_nameEntry_to_avatarSelection"
+            android:id="@+id/action_nameEntry_to_cameraCapture"
+            app:destination="@id/cameraCaptureFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cameraCaptureFragment"
+        android:name="com.game.remoteclient.ui.CameraCaptureFragment"
+        android:label="Take Photo">
+        <argument
+            android:name="playerName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_cameraCapture_to_avatarSelection"
             app:destination="@id/avatarSelectionFragment" />
     </fragment>
 
@@ -50,11 +62,33 @@
         <action
             android:id="@+id/action_holdingScreen_to_categorySelection"
             app:destination="@id/categorySelectionFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_triviaAnswering"
+            app:destination="@id/triviaAnsweringFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_continue"
+            app:destination="@id/continueFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/categorySelectionFragment"
         android:name="com.game.remoteclient.ui.CategorySelectionFragment"
-        android:label="Category Selection" />
+        android:label="Category Selection">
+        <action
+            android:id="@+id/action_categorySelection_to_triviaAnswering"
+            app:destination="@id/triviaAnsweringFragment"
+            app:popUpTo="@id/holdingScreenFragment"
+            app:popUpToInclusive="false" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/triviaAnsweringFragment"
+        android:name="com.game.remoteclient.ui.TriviaAnsweringFragment"
+        android:label="Trivia" />
+
+    <fragment
+        android:id="@+id/continueFragment"
+        android:name="com.game.remoteclient.ui.ContinueFragment"
+        android:label="Continue" />
 
 </navigation>

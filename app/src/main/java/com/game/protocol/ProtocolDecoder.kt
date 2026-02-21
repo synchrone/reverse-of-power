@@ -11,14 +11,14 @@ import java.nio.ByteOrder
 // ==================== Decoded Packet Types ====================
 
 sealed class DecodedPacket {
-    data class Ack(val messageId: Byte) : DecodedPacket()
-    data class Nack(val messageId: Byte, val payload: ByteArray) : DecodedPacket()
+    data class Ack(val messageId: Int) : DecodedPacket()
+    data class Nack(val messageId: Int, val payload: ByteArray) : DecodedPacket()
     data class ConnectionInit(val raw: ByteArray) : DecodedPacket()
     data class DeviceUID(val uid: String, val raw: ByteArray) : DecodedPacket()
     data class GameInProgress(val raw: ByteArray) : DecodedPacket()
-    data class DataMessage(val messageId: Byte, val messages: List<GameMessage>) : DecodedPacket()
-    data class ImageData(val messageId: Byte, val transferId: Int, val jpegSize: Int, val jpeg: ByteArray) : DecodedPacket()
-    data class Fragment(val messageId: Byte, val idx: Int, val total: Int, val size: Int) : DecodedPacket()
+    data class DataMessage(val messageId: Int, val messages: List<GameMessage>) : DecodedPacket()
+    data class ImageData(val messageId: Int, val transferId: Int, val jpegSize: Int, val jpeg: ByteArray) : DecodedPacket()
+    data class Fragment(val messageId: Int, val idx: Int, val total: Int, val size: Int) : DecodedPacket()
     data class Unknown(val raw: ByteArray) : DecodedPacket()
     data class TooShort(val raw: ByteArray) : DecodedPacket()
     data class Error(val message: String, val raw: ByteArray) : DecodedPacket()
@@ -35,7 +35,7 @@ class ProtocolDecoder {
         encodeDefaults = true
     }
 
-    private val fragmentBuffer = mutableMapOf<Byte, MutableMap<Int, ByteArray>>()
+    private val fragmentBuffer = mutableMapOf<Int, MutableMap<Int, ByteArray>>()
 
     fun decode(data: ByteArray): DecodedPacket {
         if (data.size < 8) return DecodedPacket.TooShort(data)
@@ -73,9 +73,9 @@ class ProtocolDecoder {
                 } else {
                     val payload = data.sliceArray(3 until data.size)
                     if (payload.any { it != 0.toByte() }) {
-                        DecodedPacket.Nack(data[2], payload)
+                        DecodedPacket.Nack(data[2].toInt(), payload)
                     } else {
-                        DecodedPacket.Ack(data[2])
+                        DecodedPacket.Ack(data[2].toInt())
                     }
                 }
             }
@@ -97,18 +97,12 @@ class ProtocolDecoder {
     }
 
     private fun decodeDataPacket(data: ByteArray): DecodedPacket {
-        val buffer = ByteBuffer.wrap(data).order(ByteOrder.BIG_ENDIAN)
+        val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
         buffer.get() // 0xae
         buffer.get() // 0x7f
-        val messageId = buffer.get()
-        buffer.get() // unk1
-        buffer.get() // unk2
-        val packetNum = buffer.short.toInt()
+        val messageId = buffer.int
+        val packetNum = buffer.int
         val packetIdx = buffer.int
-        buffer.get()
-        buffer.get()
-        buffer.get() // 3x zero
-        buffer.order(ByteOrder.LITTLE_ENDIAN)
         val packetLen = buffer.int
         val offset = buffer.int
 
@@ -120,7 +114,7 @@ class ProtocolDecoder {
         return decodePayload(messageId, data.sliceArray(22 until data.size))
     }
 
-    private fun handleFragment(messageId: Byte, packetIdx: Int, totalPackets: Int, fragment: ByteArray): DecodedPacket {
+    private fun handleFragment(messageId: Int, packetIdx: Int, totalPackets: Int, fragment: ByteArray): DecodedPacket {
         if (!fragmentBuffer.containsKey(messageId)) {
             fragmentBuffer[messageId] = mutableMapOf()
         }
@@ -133,10 +127,10 @@ class ProtocolDecoder {
             return decodePayload(messageId, completeData)
         }
 
-        return DecodedPacket.Fragment(messageId, packetIdx + 1, totalPackets, fragment.size)
+        return DecodedPacket.Fragment(messageId, packetIdx, totalPackets, fragment.size)
     }
 
-    private fun reassembleFragments(messageId: Byte, totalPackets: Int): ByteArray {
+    private fun reassembleFragments(messageId: Int, totalPackets: Int): ByteArray {
         val fragments = fragmentBuffer[messageId]!!
         val totalSize = fragments.values.sumOf { it.size }
         val result = ByteArray(totalSize)
@@ -151,7 +145,7 @@ class ProtocolDecoder {
         return result
     }
 
-    fun decodePayload(messageId: Byte, data: ByteArray): DecodedPacket {
+    fun decodePayload(messageId: Int, data: ByteArray): DecodedPacket {
         val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
         buffer.getShort() // 0x33, 0x29
         var payloadType = buffer.int
@@ -238,6 +232,10 @@ class ProtocolDecoder {
                     json.decodeFromString<ServerCategorySelectOverrideSuccess>(jsonStr)
                 typeString.contains("ServerBeginTriviaAnsweringPhase") ->
                     json.decodeFromString<ServerBeginTriviaAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginPowerPlayPhase") ->
+                    json.decodeFromString<ServerBeginPowerPlayPhase>(jsonStr)
+                typeString.contains("ServerRequestPowerPlayChoice") ->
+                    json.decodeFromString<ServerRequestPowerPlayChoice>(jsonStr)
                 typeString == "ImageResourceContentTransferMessage" ->
                     json.decodeFromString<ImageResourceContentTransferMessage>(jsonStr)
                 typeString == "ClientRequestPlayerIDMessage" ->
@@ -254,12 +252,18 @@ class ProtocolDecoder {
                     json.decodeFromString<ClientImageResourceContentTransferMessage>(jsonStr)
                 typeString == "StartGameButtonPressedResponseMessage" ->
                     json.decodeFromString<StartGameButtonPressedResponseMessage>(jsonStr)
+                typeString == "ContinuePressedResponseMessage" ->
+                    json.decodeFromString<ContinuePressedResponseMessage>(jsonStr)
                 typeString.contains("ClientCategorySelectChoice") ->
                     json.decodeFromString<ClientCategorySelectChoice>(jsonStr)
                 typeString.contains("ClientCategorySelectOverride") ->
                     json.decodeFromString<ClientCategorySelectOverride>(jsonStr)
                 typeString.contains("ClientStopCategorySelectOverrideResponse") ->
                     json.decodeFromString<ClientStopCategorySelectOverrideResponse>(jsonStr)
+                typeString.contains("ClientPowerPlayChoice") ->
+                    json.decodeFromString<ClientPowerPlayChoice>(jsonStr)
+                typeString.contains("ClientTriviaAnswer") ->
+                    json.decodeFromString<ClientTriviaAnswer>(jsonStr)
                 else -> null
             }
 

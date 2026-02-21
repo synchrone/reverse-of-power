@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ClientHoldingScreenCommandMessage
+import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.ColorTint
+import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.ServerColourMessage
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -25,6 +27,13 @@ class HoldingScreenFragment : Fragment() {
     private var backgroundColor = Color.parseColor("#C4B8A8")
     private var backgroundSecondary = Color.parseColor("#D4C8B8")
     private var foregroundColor = Color.WHITE
+
+    // Store references to our callbacks so we only clear our own
+    private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
+    private var colourCb: ((ServerColourMessage) -> Unit)? = null
+    private var categoryCb: ((com.game.protocol.ServerCategorySelectChoices) -> Unit)? = null
+    private var triviaCb: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
+    private var quizCb: ((ClientQuizCommandMessage) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,31 +52,45 @@ class HoldingScreenFragment : Fragment() {
     }
 
     private fun observeMessages() {
-        networkManager.onHoldingScreenMessage = { message ->
-            activity?.runOnUiThread {
-                handleHoldingScreenMessage(message)
+        holdingScreenCb = { message ->
+            activity?.runOnUiThread { handleHoldingScreenMessage(message) }
+        }
+        colourCb = { message ->
+            activity?.runOnUiThread { handleColourMessage(message) }
+        }
+        categoryCb = { _ ->
+            activity?.runOnUiThread { navigateToCategorySelection() }
+        }
+        triviaCb = { _ ->
+            activity?.runOnUiThread { navigateToTriviaAnswering() }
+        }
+        quizCb = { message ->
+            if (message.action == 4) {
+                activity?.runOnUiThread { navigateToContinue() }
             }
         }
 
-        networkManager.onColourMessage = { message ->
-            activity?.runOnUiThread {
-                handleColourMessage(message)
-            }
-        }
-
-        networkManager.onCategoryChoicesMessage = { _ ->
-            activity?.runOnUiThread {
-                navigateToCategorySelection()
-            }
-        }
+        networkManager.onHoldingScreenMessage = holdingScreenCb
+        networkManager.onColourMessage = colourCb
+        networkManager.onCategoryChoicesMessage = categoryCb
+        networkManager.onTriviaMessage = triviaCb
+        networkManager.onQuizCommand = quizCb
     }
 
     private fun navigateToCategorySelection() {
         findNavController().navigate(R.id.action_holdingScreen_to_categorySelection)
     }
 
+    private fun navigateToTriviaAnswering() {
+        findNavController().navigate(R.id.action_holdingScreen_to_triviaAnswering)
+    }
+
+    private fun navigateToContinue() {
+        findNavController().navigate(R.id.action_holdingScreen_to_continue)
+    }
+
     private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
-        binding.retroTvView.text = message.HoldingScreenText.replace("\\n", "\n")
+        binding.holdingText.text = message.HoldingScreenText.replace("\\n", "\n")
     }
 
     private fun handleColourMessage(message: ServerColourMessage) {
@@ -88,14 +111,16 @@ class HoldingScreenFragment : Fragment() {
 
     private fun applyColors() {
         binding.sunburstBackground.setColors(backgroundColor, backgroundSecondary)
-        binding.retroTvView.setForegroundColor(foregroundColor)
+        binding.holdingText.setTextColor(foregroundColor)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        networkManager.onHoldingScreenMessage = null
-        networkManager.onColourMessage = null
-        networkManager.onCategoryChoicesMessage = null
+        if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
+        if (networkManager.onColourMessage === colourCb) networkManager.onColourMessage = null
+        if (networkManager.onCategoryChoicesMessage === categoryCb) networkManager.onCategoryChoicesMessage = null
+        if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
+        if (networkManager.onQuizCommand === quizCb) networkManager.onQuizCommand = null
         _binding = null
     }
 }

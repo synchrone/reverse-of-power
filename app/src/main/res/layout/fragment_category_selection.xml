@@ -40,6 +40,7 @@
 
             <!-- Door 0 -->
             <LinearLayout
+                android:id="@+id/doorColumn0"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -72,6 +73,7 @@
 
             <!-- Door 1 -->
             <LinearLayout
+                android:id="@+id/doorColumn1"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -104,6 +106,7 @@
 
             <!-- Door 2 -->
             <LinearLayout
+                android:id="@+id/doorColumn2"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -136,6 +139,7 @@
 
             <!-- Door 3 -->
             <LinearLayout
+                android:id="@+id/doorColumn3"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
