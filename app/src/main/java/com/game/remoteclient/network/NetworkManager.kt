@@ -1,16 +1,23 @@
 package com.game.remoteclient.network
 
 import android.util.Log
+import com.game.protocol.ClientCategorySelectChoice
 import com.game.protocol.ClientHoldingScreenCommandMessage
+import com.game.protocol.ClientPlayerProfileMessage
+import com.game.protocol.ClientTriviaAnswer
+import com.game.protocol.ContinuePressedResponseMessage
 import com.game.protocol.ClientQuizCommandMessage
+import com.game.protocol.ClientRequestAvatarMessage
 import com.game.protocol.GameMessage
 import com.game.protocol.GameProtocolClient
 import com.game.protocol.InterfaceVersionMessage
 import com.game.protocol.ServerAvatarRequestResponseMessage
 import com.game.protocol.ServerAvatarStatusMessage
+import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.ServerCategorySelectChoices
 import com.game.protocol.ServerColourMessage
 import com.game.protocol.ServerRequestCategorySelectChoice
+import com.game.protocol.StartGameButtonPressedResponseMessage
 import com.game.remoteclient.models.GameServer
 import com.game.remoteclient.models.GameState
 import kotlinx.coroutines.CoroutineScope
@@ -37,9 +44,7 @@ class NetworkManager private constructor() {
     private val _connectionError = MutableStateFlow<String?>(null)
     val connectionError: StateFlow<String?> = _connectionError
 
-    // Delegate to protocolClient for avatar state
-    val availableAvatars: List<ServerAvatarStatusMessage>
-        get() = protocolClient?.availableAvatars ?: emptyList()
+    val availableAvatars = mutableListOf<ServerAvatarStatusMessage>()
 
     var onAvatarsChanged: (() -> Unit)? = null
     var onAvatarRequestResponse: ((ServerAvatarRequestResponseMessage) -> Unit)? = null
@@ -48,6 +53,7 @@ class NetworkManager private constructor() {
     var onColourMessage: ((ServerColourMessage) -> Unit)? = null
     var onCategoryChoicesMessage: ((ServerCategorySelectChoices) -> Unit)? = null
     var onCategorySelectRequest: (() -> Unit)? = null
+    var onTriviaMessage: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
 
     // Avatar selection state
     var isAvatarConfirmed: Boolean = false
@@ -57,6 +63,8 @@ class NetworkManager private constructor() {
 
     // Pending category choices for when message arrives before fragment is ready
     var pendingCategoryChoices: ServerCategorySelectChoices? = null
+    // Pending trivia for when message arrives before fragment is ready
+    var pendingTrivia: ServerBeginTriviaAnsweringPhase? = null
 
     companion object {
         @Volatile
@@ -116,13 +124,21 @@ class NetworkManager private constructor() {
     }
 
     // UI event handling only - protocol responses are handled by GameProtocolClient
-    private fun handleUIEvents(message: GameMessage) {
+    private fun handleUIEvents(message: GameMessage): Boolean {
+        Log.i(TAG, "< Received message: $message")
+
         when (message) {
             is InterfaceVersionMessage -> {
                 _gameState.value = GameState.CONNECTED
             }
 
             is ServerAvatarStatusMessage -> {
+                val existingIndex = availableAvatars.indexOfFirst { it.AvatarID == message.AvatarID }
+                if (existingIndex >= 0) {
+                    availableAvatars[existingIndex] = message
+                } else {
+                    availableAvatars.add(message)
+                }
                 onAvatarsChanged?.invoke()
             }
 
@@ -155,34 +171,57 @@ class NetworkManager private constructor() {
                 onCategorySelectRequest?.invoke()
             }
 
-            else -> { }
+            is ServerBeginTriviaAnsweringPhase -> {
+                pendingTrivia = message
+                onTriviaMessage?.invoke(message)
+            }
+
+            else -> return false
         }
+        return true
     }
 
     fun sendPlayerProfile(playerName: String, culture: String = "en-US") {
-        selectedAvatarId?.let { avatarId ->
-            Log.d(TAG, "Sending player profile: $playerName with avatar $avatarId")
-            scope.launch {
-                protocolClient?.sendPlayerProfile(
-                    name = playerName,
-                    avatarId = avatarId,
-                    culture = culture
-                )
-            }
+        val avatarId = selectedAvatarId ?: return
+        Log.d(TAG, "Sending player profile: $playerName with avatar $avatarId")
+        scope.launch {
+            protocolClient?.sendMessage(ClientPlayerProfileMessage(
+                playerName = playerName,
+                uppercasePlayerName = playerName.uppercase(),
+                deviceCultureName = culture,
+                playerCardId = avatarId
+            ))
         }
     }
 
     fun sendStartGameButtonPressed() {
         Log.d(TAG, "Start game button pressed")
         scope.launch {
-            protocolClient?.sendStartGameButtonPressed()
+            protocolClient?.sendMessage(StartGameButtonPressedResponseMessage())
+        }
+    }
+
+    fun sendContinueButtonPressed() {
+        Log.d(TAG, "Continue button pressed")
+        scope.launch {
+            protocolClient?.sendMessage(ContinuePressedResponseMessage())
+        }
+    }
+
+    fun sendTriviaAnswer(answerIndex: Int, answerTime: Double) {
+        Log.d(TAG, "Trivia answer: index=$answerIndex time=$answerTime")
+        scope.launch {
+            protocolClient?.sendMessage(ClientTriviaAnswer(
+                ChosenAnswerDisplayIndex = answerIndex,
+                AnswerTime = answerTime
+            ))
         }
     }
 
     fun sendCategorySelection(doorIndex: Int) {
         Log.d(TAG, "Category selected: door $doorIndex")
         scope.launch {
-            protocolClient?.sendCategorySelection(doorIndex)
+            protocolClient?.sendMessage(ClientCategorySelectChoice(ChosenCategoryIndex = doorIndex))
         }
     }
 
@@ -191,7 +230,11 @@ class NetworkManager private constructor() {
         pendingAvatarRequest = avatarId
         isAvatarConfirmed = false
         scope.launch {
-            protocolClient?.requestAvatar(avatarId)
+            protocolClient?.sendMessage(ClientRequestAvatarMessage(
+                RequestID = UUID.randomUUID().toString(),
+                AvatarID = avatarId,
+                Request = true
+            ))
         }
     }
 
@@ -206,7 +249,12 @@ class NetworkManager private constructor() {
         Log.d(TAG, "Sending image+profile+image: $playerName with avatar $avatarId")
         scope.launch {
             protocolClient?.sendImage(imageData, imageGuid, transferId)
-            protocolClient?.sendPlayerProfile(name = playerName, avatarId = avatarId, culture = culture)
+            protocolClient?.sendMessage(ClientPlayerProfileMessage(
+                playerName = playerName,
+                uppercasePlayerName = playerName.uppercase(),
+                deviceCultureName = culture,
+                playerCardId = avatarId
+            ))
             protocolClient?.sendImage(imageData, imageGuid, transferId + 1)
         }
     }
@@ -216,6 +264,7 @@ class NetworkManager private constructor() {
         protocolClient = null
         currentServer = null
         selectedAvatarId = null
+        availableAvatars.clear()
         _gameState.value = GameState.DISCONNECTED
         Log.d(TAG, "Disconnected from server")
     }

@@ -58,7 +58,7 @@ data class AllResourcesReceivedMessage(
 @Serializable
 data class ClientQuizCommandMessage(
     override val TypeString: String = "ClientQuizCommandMessage",
-    val action: Int, // 14 = show ready button; 31 = go back to name selection screen; 29, 30, 15 = something around game being exited
+    val action: Int, // 14 = show ready button; 4 = show continue button; 5 = pick power play; 31 = go back to name selection screen; 29, 30, 15 = something around exiting to Player Name screen
     val time: Double
 ) : GameMessage()
 
@@ -193,6 +193,12 @@ data class StartGameButtonPressedResponseMessage(
 ) : GameMessage()
 
 @Serializable
+data class ContinuePressedResponseMessage(
+    override val TypeString: String = "ContinuePressedResponseMessage",
+    val Response: Int = 3
+) : GameMessage()
+
+@Serializable
 data class CategoryChoice(
     val DisplayText: String,
     val Colour: ColorTint,
@@ -270,13 +276,20 @@ data class PowerPlayPlayer(
 )
 
 @Serializable
+data class ActivePowerPlay(
+    val PowerType: Int,
+    val Count: Int,
+    val Culprits: List<Int>
+)
+
+@Serializable
 data class ServerBeginTriviaAnsweringPhase(
     override val TypeString: String = "KnowledgeIsPower.ServerBeginTriviaAnsweringPhase",
     val QuestionID: String,
     val QuestionText: String,
     val QuestionDuration: Double,
     val Answers: List<TriviaAnswer>,
-    val PowerPlays: List<String>,
+    val PowerPlays: List<ActivePowerPlay>,
     val PowerPlayPlayers: List<PowerPlayPlayer>,
     val RoundType: Int,
     val BackgroundTint: ColorTint,
@@ -284,21 +297,53 @@ data class ServerBeginTriviaAnsweringPhase(
     val SecondaryTint: ColorTint
 ) : GameMessage()
 
-// ==================== Protocol Packet Classes ====================
-
-data class ProtocolPacket(
-    val header: Byte,
-    val secondaryHeader: Byte,
-    val messageId: Short,
-    val packetNumber: Short,
-    val totalPackets: Short,
-    val dataLength: Long,
-    val payload: ByteArray
+@Serializable
+data class PowerPlay(
+    val DisplayIndex: Int,
+    val PowerType: Int,
+    val PowerTarget: Int,
+    val PowerPlayTargets: List<Int>,
+    val New: Boolean,
+    val TargetCount: Int
 )
 
-data class AckPacket(
-    val header: Byte = 0x8a.toByte(),
-    val secondaryHeader: Byte = 0x33.toByte(),
-    val messageId: Byte,
-    val padding: ByteArray = ByteArray(34)
-)
+@Serializable
+data class ServerBeginPowerPlayPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginPowerPlayPhase",
+    val PowerPlays: List<PowerPlay>,
+    val PowerPlayPlayers: List<PowerPlayPlayer>,
+    val RoundType: Int
+) : GameMessage()
+
+@Serializable
+data class ServerRequestPowerPlayChoice(
+    override val TypeString: String = "KnowledgeIsPower.ServerRequestPowerPlayChoice"
+) : GameMessage()
+
+@Serializable
+data class ClientPowerPlayChoice(
+    override val TypeString: String = "KnowledgeIsPower.ClientPowerPlayChoice",
+    val PowerPlaySlotIndex: Int,
+    val TargetSlotIndex: List<Int>
+) : GameMessage()
+
+@Serializable
+data class ClientTriviaAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientTriviaAnswer",
+    val ChosenAnswerDisplayIndex: Int,
+    val AnswerTime: Double,
+    val NumBombsExploded: Int = 0,
+    val PaintCleared: Boolean = false,
+    val IceCleared: Boolean = false,
+    val NumWrongAnswers: Int = 0,
+    val TotalPaintLayersPerAnswer: Int = 0,
+    val PaintLayersClearedAnswer0: Int = 0,
+    val PaintLayersClearedAnswer1: Int = 0,
+    val PaintLayersClearedAnswer2: Int = 0,
+    val PaintLayersClearedAnswer3: Int = 0,
+    val TotalIceLayersPerAnswer: Int = 0,
+    val IceLayersClearedAnswer0: Int = 0,
+    val IceLayersClearedAnswer1: Int = 0,
+    val IceLayersClearedAnswer2: Int = 0,
+    val IceLayersClearedAnswer3: Int = 0
+) : GameMessage()

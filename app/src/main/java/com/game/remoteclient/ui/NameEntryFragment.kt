@@ -45,8 +45,7 @@ class NameEntryFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            // Navigate to avatar selection
-            val action = NameEntryFragmentDirections.actionNameEntryToAvatarSelection(
+            val action = NameEntryFragmentDirections.actionNameEntryToCameraCapture(
                 playerName = name
             )
             findNavController().navigate(action)
