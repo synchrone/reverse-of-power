@@ -38,6 +38,15 @@ data class AssignPlayerIDAndSlotMessage(
 ) : GameMessage()
 
 @Serializable
+data class RejoiningClientOwnProfileMessage(
+    override val TypeString: String = "RejoiningClientOwnProfileMessage",
+    val Name: String,
+    val PortraitGUID: String,
+    val Colour: ColorTint,
+    val AvatarID: String
+) : GameMessage()
+
+@Serializable
 data class ResourceRequirement(
     val GUID: String,
     val Rqrmnt: Int
@@ -47,6 +56,12 @@ data class ResourceRequirement(
 data class ResourceRequirementsMessage(
     override val TypeString: String = "ResourceRequirementsMessage",
     val Requirements: List<ResourceRequirement>
+) : GameMessage()
+
+@Serializable
+data class RequestResourceMessage(
+    override val TypeString: String = "RequestResourceMessage",
+    val ResourceGUID: String
 ) : GameMessage()
 
 @Serializable

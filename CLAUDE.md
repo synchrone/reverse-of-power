@@ -160,3 +160,4 @@ ServerDiscoveryFragment → NameEntryFragment → AvatarSelectionFragment
 ## Known Issues / Areas of Active Work
 - Server discovery is stub (TODO: UPnP scanning)
 - powerplay New=true means we can show a randomizing animation to attract attention to the new type
+- HoldingScreenType = 4 means look on tv, 9 means text is "get ready" 
