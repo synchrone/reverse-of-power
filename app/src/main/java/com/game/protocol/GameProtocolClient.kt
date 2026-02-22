@@ -104,7 +104,7 @@ class GameProtocolClient(
 
     fun sendMessage(msg: GameMessage) {
         Log.i(TAG, "> Sending message: $msg")
-        sendRawUDP(encoder.encodeMessage(msg))
+        encoder.encodeMessage(msg).forEach { sendRawUDP(it) }
     }
 
     private fun sendAck(messageId: Int) = synchronized(sendLock) {

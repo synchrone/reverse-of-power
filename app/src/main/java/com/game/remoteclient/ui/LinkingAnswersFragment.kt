@@ -322,8 +322,6 @@ class LinkingAnswersFragment : Fragment() {
 
         Log.d("LinkingAnswers", "Sending answer: $correctCount correct out of $totalPairs")
         networkManager.sendLinkingAnswer(correctCount, attempts)
-
-        navigateToHoldingScreen()
     }
 
     private fun navigateToHoldingScreen() {
