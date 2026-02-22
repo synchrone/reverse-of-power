@@ -43,6 +43,13 @@ class GameProtocolClient(
     // Pending control messages when they arrive before the JPEG
     private val pendingImageControls = mutableMapOf<Int, String>() // TransferID -> ImageGUID
 
+    // GUIDs of images we've already received this session
+    private val receivedResourceGUIDs = mutableSetOf<String>()
+    // Resource request tracking: GUIDs we've requested but haven't received yet
+    private val pendingResourceGUIDs = mutableSetOf<String>()
+    // Requirements to echo back once all resources are received
+    private var pendingRequirements: List<ResourceRequirement>? = null
+
     // Lock to prevent interleaved UDP packets when sending chunked data
     private val sendLock = Any()
 
@@ -214,6 +221,7 @@ class GameProtocolClient(
         if (pendingGuid != null) {
             Log.d(TAG, "^ matched JPEG for transferId=$transferId with waiting control (${jpeg.size} bytes)")
             onImageReceived?.invoke(pendingGuid, jpeg)
+            checkResourceComplete(pendingGuid)
         } else {
             pendingImages[transferId] = jpeg
             Log.d(TAG, "^ stored JPEG for transferId=$transferId (${jpeg.size} bytes)")
@@ -225,9 +233,20 @@ class GameProtocolClient(
         if (pendingJpeg != null) {
             Log.d(TAG, "Matched JPEG for transferId=${message.TransferID}, imageGuid=${message.ImageGUID}")
             onImageReceived?.invoke(message.ImageGUID, pendingJpeg)
+            checkResourceComplete(message.ImageGUID)
         } else {
             Log.d(TAG, "No pending JPEG for transferId=${message.TransferID}, storing control to wait for JPEG")
             pendingImageControls[message.TransferID] = message.ImageGUID
+        }
+    }
+
+    private fun checkResourceComplete(guid: String) {
+        receivedResourceGUIDs.add(guid)
+        if (pendingResourceGUIDs.remove(guid) && pendingResourceGUIDs.isEmpty()) {
+            val reqs = pendingRequirements ?: return
+            pendingRequirements = null
+            Log.d(TAG, "All ${reqs.size} resources received, sending AllResourcesReceivedMessage")
+            sendMessage(AllResourcesReceivedMessage(Requirements = reqs))
         }
     }
 
@@ -263,7 +282,16 @@ class GameProtocolClient(
             }
 
             is ResourceRequirementsMessage -> {
-                sendMessage(AllResourcesReceivedMessage(Requirements = message.Requirements))
+                val missing = message.Requirements.filter { it.GUID !in receivedResourceGUIDs }
+                if (missing.isEmpty()) {
+                    sendMessage(AllResourcesReceivedMessage(Requirements = message.Requirements))
+                } else {
+                    pendingRequirements = message.Requirements
+                    for (req in missing) {
+                        pendingResourceGUIDs.add(req.GUID)
+                        sendMessage(RequestResourceMessage(ResourceGUID = req.GUID))
+                    }
+                }
             }
 
             else -> return false

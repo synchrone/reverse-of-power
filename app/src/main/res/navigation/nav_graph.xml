@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_serverDiscovery_to_nameEntry"
             app:destination="@id/nameEntryFragment" />
+        <action
+            android:id="@+id/action_serverDiscovery_to_holdingScreen"
+            app:destination="@id/holdingScreenFragment" />
     </fragment>
 
     <fragment

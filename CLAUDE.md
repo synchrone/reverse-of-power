@@ -160,4 +160,6 @@ ServerDiscoveryFragment → NameEntryFragment → AvatarSelectionFragment
 ## Known Issues / Areas of Active Work
 - Server discovery is stub (TODO: UPnP scanning)
 - powerplay New=true means we can show a randomizing animation to attract attention to the new type
-- HoldingScreenType = 4 means look on tv, 9 means text is "get ready" 
+- HoldingScreenType = 4 means default text is "Look at the TV", 9 means text is "get ready" 
+- if the player stalls the trivia answering phase - it never proceeds without their answer. The client then must send `{"TypeString":"KnowledgeIsPower.ClientTriviaAnswer","ChosenAnswerDisplayIndex":-1,"AnswerTime":15.000421524047852,"NumBombsExploded":0,"PaintCleared":false,"IceCleared":false,"NumWrongAnswers":0,"TotalPaintLayersPerAnswer":0,"PaintLayersClearedAnswer0":0,"PaintLayersClearedAnswer1":0,"PaintLayersClearedAnswer2":0,"PaintLayersClearedAnswer3":0,"TotalIceLayersPerAnswer":0,"IceLayersClearedAnswer0":0,"IceLayersClearedAnswer1":0,"IceLayersClearedAnswer2":0,"IceLayersClearedAnswer3":0}` at the end of the allocated answering time slot.
+- 
