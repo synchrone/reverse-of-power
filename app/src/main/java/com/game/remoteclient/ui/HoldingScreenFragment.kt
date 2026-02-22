@@ -118,7 +118,11 @@ class HoldingScreenFragment : Fragment() {
 
     private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
         val text = message.HoldingScreenText.replace("\\n", "\n")
-        binding.retroTv.text = text.ifEmpty { "Look at the TV" }
+        val defaultText = when (message.HoldingScreenType) {
+            9 -> "Get ready!"
+            else -> "Look at the TV"
+        }
+        binding.retroTv.text = text.ifEmpty { defaultText }
     }
 
     private fun isBlack(tint: ColorTint): Boolean =
