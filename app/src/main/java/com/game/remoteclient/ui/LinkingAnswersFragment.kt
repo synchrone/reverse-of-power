@@ -156,21 +156,26 @@ class LinkingAnswersFragment : Fragment() {
     }
 
     private fun ensureMatch() {
-        val topKeys = activeTop.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
-        val bottomKeys = activeBottom.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
+        // Ensure every active top item has a matching bottom visible, if possible
+        for (topItem in activeTop.filterNotNull()) {
+            val topKey = getMatchKey(topItem.AnswerID)
+            val visibleBottomKeys = activeBottom.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
 
-        if (topKeys.intersect(bottomKeys).isNotEmpty()) return
+            if (topKey in visibleBottomKeys) continue // already has a match on screen
 
-        // No match visible — find a matching bottom item for an active top item
-        val topItem = activeTop.filterNotNull().firstOrNull() ?: return
-        val topKey = getMatchKey(topItem.AnswerID)
+            // Find matching bottom in the queue
+            val matchIdx = bottomQueue.indexOfFirst { getMatchKey(it.AnswerID) == topKey }
+            if (matchIdx < 0) continue
 
-        val matchIdx = bottomQueue.indexOfFirst { getMatchKey(it.AnswerID) == topKey }
-        if (matchIdx >= 0) {
+            // Find a bottom slot to swap — prefer one whose match is NOT an active top item
+            val activeTopKeys = activeTop.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
+            val swapIdx = activeBottom.indices
+                .filter { activeBottom[it] != null }
+                .firstOrNull { getMatchKey(activeBottom[it]!!.AnswerID) !in activeTopKeys }
+                ?: continue // all bottom items match a top item, can't swap without breaking a pair
+
             val match = bottomQueue.removeAt(matchIdx)
-            // Swap with first occupied bottom slot
-            val swapIdx = activeBottom.indices.first { activeBottom[it] != null }
-            activeBottom[swapIdx]?.let { bottomQueue.add(0, it) }
+            activeBottom[swapIdx]?.let { bottomQueue.add(it) }
             activeBottom[swapIdx] = match
         }
     }
