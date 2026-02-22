@@ -21,5 +21,6 @@ class GameRemoteClientApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        networkManager.init(this)
     }
 }
