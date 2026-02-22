@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.game.remoteclient.ui.SunburstBackgroundView
+        android:id="@+id/sunburstBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.game.remoteclient.ui.WhirlpoolView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Counter -->
+    <TextView
+        android:id="@+id/timerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:shadowColor="#80000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:background="#40000000"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        android:layout_marginTop="8dp"
+        tools:text="25 to go" />
+
+    <!-- Question text -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="36dp"
+        android:textSize="14sp"
+        android:textColor="#CCFFFFFF"
+        android:background="#30000000"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        tools:text="Bread or pasta?" />
+
+    <!-- Left bucket -->
+    <FrameLayout
+        android:id="@+id/leftBucket"
+        android:layout_width="140dp"
+        android:layout_height="220dp"
+        android:layout_gravity="start|center_vertical">
+
+        <TextView
+            android:id="@+id/leftBucketLabel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:background="@drawable/half_circle_left"
+            android:backgroundTint="#F0EAD6"
+            android:padding="16dp"
+            tools:text="Bread" />
+    </FrameLayout>
+
+    <!-- Right bucket -->
+    <FrameLayout
+        android:id="@+id/rightBucket"
+        android:layout_width="140dp"
+        android:layout_height="220dp"
+        android:layout_gravity="end|center_vertical">
+
+        <TextView
+            android:id="@+id/rightBucketLabel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:background="@drawable/half_circle_right"
+            android:backgroundTint="#F0EAD6"
+            android:padding="16dp"
+            tools:text="Pasta" />
+    </FrameLayout>
+
+    <!-- Center item to sort -->
+    <FrameLayout
+        android:id="@+id/itemSlot"
+        android:layout_width="180dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/itemText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#F0EAD6"
+            android:padding="12dp"
+            tools:text="Focaccia" />
+    </FrameLayout>
+
+    <!-- Feedback overlay -->
+    <FrameLayout
+        android:id="@+id/feedbackOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/feedbackText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#DDFFFFFF"
+            android:padding="32dp"
+            android:gravity="center"
+            tools:text="Focaccia" />
+    </FrameLayout>
+
+    <!-- Drag overlay -->
+    <com.game.remoteclient.ui.LinkingLineView
+        android:id="@+id/dragLine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

@@ -150,12 +150,8 @@ class CategorySelectionFragment : Fragment() {
             }
         }
 
-        // Preserve existing selection; otherwise enable selection
         if (selectedDoorIndex != null) {
             highlightSelectedDoor(selectedDoorIndex!!)
-        } else {
-            selectionEnabled = true
-            columns.forEach { it.alpha = 1.0f }
         }
     }
 

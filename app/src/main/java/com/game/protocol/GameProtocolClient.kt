@@ -281,6 +281,10 @@ class GameProtocolClient(
                 sendMessage(ClientRequestAvatarStatusMessage())
             }
 
+            is ServerRequestEndOfGameFactCount -> {
+                sendMessage(ClientEndOfGameFactCount(FactCount = 63)) // random number, TODO: fix this somehow? is it a total answer counter?
+            }
+
             is ResourceRequirementsMessage -> {
                 val missing = message.Requirements.filter { it.GUID !in receivedResourceGUIDs }
                 if (missing.isEmpty()) {

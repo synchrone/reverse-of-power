@@ -238,6 +238,8 @@ class ProtocolDecoder {
                     json.decodeFromString<ServerBeginTriviaAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginLinkingAnsweringPhase") ->
                     json.decodeFromString<ServerBeginLinkingAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginSortingAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginSortingAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginPowerPlayPhase") ->
                     json.decodeFromString<ServerBeginPowerPlayPhase>(jsonStr)
                 typeString.contains("ServerRequestPowerPlayChoice") ->
@@ -272,6 +274,14 @@ class ProtocolDecoder {
                     json.decodeFromString<ClientTriviaAnswer>(jsonStr)
                 typeString.contains("ClientLinkingAnswer") ->
                     json.decodeFromString<ClientLinkingAnswer>(jsonStr)
+                typeString.contains("ClientSortingAnswer") ->
+                    json.decodeFromString<ClientSortingAnswer>(jsonStr)
+                typeString.contains("ServerRequestEndOfGameFactCount") ->
+                    json.decodeFromString<ServerRequestEndOfGameFactCount>(jsonStr)
+                typeString.contains("ClientEndOfGameFactCount") ->
+                    json.decodeFromString<ClientEndOfGameFactCount>(jsonStr)
+                typeString == "ClientEndOfGameFactCommandMessage" ->
+                    json.decodeFromString<ClientEndOfGameFactCommandMessage>(jsonStr)
                 else -> null
             }
 
