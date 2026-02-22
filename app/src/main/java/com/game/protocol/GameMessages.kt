@@ -383,6 +383,40 @@ data class ClientPowerPlayChoice(
 ) : GameMessage()
 
 @Serializable
+data class SortingAnswer(
+    val DisplayText: String,
+    val AnswerID: String,
+    val AnswerDirection: Int // 1 = left bucket, 2 = right bucket
+)
+
+@Serializable
+data class ServerBeginSortingAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginSortingAnsweringPhase",
+    val QuestionID: String,
+    val QuestionText: String,
+    val LeftBucketLabel: String,
+    val LeftBucketID: String,
+    val RightBucketLabel: String,
+    val RightBucketID: String,
+    val QuestionDuration: Double,
+    val SortingAnswers: List<SortingAnswer>
+) : GameMessage()
+
+@Serializable
+data class ClientSortingAnswerEntry(
+    val AnswerID: String,
+    val AnswerBucketID: String,
+    val Correct: Boolean
+)
+
+@Serializable
+data class ClientSortingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientSortingAnswer",
+    val ClientSortingCorrectAnswerCount: Int,
+    val SortingAnswers: List<ClientSortingAnswerEntry>
+) : GameMessage()
+
+@Serializable
 data class ClientTriviaAnswer(
     override val TypeString: String = "KnowledgeIsPower.ClientTriviaAnswer",
     val ChosenAnswerDisplayIndex: Int,
@@ -401,4 +435,23 @@ data class ClientTriviaAnswer(
     val IceLayersClearedAnswer1: Int = 0,
     val IceLayersClearedAnswer2: Int = 0,
     val IceLayersClearedAnswer3: Int = 0
+) : GameMessage()
+
+@Serializable
+data class ServerRequestEndOfGameFactCount(
+    override val TypeString: String = "KnowledgeIsPower.ServerRequestEndOfGameFactCount"
+) : GameMessage()
+
+@Serializable
+data class ClientEndOfGameFactCount(
+    override val TypeString: String = "KnowledgeIsPower.ClientEndOfGameFactCount",
+    val FactCount: Int
+) : GameMessage()
+
+@Serializable
+data class ClientEndOfGameFactCommandMessage(
+    override val TypeString: String = "ClientEndOfGameFactCommandMessage",
+    val action: Int,
+    val time: Double,
+    val FactNumber: Int
 ) : GameMessage()

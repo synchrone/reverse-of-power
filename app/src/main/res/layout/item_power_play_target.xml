@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="120dp"
+    android:layout_width="160dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="12dp"
-    android:layout_margin="8dp">
+    android:padding="16dp"
+    android:layout_marginHorizontal="12dp">
 
-    <!-- Stub circle for player avatar -->
-    <View
-        android:id="@+id/targetCircle"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:background="@drawable/circle_background" />
+    <!-- Player avatar photo in circle -->
+    <ImageView
+        android:id="@+id/targetPhoto"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true"
+        tools:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/targetName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:shadowColor="#80000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
         android:gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         tools:text="Player 1" />
 
 </LinearLayout>
