@@ -203,7 +203,7 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.Error -> {
-                Log.e(TAG, "Error decoding packet: ${decoded.message}")
+                Log.e(TAG, "Error decoding packet: ${decoded.message} ${data.toHexString()}")
             }
             is DecodedPacket.Unknown -> {
                 Log.d(TAG, "Unknown packet type: ${data.toHexString()}")
@@ -219,7 +219,7 @@ class GameProtocolClient(
     private fun handleImageData(transferId: Int, jpeg: ByteArray) {
         val pendingGuid = pendingImageControls.remove(transferId)
         if (pendingGuid != null) {
-            Log.d(TAG, "^ matched JPEG for transferId=$transferId with waiting control (${jpeg.size} bytes)")
+            Log.d(TAG, "^ matched JPEG for transferId=$transferId with waiting control $pendingGuid (${jpeg.size} bytes)")
             onImageReceived?.invoke(pendingGuid, jpeg)
             checkResourceComplete(pendingGuid)
         } else {
