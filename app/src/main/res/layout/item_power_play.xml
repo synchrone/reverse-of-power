@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="160dp"
+    android:layout_width="200dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="12dp"
-    android:layout_margin="8dp"
+    android:padding="16dp"
+    android:layout_marginHorizontal="12dp"
     android:background="@android:color/transparent">
 
-    <!-- Power play icon placeholder (colored circle) -->
+    <!-- Power play icon (colored circle) -->
     <View
         android:id="@+id/powerPlayIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:background="@drawable/circle_background" />
 
     <TextView
         android:id="@+id/powerPlayName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@android:color/white"
         android:shadowColor="#80000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
         android:gravity="center"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         tools:text="BOMBLES" />
 
     <TextView
         android:id="@+id/powerPlayDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:textColor="#CCFFFFFF"
         android:gravity="center"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="6dp"
         tools:text="Throw bombs over answers" />
 
 </LinearLayout>

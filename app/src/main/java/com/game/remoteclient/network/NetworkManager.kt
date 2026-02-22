@@ -12,6 +12,8 @@ import com.game.protocol.ClientRequestAvatarMessage
 import com.game.protocol.ClientCategorySelectOverride
 import com.game.protocol.ClientLinkingAnswer
 import com.game.protocol.ClientLinkingAnswerEntry
+import com.game.protocol.ClientSortingAnswer
+import com.game.protocol.ClientSortingAnswerEntry
 import com.game.protocol.ClientPowerPlayChoice
 import com.game.protocol.ClientStopCategorySelectOverrideResponse
 import com.game.protocol.GameMessage
@@ -22,6 +24,7 @@ import com.game.protocol.ServerAvatarRequestResponseMessage
 import com.game.protocol.ServerAvatarStatusMessage
 import com.game.protocol.ServerBeginCategorySelectOverride
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
+import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.ServerCategorySelectOverrideSuccess
@@ -70,6 +73,7 @@ class NetworkManager private constructor() {
     var onPowerPlayMessage: ((ServerBeginPowerPlayPhase) -> Unit)? = null
     var onPowerPlayRequest: (() -> Unit)? = null
     var onLinkingMessage: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
+    var onSortingMessage: ((ServerBeginSortingAnsweringPhase) -> Unit)? = null
     var onCategoryOverrideMessage: ((ServerBeginCategorySelectOverride) -> Unit)? = null
     var onStopCategoryOverride: ((ServerStopCategorySelectOverride) -> Unit)? = null
     var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
@@ -93,10 +97,14 @@ class NetworkManager private constructor() {
     var pendingPowerPlay: ServerBeginPowerPlayPhase? = null
     // Pending linking for when message arrives before fragment is ready
     var pendingLinking: ServerBeginLinkingAnsweringPhase? = null
+    var pendingSorting: ServerBeginSortingAnsweringPhase? = null
     // Pending category override for when message arrives before fragment is ready
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
     // Pending category select request for when message arrives before fragment is ready
     var pendingCategorySelectRequest: Boolean = false
+
+    // Received images indexed by GUID
+    val receivedImages = mutableMapOf<String, ByteArray>()
 
     companion object {
         @Volatile
@@ -162,6 +170,9 @@ class NetworkManager private constructor() {
     private fun setupMessageHandlers() {
         protocolClient?.onMessageReceived = { message ->
             handleUIEvents(message)
+        }
+        protocolClient?.onImageReceived = { guid, data ->
+            receivedImages[guid] = data
         }
     }
 
@@ -243,6 +254,11 @@ class NetworkManager private constructor() {
                 onLinkingMessage?.invoke(message)
             }
 
+            is ServerBeginSortingAnsweringPhase -> {
+                pendingSorting = message
+                onSortingMessage?.invoke(message)
+            }
+
             is ServerBeginCategorySelectOverride -> {
                 pendingCategoryOverride = message
                 onCategoryOverrideMessage?.invoke(message)
@@ -304,6 +320,16 @@ class NetworkManager private constructor() {
             protocolClient?.sendMessage(ClientLinkingAnswer(
                 ClientLinkingCorrectAnswerCount = correctCount,
                 ClientAnswers = answers
+            ))
+        }
+    }
+
+    fun sendSortingAnswer(correctCount: Int, answers: List<ClientSortingAnswerEntry>) {
+        Log.d(TAG, "Sorting answer: $correctCount correct, ${answers.size} attempts")
+        scope.launch {
+            protocolClient?.sendMessage(ClientSortingAnswer(
+                ClientSortingCorrectAnswerCount = correctCount,
+                SortingAnswers = answers
             ))
         }
     }

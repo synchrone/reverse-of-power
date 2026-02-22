@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_serverDiscovery_to_holdingScreen"
             app:destination="@id/holdingScreenFragment" />
+        <action
+            android:id="@+id/action_serverDiscovery_to_waitingRoom"
+            app:destination="@id/waitingRoomFragment" />
     </fragment>
 
     <fragment
@@ -77,6 +80,9 @@
         <action
             android:id="@+id/action_holdingScreen_to_linkingAnswers"
             app:destination="@id/linkingAnswersFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_sortingAnswers"
+            app:destination="@id/sortingAnswersFragment" />
     </fragment>
 
     <fragment
@@ -117,5 +123,10 @@
         android:id="@+id/linkingAnswersFragment"
         android:name="com.game.remoteclient.ui.LinkingAnswersFragment"
         android:label="Linking Answers" />
+
+    <fragment
+        android:id="@+id/sortingAnswersFragment"
+        android:name="com.game.remoteclient.ui.SortingAnswersFragment"
+        android:label="Sorting Answers" />
 
 </navigation>

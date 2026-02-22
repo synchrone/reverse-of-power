@@ -13,6 +13,7 @@ import com.game.protocol.ColorTint
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
+import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerColourMessage
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -38,6 +39,7 @@ class HoldingScreenFragment : Fragment() {
     private var quizCb: ((ClientQuizCommandMessage) -> Unit)? = null
     private var powerPlayCb: ((ServerBeginPowerPlayPhase) -> Unit)? = null
     private var linkingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
+    private var sortingCb: ((ServerBeginSortingAnsweringPhase) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,6 +84,9 @@ class HoldingScreenFragment : Fragment() {
         linkingCb = { _ ->
             activity?.runOnUiThread { navigateToLinkingAnswers() }
         }
+        sortingCb = { _ ->
+            activity?.runOnUiThread { navigateToSortingAnswers() }
+        }
 
         networkManager.onHoldingScreenMessage = holdingScreenCb
         networkManager.onColourMessage = colourCb
@@ -90,6 +95,7 @@ class HoldingScreenFragment : Fragment() {
         networkManager.onQuizCommand = quizCb
         networkManager.onPowerPlayMessage = powerPlayCb
         networkManager.onLinkingMessage = linkingCb
+        networkManager.onSortingMessage = sortingCb
     }
 
     private fun navigateToCategorySelection() {
@@ -110,6 +116,10 @@ class HoldingScreenFragment : Fragment() {
 
     private fun navigateToLinkingAnswers() {
         findNavController().navigate(R.id.action_holdingScreen_to_linkingAnswers)
+    }
+
+    private fun navigateToSortingAnswers() {
+        findNavController().navigate(R.id.action_holdingScreen_to_sortingAnswers)
     }
 
     private fun navigateToNameEntry() {
@@ -164,6 +174,7 @@ class HoldingScreenFragment : Fragment() {
         if (networkManager.onQuizCommand === quizCb) networkManager.onQuizCommand = null
         if (networkManager.onPowerPlayMessage === powerPlayCb) networkManager.onPowerPlayMessage = null
         if (networkManager.onLinkingMessage === linkingCb) networkManager.onLinkingMessage = null
+        if (networkManager.onSortingMessage === sortingCb) networkManager.onSortingMessage = null
         _binding = null
     }
 }
