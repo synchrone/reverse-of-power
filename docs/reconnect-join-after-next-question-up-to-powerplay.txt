@@ -1,0 +1,190 @@
+=== PCAP Replay: docs/reconnect-join-after-next-question-up-to-powerplay.pcapng ===
+
+Extracted 130 UDP packets
+
+#1    C→S   38b  ConnectionInit
+#2    C→S   38b  ConnectionInit
+#3    C→S   44b  DeviceUID: b2f3f8eb0cf4ef4b2359871d35495225
+#4    S→C    8b  Unknown: 4e dd 96 66 3b 27 4f 35
+#5    S→C   38b  ConnectionInit
+#6    S→C  113b  Message 0x347: InterfaceVersionMessage(version=KIP_2016-11-14-1222)
+#7    C→S   38b  NACK 0x47
+         [ 3] 0x03 (3)
+#8    S→C   90b  Message 0x348: SessionStateMessage(sessionId=500469084)
+#9    C→S   38b  NACK 0x48
+         [ 3] 0x03 (3)
+#10   C→S  118b  Message 0x1a: ClientRequestPlayerIDMessage(uid=b2f3f8eb0cf4ef4b2359871d35495225)
+#11   S→C   38b  ACK 0x1a
+#12   S→C  152b  Message 0x349: AssignPlayerIDAndSlotMessage(playerId=45, slotId=1, name="tttt")
+#13   C→S   38b  NACK 0x49
+         [ 3] 0x03 (3)
+#14   S→C  466b  Message 0x34a: 4 messages
+         ResourceRequirementsMessage(0 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=8, text="")
+         PlayerJoinedMessage(currentId=41, oldId=41, slotId=0)
+         PlayerNameQuizStateMessage(name="ggg", playerId=41)
+#15   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#16   C→S   94b  Message 0x1b: AllResourcesReceivedMessage(0 requirements)
+#17   S→C   38b  ACK 0x1b
+#18   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#19   S→C   38b  ACK 0x1b
+#20   S→C   38b  ACK 0x1b
+#21   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#22   S→C   38b  ACK 0x1b
+#23   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#24   S→C   38b  ACK 0x1b
+#25   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#26   S→C   38b  ACK 0x1b
+#27   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#28   S→C   38b  ACK 0x1b
+#29   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#30   S→C   38b  ACK 0x1b
+#31   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#32   S→C   38b  ACK 0x1b
+#33   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#34   S→C   38b  ACK 0x1b
+#35   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#36   S→C   38b  ACK 0x1b
+#37   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#38   S→C   38b  ACK 0x1b
+#39   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#40   S→C   38b  ACK 0x1b
+#41   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#42   S→C   38b  ACK 0x1b
+#43   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#44   S→C   38b  ACK 0x1b
+#45   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#46   S→C   38b  ACK 0x1b
+#47   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#48   S→C   38b  ACK 0x1b
+#49   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#50   S→C   38b  ACK 0x1b
+#51   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#52   S→C   38b  ACK 0x1b
+#53   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#54   S→C   38b  ACK 0x1b
+#55   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#56   S→C   38b  ACK 0x1b
+#57   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#58   S→C   38b  ACK 0x1b
+#59   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#60   S→C   38b  ACK 0x1b
+#61   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#62   S→C   38b  ACK 0x1b
+#63   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#64   S→C   38b  ACK 0x1b
+#65   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#66   S→C   38b  ACK 0x1b
+#67   C→S   38b  NACK 0x4a
+         [ 3] 0x03 (3)
+#68   S→C  879b  Message 0x34b: 4 messages
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+         RejoiningClientOwnProfileMessage
+         ClientGameIDMessage(gameId=29ffe2dae-1695-4cea-927a-efe9a832fa29)
+         ServerColourMessage(rainbow=false, roundType=1)
+#69   C→S   38b  NACK 0x4b
+         [ 3] 0x03 (3)
+#70   S→C  406b  Message 0x34c: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#71   C→S   38b  NACK 0x4c
+         [ 3] 0x03 (3)
+#72   C→S  125b  Message 0x1c: RequestResourceMessage
+#73   S→C   38b  ACK 0x1c
+#74   C→S  240b  Message 0x1d: 2 messages
+         RequestResourceMessage
+         RequestResourceMessage
+#75   S→C  172b  Message 0x34d: ImageResourceContentTransferMessage(transferId=2106, guid=d5455281-10a2-45ac-b227-2e983d587ee0, ack=true)
+#76   S→C   38b  ACK 0x1d
+#77   C→S   38b  NACK 0x4d
+         [ 3] 0x03 (3)
+#78   S→C 1024b  FRAG 0x34e (0/18) 1002b
+#79   S→C 1024b  FRAG 0x34e (1/18) 1002b
+#80   S→C 1024b  FRAG 0x34e (2/18) 1002b
+#81   S→C 1024b  FRAG 0x34e (3/18) 1002b
+#82   S→C 1024b  FRAG 0x34e (4/18) 1002b
+#83   S→C 1024b  FRAG 0x34e (5/18) 1002b
+#84   S→C 1024b  FRAG 0x34e (6/18) 1002b
+#85   S→C 1024b  FRAG 0x34e (7/18) 1002b
+#86   S→C 1024b  FRAG 0x34e (8/18) 1002b
+#87   S→C 1024b  FRAG 0x34e (9/18) 1002b
+#88   S→C 1024b  FRAG 0x34e (10/18) 1002b
+#89   S→C 1024b  FRAG 0x34e (11/18) 1002b
+#90   S→C 1024b  FRAG 0x34e (12/18) 1002b
+#91   S→C 1024b  FRAG 0x34e (13/18) 1002b
+#92   S→C 1024b  FRAG 0x34e (14/18) 1002b
+#93   S→C 1024b  FRAG 0x34e (15/18) 1002b
+#94   S→C 1024b  FRAG 0x34e (16/18) 1002b
+#95   S→C  292b  ImageData msgId=0x34e transferId=2106 jpeg=17290b
+#96   C→S   38b  NACK 0x4e
+         [ 3] 0x03 (3)
+#97   S→C  172b  Message 0x34f: ImageResourceContentTransferMessage(transferId=2107, guid=e8d84719-46d3-4b77-b8ef-7fb750115f88, ack=true)
+#98   C→S   38b  NACK 0x4f
+         [ 3] 0x03 (3)
+#99   S→C 1024b  FRAG 0x350 (0/10) 1002b
+#100  S→C 1024b  FRAG 0x350 (1/10) 1002b
+#101  S→C 1024b  FRAG 0x350 (2/10) 1002b
+#102  S→C 1024b  FRAG 0x350 (3/10) 1002b
+#103  S→C 1024b  FRAG 0x350 (4/10) 1002b
+#104  S→C 1024b  FRAG 0x350 (5/10) 1002b
+#105  S→C 1024b  FRAG 0x350 (6/10) 1002b
+#106  S→C 1024b  FRAG 0x350 (7/10) 1002b
+#107  S→C 1024b  FRAG 0x350 (8/10) 1002b
+#108  S→C  174b  ImageData msgId=0x350 transferId=2107 jpeg=9156b
+#109  C→S   38b  NACK 0x50
+         [ 3] 0x03 (3)
+#110  C→S  211b  Message 0x1e: AllResourcesReceivedMessage(2 requirements)
+#111  S→C   38b  ACK 0x1e
+#112  S→C   38b  ACK 0x1e
+#113  C→S   38b  NACK 0x50
+         [ 3] 0x03 (3)
+#114  S→C   38b  ACK 0x1e
+#115  C→S   38b  NACK 0x50
+         [ 3] 0x03 (3)
+#116  S→C   38b  ACK 0x1e
+#117  S→C  211b  Message 0x351: ResourceRequirementsMessage(2 requirements)
+#118  C→S   38b  NACK 0x51
+         [ 3] 0x03 (3)
+#119  C→S  211b  Message 0x1f: AllResourcesReceivedMessage(2 requirements)
+#120  S→C   38b  ACK 0x1f
+#121  S→C  739b  Message 0x352: ServerBeginPowerPlayPhase
+#122  C→S   38b  NACK 0x52
+         [ 3] 0x03 (3)
+#123  C→S  211b  Message 0x20: AllResourcesReceivedMessage(2 requirements)
+#124  S→C   38b  ACK 0x20
+#125  C→S   38b  NACK 0x52
+         [ 3] 0x03 (3)
+#126  S→C   38b  ACK 0x20
+#127  S→C   38b  ACK 0x20
+#128  C→S   38b  NACK 0x52
+         [ 3] 0x03 (3)
+#129  S→C   38b  ACK 0x20
+#130  C→S   38b  NACK 0x52
+         [ 3] 0x03 (3)
+
+=== Summary: 78 server packets, 52 client packets, 130 total ===

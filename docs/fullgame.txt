@@ -1,0 +1,3135 @@
+=== PCAP Replay: /home/syn/Nextcloud/Docs/Reversing Knowledge Is Power/fullgame.pcapng ===
+
+Extracted 3021 UDP packets
+
+#1    C→S   44b  DeviceUID: b2f3f8eb0cf4ef4b2359871d35495225
+#2    C→S   38b  ConnectionInit
+#3    S→C    8b  Unknown: 4e dd 96 66 3b 27 4f 63
+#4    S→C   38b  ConnectionInit
+#5    S→C  113b  Message 0x0c: InterfaceVersionMessage(version=KIP_2016-11-14-1222)
+#6    C→S   38b  ACK 0x0c
+#7    S→C   90b  Message 0x0d: SessionStateMessage(sessionId=627950993)
+#8    C→S   38b  ACK 0x0d
+#9    C→S  118b  Message 0x01: ClientRequestPlayerIDMessage(uid=b2f3f8eb0cf4ef4b2359871d35495225)
+#10   S→C   38b  ACK 0x01
+#11   S→C  155b  Message 0x0e: AssignPlayerIDAndSlotMessage(playerId=4, slotId=1, name="Player 2")
+#12   C→S   38b  ACK 0x0e
+#13   S→C 1024b  FRAG 0x0f (0/2) 1002b
+#14   S→C   23b  Message 0x0f: 10 messages
+         ResourceRequirementsMessage(0 requirements)
+         ClientQuizCommandMessage(action=31, time=0.0)
+         ServerAvatarStatusMessage(id=COWGIRL, available=true)
+         ServerAvatarStatusMessage(id=GOFF, available=true)
+         ServerAvatarStatusMessage(id=HOTDOGMAN, available=true)
+         ServerAvatarStatusMessage(id=LOVER, available=true)
+         ServerAvatarStatusMessage(id=MOUNTAINEER, available=true)
+         ServerAvatarStatusMessage(id=SCIENTIST, available=true)
+         ServerAvatarStatusMessage(id=SPACEMAN, available=true)
+         ServerAvatarStatusMessage(id=MAGICIAN, available=true)
+#15   C→S   38b  ACK 0x0f
+#16   C→S   94b  Message 0x02: AllResourcesReceivedMessage(0 requirements)
+#17   S→C   38b  ACK 0x02
+#18   C→S  373b  Message 0x03: 2 messages
+         ClientRequestAvatarStatusMessage
+         DeviceInfoMessage(model="Genymobile Pixel 9", os="Android OS 11 / API-30 (RQ1A.210105.003/857)")
+#19   S→C   38b  ACK 0x03
+#20   S→C  883b  Message 0x10: 8 messages
+         ServerAvatarStatusMessage(id=COWGIRL, available=true)
+         ServerAvatarStatusMessage(id=GOFF, available=true)
+         ServerAvatarStatusMessage(id=HOTDOGMAN, available=true)
+         ServerAvatarStatusMessage(id=LOVER, available=true)
+         ServerAvatarStatusMessage(id=MOUNTAINEER, available=true)
+         ServerAvatarStatusMessage(id=SCIENTIST, available=true)
+         ServerAvatarStatusMessage(id=SPACEMAN, available=true)
+         ServerAvatarStatusMessage(id=MAGICIAN, available=true)
+#21   C→S   38b  ACK 0x10
+#22   S→C   38b  ACK 0x03
+#23   C→S   38b  ACK 0x10
+#24   S→C   38b  ACK 0x03
+#25   C→S   38b  ACK 0x10
+#26   S→C   38b  ACK 0x03
+#27   C→S   38b  ACK 0x10
+#28   S→C   38b  ACK 0x03
+#29   C→S   38b  ACK 0x10
+#30   S→C   38b  ACK 0x03
+#31   C→S   38b  ACK 0x10
+#32   S→C   38b  ACK 0x03
+#33   C→S   38b  ACK 0x10
+#34   S→C   38b  ACK 0x03
+#35   C→S   38b  ACK 0x10
+#36   S→C   38b  ACK 0x03
+#37   C→S   38b  ACK 0x10
+#38   S→C   38b  ACK 0x03
+#39   C→S   38b  ACK 0x10
+#40   S→C   38b  ACK 0x03
+#41   C→S   38b  ACK 0x10
+#42   S→C   38b  ACK 0x03
+#43   C→S   38b  ACK 0x10
+#44   S→C   38b  ACK 0x03
+#45   C→S   38b  ACK 0x10
+#46   S→C   38b  ACK 0x03
+#47   C→S   38b  ACK 0x10
+#48   S→C   38b  ACK 0x03
+#49   C→S   38b  ACK 0x10
+#50   S→C   38b  ACK 0x03
+#51   C→S   38b  ACK 0x10
+#52   S→C   38b  ACK 0x03
+#53   C→S   38b  ACK 0x10
+#54   C→S  180b  Message 0x04: ClientRequestAvatarMessage(requestId=b67c9407-a4d9-463c-b63b-f96a1246e71f, avatarId=MAGICIAN)
+#55   S→C   38b  ACK 0x04
+#56   S→C  311b  Message 0x11: 2 messages
+         ServerAvatarRequestResponseMessage(requestId=b67c9407-a4d9-463c-b63b-f96a1246e71f, id=MAGICIAN, available=true)
+         ServerAvatarStatusMessage(id=MAGICIAN, available=false)
+#57   C→S   38b  ACK 0x11
+#58   S→C   38b  ACK 0x04
+#59   C→S   38b  ACK 0x11
+#60   S→C   38b  ACK 0x04
+#61   C→S   38b  ACK 0x11
+#62   C→S  168b  Message 0x05: ClientImageResourceContentTransferMessage(transferId=2, guid=7551b16c-ac64-49db-86cd-ea2f3c446a04, type=2)
+#63   S→C   38b  ACK 0x05
+#64   C→S 1024b  FRAG 0x06 (0/13) 1002b
+#65   C→S 1024b  FRAG 0x06 (1/13) 1002b
+#66   C→S 1024b  FRAG 0x06 (2/13) 1002b
+#67   C→S 1024b  FRAG 0x06 (3/13) 1002b
+#68   C→S 1024b  FRAG 0x06 (4/13) 1002b
+#69   C→S 1024b  FRAG 0x06 (5/13) 1002b
+#70   C→S 1024b  FRAG 0x06 (6/13) 1002b
+#71   C→S 1024b  FRAG 0x06 (7/13) 1002b
+#72   C→S 1024b  FRAG 0x06 (8/13) 1002b
+#73   C→S 1024b  FRAG 0x06 (9/13) 1002b
+#74   C→S 1024b  FRAG 0x06 (10/13) 1002b
+#75   C→S 1024b  FRAG 0x06 (11/13) 1002b
+#76   C→S  352b  ImageData msgId=0x06 transferId=2 jpeg=12340b
+#77   S→C   38b  ACK 0x06
+#78   C→S   38b  ACK 0x11
+#79   S→C   38b  ACK 0x06
+#80   C→S   38b  ACK 0x11
+#81   S→C   38b  ACK 0x06
+#82   S→C   38b  ACK 0x06
+#83   C→S   38b  ACK 0x11
+#84   S→C   38b  ACK 0x06
+#85   C→S   38b  ACK 0x11
+#86   S→C   38b  ACK 0x06
+#87   C→S   38b  ACK 0x11
+#88   S→C   38b  ACK 0x06
+#89   C→S   38b  ACK 0x11
+#90   S→C   38b  ACK 0x06
+#91   C→S   38b  ACK 0x11
+#92   C→S  340b  Message 0x07: 2 messages
+         ClientPlayerProfileMessage(name="player", card=MAGICIAN)
+         ClientImageResourceContentTransferMessage(transferId=3, guid=7551b16c-ac64-49db-86cd-ea2f3c446a04, type=2)
+#93   S→C   38b  ACK 0x07
+#94   C→S 1024b  FRAG 0x08 (0/13) 1002b
+#95   C→S 1024b  FRAG 0x08 (1/13) 1002b
+#96   C→S 1024b  FRAG 0x08 (2/13) 1002b
+#97   C→S 1024b  FRAG 0x08 (3/13) 1002b
+#98   C→S 1024b  FRAG 0x08 (4/13) 1002b
+#99   C→S 1024b  FRAG 0x08 (5/13) 1002b
+#100  C→S 1024b  FRAG 0x08 (6/13) 1002b
+#101  C→S 1024b  FRAG 0x08 (7/13) 1002b
+#102  C→S 1024b  FRAG 0x08 (8/13) 1002b
+#103  C→S 1024b  FRAG 0x08 (9/13) 1002b
+#104  C→S 1024b  FRAG 0x08 (10/13) 1002b
+#105  C→S 1024b  FRAG 0x08 (11/13) 1002b
+#106  C→S  352b  ImageData msgId=0x08 transferId=3 jpeg=12340b
+#107  S→C   38b  ACK 0x08
+#108  C→S   38b  ACK 0x11
+#109  S→C   38b  ACK 0x08
+#110  S→C   38b  ACK 0x08
+#111  C→S   38b  ACK 0x11
+#112  S→C   38b  ACK 0x08
+#113  C→S   38b  ACK 0x11
+#114  S→C   38b  ACK 0x08
+#115  C→S   38b  ACK 0x11
+#116  S→C   38b  ACK 0x08
+#117  C→S   38b  ACK 0x11
+#118  S→C   38b  ACK 0x08
+#119  C→S   38b  ACK 0x11
+#120  S→C  128b  Message 0x12: ServerAvatarStatusMessage(id=LOVER, available=false)
+#121  C→S   38b  ACK 0x12
+#122  S→C   38b  ACK 0x08
+#123  C→S   38b  ACK 0x12
+#124  S→C   38b  ACK 0x08
+#125  C→S   38b  ACK 0x12
+#126  S→C   38b  ACK 0x08
+#127  C→S   38b  ACK 0x12
+#128  S→C   38b  ACK 0x08
+#129  C→S   38b  ACK 0x12
+#130  S→C   38b  ACK 0x08
+#131  C→S   38b  ACK 0x12
+#132  S→C   38b  ACK 0x08
+#133  C→S   38b  ACK 0x12
+#134  S→C   96b  Message 0x13: ClientQuizCommandMessage(action=14, time=0.0)
+#135  C→S   38b  ACK 0x13
+#136  S→C   38b  ACK 0x08
+#137  C→S   38b  ACK 0x13
+#138  S→C   38b  ACK 0x08
+#139  C→S   38b  ACK 0x13
+#140  S→C   38b  ACK 0x08
+#141  C→S   38b  ACK 0x13
+#142  S→C  844b  Message 0x14: 5 messages
+         ClientGameIDMessage(gameId=2d89cda4c-c7ae-4c4b-a8d7-a7289c16af1a)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+         PlayerJoinedMessage(currentId=2, oldId=2, slotId=0)
+         PlayerNameQuizStateMessage(name="t", playerId=2)
+         ServerColourMessage(rainbow=false, roundType=1)
+#143  C→S   38b  ACK 0x14
+#144  S→C  170b  Message 0x15: ImageResourceContentTransferMessage(transferId=90, guid=cfe52c9b-47e0-404f-877c-1c3f687f61df, ack=true)
+#145  C→S   38b  ACK 0x15
+#146  S→C 1024b  FRAG 0x16 (0/24) 1002b
+#147  S→C 1024b  FRAG 0x16 (1/24) 1002b
+#148  S→C 1024b  FRAG 0x16 (2/24) 1002b
+#149  S→C 1024b  FRAG 0x16 (3/24) 1002b
+#150  S→C 1024b  FRAG 0x16 (4/24) 1002b
+#151  S→C 1024b  FRAG 0x16 (5/24) 1002b
+#152  S→C 1024b  FRAG 0x16 (6/24) 1002b
+#153  S→C 1024b  FRAG 0x16 (7/24) 1002b
+#154  S→C 1024b  FRAG 0x16 (8/24) 1002b
+#155  S→C 1024b  FRAG 0x16 (9/24) 1002b
+#156  S→C 1024b  FRAG 0x16 (10/24) 1002b
+#157  S→C 1024b  FRAG 0x16 (11/24) 1002b
+#158  S→C 1024b  FRAG 0x16 (12/24) 1002b
+#159  S→C 1024b  FRAG 0x16 (13/24) 1002b
+#160  S→C 1024b  FRAG 0x16 (14/24) 1002b
+#161  S→C 1024b  FRAG 0x16 (15/24) 1002b
+#162  S→C 1024b  FRAG 0x16 (16/24) 1002b
+#163  S→C 1024b  FRAG 0x16 (17/24) 1002b
+#164  S→C 1024b  FRAG 0x16 (18/24) 1002b
+#165  S→C 1024b  FRAG 0x16 (19/24) 1002b
+#166  S→C 1024b  FRAG 0x16 (20/24) 1002b
+#167  S→C 1024b  FRAG 0x16 (21/24) 1002b
+#168  S→C 1024b  FRAG 0x16 (22/24) 1002b
+#169  S→C  783b  ImageData msgId=0x16 transferId=90 jpeg=23793b
+#170  C→S   38b  ACK 0x16
+#171  C→S   94b  Message 0x09: AllResourcesReceivedMessage(0 requirements)
+#172  S→C   38b  ACK 0x09
+#173  C→S   38b  ACK 0x16
+#174  S→C   38b  ACK 0x09
+#175  C→S   38b  ACK 0x16
+#176  S→C   38b  ACK 0x09
+#177  S→C   38b  ACK 0x09
+#178  C→S   38b  ACK 0x16
+#179  S→C   38b  ACK 0x09
+#180  C→S   38b  ACK 0x16
+#181  S→C   38b  ACK 0x09
+#182  C→S   38b  ACK 0x16
+#183  S→C   38b  ACK 0x09
+#184  C→S   38b  ACK 0x16
+#185  S→C   38b  ACK 0x09
+#186  C→S   38b  ACK 0x16
+#187  S→C   38b  ACK 0x09
+#188  C→S   38b  ACK 0x16
+#189  S→C   38b  ACK 0x09
+#190  C→S   38b  ACK 0x16
+#191  S→C   38b  ACK 0x09
+#192  C→S   38b  ACK 0x16
+#193  S→C   38b  ACK 0x09
+#194  C→S   38b  ACK 0x16
+#195  S→C   38b  ACK 0x09
+#196  C→S   38b  ACK 0x16
+#197  S→C   38b  ACK 0x09
+#198  C→S   38b  ACK 0x16
+#199  S→C   38b  ACK 0x09
+#200  C→S   38b  ACK 0x16
+#201  S→C   38b  ACK 0x09
+#202  C→S   38b  ACK 0x16
+#203  S→C   38b  ACK 0x09
+#204  C→S   38b  ACK 0x16
+#205  S→C   38b  ACK 0x09
+#206  C→S   38b  ACK 0x16
+#207  S→C   38b  ACK 0x09
+#208  C→S   38b  ACK 0x16
+#209  S→C   38b  ACK 0x09
+#210  C→S   38b  ACK 0x16
+#211  S→C   38b  ACK 0x09
+#212  C→S   38b  ACK 0x16
+#213  S→C   38b  ACK 0x09
+#214  C→S   38b  ACK 0x16
+#215  S→C   38b  ACK 0x09
+#216  C→S   38b  ACK 0x16
+#217  S→C   38b  ACK 0x09
+#218  C→S   38b  ACK 0x16
+#219  S→C   38b  ACK 0x09
+#220  C→S   38b  ACK 0x16
+#221  S→C   38b  ACK 0x09
+#222  C→S   38b  ACK 0x16
+#223  S→C   38b  ACK 0x09
+#224  C→S   38b  ACK 0x16
+#225  S→C   38b  ACK 0x09
+#226  C→S   38b  ACK 0x16
+#227  S→C   38b  ACK 0x09
+#228  C→S   38b  ACK 0x16
+#229  S→C   38b  ACK 0x09
+#230  C→S   38b  ACK 0x16
+#231  S→C   38b  ACK 0x09
+#232  C→S   38b  ACK 0x16
+#233  S→C   38b  ACK 0x09
+#234  C→S   38b  ACK 0x16
+#235  S→C   38b  ACK 0x09
+#236  C→S   38b  ACK 0x16
+#237  S→C   38b  ACK 0x09
+#238  C→S   38b  ACK 0x16
+#239  S→C   38b  ACK 0x09
+#240  C→S   38b  ACK 0x16
+#241  S→C   38b  ACK 0x09
+#242  C→S   38b  ACK 0x16
+#243  S→C   38b  ACK 0x09
+#244  C→S   38b  ACK 0x16
+#245  S→C   38b  ACK 0x09
+#246  C→S   38b  ACK 0x16
+#247  S→C   38b  ACK 0x09
+#248  S→C   38b  ACK 0x09
+#249  C→S   38b  ACK 0x16
+#250  S→C   38b  ACK 0x09
+#251  C→S   38b  ACK 0x16
+#252  S→C   38b  ACK 0x09
+#253  C→S   38b  ACK 0x16
+#254  S→C   38b  ACK 0x09
+#255  C→S   38b  ACK 0x16
+#256  S→C   38b  ACK 0x09
+#257  C→S   38b  ACK 0x16
+#258  S→C   38b  ACK 0x09
+#259  C→S   38b  ACK 0x16
+#260  S→C  384b  Message 0x17: ServerColourMessage(rainbow=false, roundType=1)
+#261  C→S   38b  ACK 0x17
+#262  S→C   38b  ACK 0x09
+#263  C→S   38b  ACK 0x17
+#264  S→C   38b  ACK 0x09
+#265  C→S   38b  ACK 0x17
+#266  S→C   38b  ACK 0x09
+#267  C→S   38b  ACK 0x17
+#268  S→C  910b  Message 0x18: ServerCategorySelectChoices(4 choices: "Life Sciences", "The World Today", "Hobbies", "Music")
+#269  C→S   38b  ACK 0x18
+#270  S→C   38b  ACK 0x09
+#271  C→S   38b  ACK 0x18
+#272  S→C   38b  ACK 0x09
+#273  C→S   38b  ACK 0x18
+#274  S→C   38b  ACK 0x09
+#275  C→S   38b  ACK 0x18
+#276  S→C   38b  ACK 0x09
+#277  C→S   38b  ACK 0x18
+#278  S→C   38b  ACK 0x09
+#279  C→S   38b  ACK 0x18
+#280  S→C   38b  ACK 0x09
+#281  C→S   38b  ACK 0x18
+#282  C→S  116b  Message 0x0a: ClientCategorySelectChoice(doorIndex=0)
+#283  S→C   38b  ACK 0x0a
+#284  S→C   38b  ACK 0x0a
+#285  C→S   38b  ACK 0x18
+#286  S→C   38b  ACK 0x0a
+#287  C→S   38b  ACK 0x18
+#288  S→C   38b  ACK 0x0a
+#289  C→S   38b  ACK 0x18
+#290  S→C   38b  ACK 0x0a
+#291  C→S   38b  ACK 0x18
+#292  S→C   38b  ACK 0x0a
+#293  C→S   38b  ACK 0x18
+#294  S→C   99b  Message 0x19: ServerRequestCategorySelectChoice
+#295  C→S   38b  ACK 0x19
+#296  S→C  182b  Message 0x1a: ServerBeginCategorySelectOverride(duration=15.0s, door=6)
+#297  C→S   38b  ACK 0x1a
+#298  S→C   38b  ACK 0x0a
+#299  C→S   38b  ACK 0x1a
+#300  S→C   38b  ACK 0x0a
+#301  C→S   38b  ACK 0x1a
+#302  S→C   38b  ACK 0x0a
+#303  C→S   38b  ACK 0x1a
+#304  S→C   98b  Message 0x1b: ServerStopCategorySelectOverride
+#305  C→S   38b  ACK 0x1b
+#306  S→C  205b  Message 0x1c: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#307  C→S  127b  Message 0x0b: ClientStopCategorySelectOverrideResponse(overrideSent=false)
+#308  C→S   38b  ACK 0x1c
+#309  S→C   38b  ACK 0x0b
+#310  C→S   38b  ACK 0x1c
+#311  S→C   38b  ACK 0x0b
+#312  S→C   38b  ACK 0x0b
+#313  C→S   38b  ACK 0x1c
+#314  S→C   38b  ACK 0x0b
+#315  C→S   38b  ACK 0x1c
+#316  S→C   38b  ACK 0x0b
+#317  C→S   38b  ACK 0x1c
+#318  S→C   38b  ACK 0x0b
+#319  C→S   38b  ACK 0x1c
+#320  S→C   38b  ACK 0x0b
+#321  C→S   38b  ACK 0x1c
+#322  S→C   38b  ACK 0x0b
+#323  C→S   38b  ACK 0x1c
+#324  S→C   38b  ACK 0x0b
+#325  C→S   38b  ACK 0x1c
+#326  S→C   38b  ACK 0x0b
+#327  C→S   38b  ACK 0x1c
+#328  S→C  580b  Message 0x1d: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#329  C→S   38b  ACK 0x1d
+#330  S→C   38b  ACK 0x0b
+#331  C→S   38b  ACK 0x1d
+#332  S→C   38b  ACK 0x0b
+#333  C→S   38b  ACK 0x1d
+#334  S→C   38b  ACK 0x0b
+#335  C→S   38b  ACK 0x1d
+#336  S→C  347b  Message 0x1e: 2 messages
+         ResourceRequirementsMessage(1 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#337  C→S   38b  ACK 0x1e
+#338  C→S   94b  Message 0x0c: AllResourcesReceivedMessage(0 requirements)
+#339  S→C   38b  ACK 0x0c
+#340  S→C   38b  ACK 0x0c
+#341  C→S   38b  ACK 0x1e
+#342  S→C   38b  ACK 0x0c
+#343  C→S   38b  ACK 0x1e
+#344  S→C   38b  ACK 0x0c
+#345  C→S   38b  ACK 0x1e
+#346  S→C   38b  ACK 0x0c
+#347  C→S   38b  ACK 0x1e
+#348  S→C   38b  ACK 0x0c
+#349  C→S   38b  ACK 0x1e
+#350  S→C   38b  ACK 0x0c
+#351  C→S   38b  ACK 0x1e
+#352  S→C   38b  ACK 0x0c
+#353  C→S   38b  ACK 0x1e
+#354  S→C   38b  ACK 0x0c
+#355  C→S   38b  ACK 0x1e
+#356  S→C  205b  Message 0x1f: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#357  C→S   38b  ACK 0x1f
+#358  S→C   38b  ACK 0x0c
+#359  C→S   38b  ACK 0x1f
+#360  S→C   38b  ACK 0x0c
+#361  C→S   38b  ACK 0x1f
+#362  S→C   38b  ACK 0x0c
+#363  C→S   38b  ACK 0x1f
+#364  S→C   38b  ACK 0x0c
+#365  C→S   38b  ACK 0x1f
+#366  S→C   38b  ACK 0x0c
+#367  C→S   38b  ACK 0x1f
+#368  S→C   38b  ACK 0x0c
+#369  C→S   38b  ACK 0x1f
+#370  S→C 1024b  FRAG 0x20 (0/2) 1002b
+#371  S→C   91b  Message 0x20: ServerBeginTriviaAnsweringPhase(q="What kind of “Hippos” starred in a best-selling 90s toy?", 4 answers, duration=15.0s)
+#372  C→S   38b  ACK 0x20
+#373  C→S   94b  Message 0x0d: AllResourcesReceivedMessage(0 requirements)
+#374  S→C   38b  ACK 0x0d
+#375  C→S   38b  ACK 0x20
+#376  S→C   38b  ACK 0x0d
+#377  C→S   38b  ACK 0x20
+#378  S→C   38b  ACK 0x0d
+#379  S→C   38b  ACK 0x0d
+#380  C→S   38b  ACK 0x20
+#381  S→C   38b  ACK 0x0d
+#382  C→S   38b  ACK 0x20
+#383  C→S  516b  Message 0x0e: ClientTriviaAnswer
+#384  S→C   38b  ACK 0x0e
+#385  S→C  205b  Message 0x21: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#386  C→S   38b  ACK 0x21
+#387  S→C   38b  ACK 0x0e
+#388  C→S   38b  ACK 0x21
+#389  S→C   38b  ACK 0x0e
+#390  C→S   38b  ACK 0x21
+#391  S→C   38b  ACK 0x0e
+#392  C→S   38b  ACK 0x21
+#393  S→C   38b  ACK 0x0e
+#394  C→S   38b  ACK 0x21
+#395  S→C   38b  ACK 0x0e
+#396  C→S   38b  ACK 0x21
+#397  S→C   38b  ACK 0x0e
+#398  C→S   38b  ACK 0x21
+#399  S→C   38b  ACK 0x0e
+#400  C→S   38b  ACK 0x21
+#401  S→C   38b  ACK 0x0e
+#402  C→S   38b  ACK 0x21
+#403  S→C   38b  ACK 0x0e
+#404  C→S   38b  ACK 0x21
+#405  S→C   38b  ACK 0x0e
+#406  C→S   38b  ACK 0x21
+#407  S→C   38b  ACK 0x0e
+#408  C→S   38b  ACK 0x21
+#409  S→C   38b  ACK 0x0e
+#410  C→S   38b  ACK 0x21
+#411  S→C   38b  ACK 0x0e
+#412  C→S   38b  ACK 0x21
+#413  S→C   38b  ACK 0x0e
+#414  C→S   38b  ACK 0x21
+#415  S→C   38b  ACK 0x0e
+#416  C→S   38b  ACK 0x21
+#417  S→C   38b  ACK 0x0e
+#418  C→S   38b  ACK 0x21
+#419  S→C   38b  ACK 0x0e
+#420  S→C   95b  Message 0x22: ClientQuizCommandMessage(action=4, time=0.0)
+#421  C→S   38b  ACK 0x22
+#422  S→C   38b  ACK 0x0e
+#423  C→S   38b  ACK 0x22
+#424  S→C   38b  ACK 0x0e
+#425  C→S   38b  ACK 0x22
+#426  S→C   38b  ACK 0x0e
+#427  C→S   38b  ACK 0x22
+#428  S→C   38b  ACK 0x0e
+#429  C→S   38b  ACK 0x22
+#430  S→C   38b  ACK 0x0e
+#431  C→S   38b  ACK 0x22
+#432  S→C  205b  Message 0x23: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#433  C→S   38b  ACK 0x23
+#434  S→C   38b  ACK 0x0e
+#435  C→S   38b  ACK 0x23
+#436  S→C   38b  ACK 0x0e
+#437  C→S   38b  ACK 0x23
+#438  S→C   38b  ACK 0x0e
+#439  C→S   38b  ACK 0x23
+#440  S→C  912b  Message 0x24: ServerCategorySelectChoices(4 choices: "Family Time", "Fun For Kids", "Hippos", "Toys & Games")
+#441  C→S   38b  ACK 0x24
+#442  S→C   38b  ACK 0x0e
+#443  C→S   38b  ACK 0x24
+#444  S→C   38b  ACK 0x0e
+#445  C→S   38b  ACK 0x24
+#446  C→S  116b  Message 0x0f: ClientCategorySelectChoice(doorIndex=1)
+#447  S→C   38b  ACK 0x0f
+#448  C→S   38b  ACK 0x24
+#449  S→C   38b  ACK 0x0f
+#450  S→C   99b  Message 0x25: ServerRequestCategorySelectChoice
+#451  C→S   38b  ACK 0x25
+#452  S→C  181b  Message 0x26: ServerBeginCategorySelectOverride(duration=15.0s, door=0)
+#453  C→S   38b  ACK 0x26
+#454  S→C   38b  ACK 0x0f
+#455  C→S   38b  ACK 0x26
+#456  C→S  131b  Message 0x10: ClientCategorySelectOverride(duration=1.2216854095458984s)
+#457  S→C   38b  ACK 0x10
+#458  S→C   98b  Message 0x27: ServerStopCategorySelectOverride
+#459  C→S   38b  ACK 0x27
+#460  S→C  182b  Message 0x28: ServerCategorySelectOverrideSuccess(success=true, player="player")
+#461  C→S  126b  Message 0x11: ClientStopCategorySelectOverrideResponse(overrideSent=true)
+#462  C→S   38b  ACK 0x28
+#463  S→C   38b  ACK 0x11
+#464  S→C   38b  ACK 0x11
+#465  C→S   38b  ACK 0x28
+#466  S→C   38b  ACK 0x11
+#467  C→S   38b  ACK 0x28
+#468  S→C   38b  ACK 0x11
+#469  C→S   38b  ACK 0x28
+#470  S→C   38b  ACK 0x11
+#471  C→S   38b  ACK 0x28
+#472  S→C   38b  ACK 0x11
+#473  C→S   38b  ACK 0x28
+#474  S→C   38b  ACK 0x11
+#475  C→S   38b  ACK 0x28
+#476  S→C   38b  ACK 0x11
+#477  C→S   38b  ACK 0x28
+#478  S→C   38b  ACK 0x11
+#479  C→S   38b  ACK 0x28
+#480  S→C   38b  ACK 0x11
+#481  C→S   38b  ACK 0x28
+#482  S→C   38b  ACK 0x11
+#483  C→S   38b  ACK 0x28
+#484  S→C   38b  ACK 0x11
+#485  C→S   38b  ACK 0x28
+#486  S→C   38b  ACK 0x11
+#487  C→S   38b  ACK 0x28
+#488  S→C   38b  ACK 0x11
+#489  C→S   38b  ACK 0x28
+#490  S→C   38b  ACK 0x11
+#491  C→S   38b  ACK 0x28
+#492  S→C   38b  ACK 0x11
+#493  C→S   38b  ACK 0x28
+#494  S→C   38b  ACK 0x11
+#495  C→S   38b  ACK 0x28
+#496  S→C   38b  ACK 0x11
+#497  C→S   38b  ACK 0x28
+#498  S→C   38b  ACK 0x11
+#499  C→S   38b  ACK 0x28
+#500  S→C   38b  ACK 0x11
+#501  C→S   38b  ACK 0x28
+#502  S→C   38b  ACK 0x11
+#503  S→C  551b  Message 0x29: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#504  C→S   38b  ACK 0x29
+#505  S→C   38b  ACK 0x11
+#506  C→S   38b  ACK 0x29
+#507  S→C   38b  ACK 0x11
+#508  C→S   38b  ACK 0x29
+#509  S→C  289b  Message 0x2a: 2 messages
+         ResourceRequirementsMessage(0 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#510  C→S   38b  ACK 0x2a
+#511  C→S   94b  Message 0x12: AllResourcesReceivedMessage(0 requirements)
+#512  S→C   38b  ACK 0x12
+#513  S→C   38b  ACK 0x12
+#514  C→S   38b  ACK 0x2a
+#515  S→C   38b  ACK 0x12
+#516  C→S   38b  ACK 0x2a
+#517  S→C   38b  ACK 0x12
+#518  C→S   38b  ACK 0x2a
+#519  S→C  211b  Message 0x2b: ResourceRequirementsMessage(2 requirements)
+#520  C→S   38b  ACK 0x2b
+#521  C→S  211b  Message 0x13: AllResourcesReceivedMessage(2 requirements)
+#522  S→C   38b  ACK 0x13
+#523  S→C  739b  Message 0x2c: ServerBeginPowerPlayPhase
+#524  C→S   38b  ACK 0x2c
+#525  C→S  211b  Message 0x14: AllResourcesReceivedMessage(2 requirements)
+#526  S→C   38b  ACK 0x14
+#527  S→C   38b  ACK 0x14
+#528  C→S   38b  ACK 0x2c
+#529  S→C   38b  ACK 0x14
+#530  C→S   38b  ACK 0x2c
+#531  S→C   38b  ACK 0x14
+#532  C→S   38b  ACK 0x2c
+#533  C→S  132b  Message 0x15: ClientPowerPlayChoice
+#534  S→C   38b  ACK 0x15
+#535  C→S   38b  ACK 0x2c
+#536  S→C   38b  ACK 0x15
+#537  S→C   38b  ACK 0x15
+#538  C→S   38b  ACK 0x2c
+#539  S→C   94b  Message 0x2d: ServerRequestPowerPlayChoice
+#540  C→S   38b  ACK 0x2d
+#541  S→C  205b  Message 0x2e: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#542  C→S   38b  ACK 0x2e
+#543  S→C   38b  ACK 0x15
+#544  C→S   38b  ACK 0x2e
+#545  S→C   38b  ACK 0x15
+#546  C→S   38b  ACK 0x2e
+#547  S→C   38b  ACK 0x15
+#548  C→S   38b  ACK 0x2e
+#549  S→C   38b  ACK 0x15
+#550  C→S   38b  ACK 0x2e
+#551  S→C   38b  ACK 0x15
+#552  C→S   38b  ACK 0x2e
+#553  S→C   38b  ACK 0x15
+#554  C→S   38b  ACK 0x2e
+#555  S→C   38b  ACK 0x15
+#556  C→S   38b  ACK 0x2e
+#557  S→C   38b  ACK 0x15
+#558  C→S   38b  ACK 0x2e
+#559  S→C   38b  ACK 0x15
+#560  C→S   38b  ACK 0x2e
+#561  S→C   38b  ACK 0x15
+#562  C→S   38b  ACK 0x2e
+#563  S→C   38b  ACK 0x15
+#564  C→S   38b  ACK 0x2e
+#565  S→C   38b  ACK 0x15
+#566  C→S   38b  ACK 0x2e
+#567  S→C   38b  ACK 0x15
+#568  C→S   38b  ACK 0x2e
+#569  S→C   38b  ACK 0x15
+#570  C→S   38b  ACK 0x2e
+#571  S→C   38b  ACK 0x15
+#572  C→S   38b  ACK 0x2e
+#573  S→C   38b  ACK 0x15
+#574  C→S   38b  ACK 0x2e
+#575  S→C   38b  ACK 0x15
+#576  S→C  205b  Message 0x2f: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#577  C→S   38b  ACK 0x2f
+#578  S→C   38b  ACK 0x15
+#579  C→S   38b  ACK 0x2f
+#580  S→C   38b  ACK 0x15
+#581  C→S   38b  ACK 0x2f
+#582  S→C   38b  ACK 0x15
+#583  C→S   38b  ACK 0x2f
+#584  S→C   38b  ACK 0x15
+#585  C→S   38b  ACK 0x2f
+#586  S→C   38b  ACK 0x15
+#587  C→S   38b  ACK 0x2f
+#588  S→C   38b  ACK 0x15
+#589  C→S   38b  ACK 0x2f
+#590  S→C 1024b  FRAG 0x30 (0/2) 1002b
+#591  S→C  152b  Message 0x30: ServerBeginTriviaAnsweringPhase(q="Which classic swashbuckling novel is this illustration taken from?", 4 answers, duration=15.0s)
+#592  C→S   38b  ACK 0x30
+#593  C→S  152b  Message 0x16: AllResourcesReceivedMessage(1 requirements)
+#594  S→C   38b  ACK 0x16
+#595  C→S   38b  ACK 0x30
+#596  S→C   38b  ACK 0x16
+#597  C→S   38b  ACK 0x30
+#598  S→C   38b  ACK 0x16
+#599  S→C   38b  ACK 0x16
+#600  C→S   38b  ACK 0x30
+#601  S→C   38b  ACK 0x16
+#602  C→S   38b  ACK 0x30
+#603  S→C   38b  ACK 0x16
+#604  C→S   38b  ACK 0x30
+#605  S→C   38b  ACK 0x16
+#606  C→S   38b  ACK 0x30
+#607  S→C   38b  ACK 0x16
+#608  C→S   38b  ACK 0x30
+#609  S→C   38b  ACK 0x16
+#610  C→S   38b  ACK 0x30
+#611  S→C   38b  ACK 0x16
+#612  C→S  515b  Message 0x17: ClientTriviaAnswer
+#613  S→C   38b  ACK 0x17
+#614  S→C  205b  Message 0x31: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#615  C→S   38b  ACK 0x31
+#616  S→C   38b  ACK 0x17
+#617  C→S   38b  ACK 0x31
+#618  S→C   38b  ACK 0x17
+#619  C→S   38b  ACK 0x31
+#620  S→C   38b  ACK 0x17
+#621  C→S   38b  ACK 0x31
+#622  S→C   38b  ACK 0x17
+#623  C→S   38b  ACK 0x31
+#624  S→C   38b  ACK 0x17
+#625  C→S   38b  ACK 0x31
+#626  S→C   38b  ACK 0x17
+#627  C→S   38b  ACK 0x31
+#628  S→C   38b  ACK 0x17
+#629  C→S   38b  ACK 0x31
+#630  S→C   38b  ACK 0x17
+#631  C→S   38b  ACK 0x31
+#632  S→C   38b  ACK 0x17
+#633  C→S   38b  ACK 0x31
+#634  S→C   38b  ACK 0x17
+#635  C→S   38b  ACK 0x31
+#636  S→C   38b  ACK 0x17
+#637  C→S   38b  ACK 0x31
+#638  S→C   38b  ACK 0x17
+#639  C→S   38b  ACK 0x31
+#640  S→C   38b  ACK 0x17
+#641  C→S   38b  ACK 0x31
+#642  S→C   38b  ACK 0x17
+#643  C→S   38b  ACK 0x31
+#644  S→C   38b  ACK 0x17
+#645  C→S   38b  ACK 0x31
+#646  S→C   38b  ACK 0x17
+#647  C→S   38b  ACK 0x31
+#648  S→C   38b  ACK 0x17
+#649  C→S   38b  ACK 0x31
+#650  S→C   38b  ACK 0x17
+#651  C→S   38b  ACK 0x31
+#652  S→C   38b  ACK 0x17
+#653  C→S   38b  ACK 0x31
+#654  S→C   38b  ACK 0x17
+#655  C→S   38b  ACK 0x31
+#656  S→C   95b  Message 0x32: ClientQuizCommandMessage(action=4, time=0.0)
+#657  C→S   38b  ACK 0x32
+#658  S→C   38b  ACK 0x17
+#659  C→S   38b  ACK 0x32
+#660  S→C   38b  ACK 0x17
+#661  C→S   38b  ACK 0x32
+#662  C→S   92b  Message 0x18: ContinuePressedResponseMessage
+#663  S→C   38b  ACK 0x18
+#664  S→C  205b  Message 0x33: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#665  C→S   38b  ACK 0x33
+#666  S→C   38b  ACK 0x18
+#667  C→S   38b  ACK 0x33
+#668  S→C   38b  ACK 0x18
+#669  C→S   38b  ACK 0x33
+#670  S→C   38b  ACK 0x18
+#671  C→S   38b  ACK 0x33
+#672  S→C  882b  Message 0x34: ServerCategorySelectChoices(4 choices: "Childrens Fiction", "Pirates", "Drawing", "Sketching")
+#673  C→S   38b  ACK 0x34
+#674  S→C   38b  ACK 0x18
+#675  C→S   38b  ACK 0x34
+#676  S→C   38b  ACK 0x18
+#677  C→S   38b  ACK 0x34
+#678  C→S  116b  Message 0x19: ClientCategorySelectChoice(doorIndex=0)
+#679  S→C   38b  ACK 0x19
+#680  C→S   38b  ACK 0x34
+#681  S→C   38b  ACK 0x19
+#682  S→C   38b  ACK 0x19
+#683  C→S   38b  ACK 0x34
+#684  S→C   99b  Message 0x35: ServerRequestCategorySelectChoice
+#685  C→S   38b  ACK 0x35
+#686  S→C   38b  ACK 0x19
+#687  C→S   38b  ACK 0x35
+#688  S→C   38b  ACK 0x19
+#689  C→S   38b  ACK 0x35
+#690  S→C   38b  ACK 0x19
+#691  C→S   38b  ACK 0x35
+#692  S→C   38b  ACK 0x19
+#693  C→S   38b  ACK 0x35
+#694  S→C   38b  ACK 0x19
+#695  C→S   38b  ACK 0x35
+#696  S→C   98b  Message 0x36: ServerStopCategorySelectOverride
+#697  C→S   38b  ACK 0x36
+#698  S→C  205b  Message 0x37: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#699  C→S   38b  ACK 0x37
+#700  S→C  551b  Message 0x38: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#701  C→S   38b  ACK 0x38
+#702  S→C   38b  ACK 0x19
+#703  C→S   38b  ACK 0x38
+#704  S→C   38b  ACK 0x19
+#705  C→S   38b  ACK 0x38
+#706  S→C   38b  ACK 0x19
+#707  C→S   38b  ACK 0x38
+#708  S→C  406b  Message 0x39: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#709  C→S   38b  ACK 0x39
+#710  C→S  211b  Message 0x1a: AllResourcesReceivedMessage(2 requirements)
+#711  S→C   38b  ACK 0x1a
+#712  S→C   38b  ACK 0x1a
+#713  C→S   38b  ACK 0x39
+#714  S→C   38b  ACK 0x1a
+#715  C→S   38b  ACK 0x39
+#716  S→C   38b  ACK 0x1a
+#717  C→S   38b  ACK 0x39
+#718  S→C  211b  Message 0x3a: ResourceRequirementsMessage(2 requirements)
+#719  C→S   38b  ACK 0x3a
+#720  C→S  211b  Message 0x1b: AllResourcesReceivedMessage(2 requirements)
+#721  S→C   38b  ACK 0x1b
+#722  S→C  738b  Message 0x3b: ServerBeginPowerPlayPhase
+#723  C→S   38b  ACK 0x3b
+#724  C→S  211b  Message 0x1c: AllResourcesReceivedMessage(2 requirements)
+#725  S→C   38b  ACK 0x1c
+#726  S→C   38b  ACK 0x1c
+#727  C→S   38b  ACK 0x3b
+#728  S→C   38b  ACK 0x1c
+#729  C→S   38b  ACK 0x3b
+#730  S→C   38b  ACK 0x1c
+#731  C→S   38b  ACK 0x3b
+#732  C→S  132b  Message 0x1d: ClientPowerPlayChoice
+#733  S→C   38b  ACK 0x1d
+#734  C→S   38b  ACK 0x3b
+#735  S→C   38b  ACK 0x1d
+#736  S→C   38b  ACK 0x1d
+#737  C→S   38b  ACK 0x3b
+#738  S→C   94b  Message 0x3c: ServerRequestPowerPlayChoice
+#739  C→S   38b  ACK 0x3c
+#740  S→C  205b  Message 0x3d: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#741  C→S   38b  ACK 0x3d
+#742  S→C   38b  ACK 0x1d
+#743  C→S   38b  ACK 0x3d
+#744  S→C   38b  ACK 0x1d
+#745  C→S   38b  ACK 0x3d
+#746  S→C   38b  ACK 0x1d
+#747  C→S   38b  ACK 0x3d
+#748  S→C   38b  ACK 0x1d
+#749  C→S   38b  ACK 0x3d
+#750  S→C   38b  ACK 0x1d
+#751  C→S   38b  ACK 0x3d
+#752  S→C   38b  ACK 0x1d
+#753  C→S   38b  ACK 0x3d
+#754  S→C   38b  ACK 0x1d
+#755  C→S   38b  ACK 0x3d
+#756  S→C   38b  ACK 0x1d
+#757  C→S   38b  ACK 0x3d
+#758  S→C   38b  ACK 0x1d
+#759  C→S   38b  ACK 0x3d
+#760  S→C   38b  ACK 0x1d
+#761  C→S   38b  ACK 0x3d
+#762  S→C   38b  ACK 0x1d
+#763  C→S   38b  ACK 0x3d
+#764  S→C   38b  ACK 0x1d
+#765  C→S   38b  ACK 0x3d
+#766  S→C   38b  ACK 0x1d
+#767  C→S   38b  ACK 0x3d
+#768  S→C   38b  ACK 0x1d
+#769  C→S   38b  ACK 0x3d
+#770  S→C   38b  ACK 0x1d
+#771  C→S   38b  ACK 0x3d
+#772  S→C   38b  ACK 0x1d
+#773  S→C  205b  Message 0x3e: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#774  C→S   38b  ACK 0x3e
+#775  S→C   38b  ACK 0x1d
+#776  C→S   38b  ACK 0x3e
+#777  S→C   38b  ACK 0x1d
+#778  C→S   38b  ACK 0x3e
+#779  S→C   38b  ACK 0x1d
+#780  C→S   38b  ACK 0x3e
+#781  S→C   38b  ACK 0x1d
+#782  C→S   38b  ACK 0x3e
+#783  S→C   38b  ACK 0x1d
+#784  C→S   38b  ACK 0x3e
+#785  S→C   38b  ACK 0x1d
+#786  C→S   38b  ACK 0x3e
+#787  S→C 1024b  FRAG 0x3f (0/2) 1002b
+#788  S→C  119b  Message 0x3f: ServerBeginTriviaAnsweringPhase(q="In “The Three Little Pigs”, what did the second pig make his house with?", 4 answers, duration=15.0s)
+#789  C→S   38b  ACK 0x3f
+#790  C→S  152b  Message 0x1e: AllResourcesReceivedMessage(1 requirements)
+#791  S→C   38b  ACK 0x1e
+#792  C→S   38b  ACK 0x3f
+#793  S→C   38b  ACK 0x1e
+#794  C→S  516b  Message 0x1f: ClientTriviaAnswer
+#795  S→C   38b  ACK 0x1f
+#796  C→S   38b  ACK 0x3f
+#797  S→C   38b  ACK 0x1f
+#798  S→C   38b  ACK 0x1f
+#799  C→S   38b  ACK 0x3f
+#800  S→C   38b  ACK 0x1f
+#801  C→S   38b  ACK 0x3f
+#802  S→C  205b  Message 0x40: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#803  C→S   38b  ACK 0x40
+#804  S→C   38b  ACK 0x1f
+#805  C→S   38b  ACK 0x40
+#806  S→C   38b  ACK 0x1f
+#807  C→S   38b  ACK 0x40
+#808  S→C   38b  ACK 0x1f
+#809  C→S   38b  ACK 0x40
+#810  S→C   38b  ACK 0x1f
+#811  C→S   38b  ACK 0x40
+#812  S→C   38b  ACK 0x1f
+#813  C→S   38b  ACK 0x40
+#814  S→C   38b  ACK 0x1f
+#815  C→S   38b  ACK 0x40
+#816  S→C   38b  ACK 0x1f
+#817  C→S   38b  ACK 0x40
+#818  S→C   38b  ACK 0x1f
+#819  C→S   38b  ACK 0x40
+#820  S→C   38b  ACK 0x1f
+#821  C→S   38b  ACK 0x40
+#822  S→C   38b  ACK 0x1f
+#823  C→S   38b  ACK 0x40
+#824  S→C   38b  ACK 0x1f
+#825  C→S   38b  ACK 0x40
+#826  S→C   38b  ACK 0x1f
+#827  C→S   38b  ACK 0x40
+#828  S→C   38b  ACK 0x1f
+#829  C→S   38b  ACK 0x40
+#830  S→C   38b  ACK 0x1f
+#831  C→S   38b  ACK 0x40
+#832  S→C   38b  ACK 0x1f
+#833  C→S   38b  ACK 0x40
+#834  S→C   38b  ACK 0x1f
+#835  C→S   38b  ACK 0x40
+#836  S→C   38b  ACK 0x1f
+#837  S→C   95b  Message 0x41: ClientQuizCommandMessage(action=4, time=0.0)
+#838  C→S   38b  ACK 0x41
+#839  S→C   38b  ACK 0x1f
+#840  C→S   38b  ACK 0x41
+#841  S→C   38b  ACK 0x1f
+#842  C→S   38b  ACK 0x41
+#843  C→S   92b  Message 0x20: ContinuePressedResponseMessage
+#844  S→C   38b  ACK 0x20
+#845  S→C  205b  Message 0x42: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#846  C→S   38b  ACK 0x42
+#847  S→C   38b  ACK 0x20
+#848  C→S   38b  ACK 0x42
+#849  S→C   38b  ACK 0x20
+#850  C→S   38b  ACK 0x42
+#851  S→C   38b  ACK 0x20
+#852  C→S   38b  ACK 0x42
+#853  S→C   38b  ACK 0x20
+#854  C→S   38b  ACK 0x42
+#855  S→C   38b  ACK 0x20
+#856  C→S   38b  ACK 0x42
+#857  S→C   38b  ACK 0x20
+#858  C→S   38b  ACK 0x42
+#859  S→C   38b  ACK 0x20
+#860  C→S   38b  ACK 0x42
+#861  S→C   38b  ACK 0x20
+#862  C→S   38b  ACK 0x42
+#863  S→C   38b  ACK 0x20
+#864  C→S   38b  ACK 0x42
+#865  S→C  459b  Message 0x43: 2 messages
+         ServerColourMessage(rainbow=false, roundType=4)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#866  C→S   38b  ACK 0x43
+#867  S→C   38b  ACK 0x20
+#868  C→S   38b  ACK 0x43
+#869  S→C   38b  ACK 0x20
+#870  C→S   38b  ACK 0x43
+#871  S→C   38b  ACK 0x20
+#872  C→S   38b  ACK 0x43
+#873  S→C   38b  ACK 0x20
+#874  C→S   38b  ACK 0x43
+#875  S→C   38b  ACK 0x20
+#876  C→S   38b  ACK 0x43
+#877  S→C   38b  ACK 0x20
+#878  C→S   38b  ACK 0x43
+#879  S→C   38b  ACK 0x20
+#880  C→S   38b  ACK 0x43
+#881  S→C  406b  Message 0x44: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#882  C→S   38b  ACK 0x44
+#883  C→S  211b  Message 0x21: AllResourcesReceivedMessage(2 requirements)
+#884  S→C   38b  ACK 0x21
+#885  S→C   38b  ACK 0x21
+#886  C→S   38b  ACK 0x44
+#887  S→C   38b  ACK 0x21
+#888  C→S   38b  ACK 0x44
+#889  S→C   38b  ACK 0x21
+#890  C→S   38b  ACK 0x44
+#891  S→C   38b  ACK 0x21
+#892  C→S   38b  ACK 0x44
+#893  S→C   38b  ACK 0x21
+#894  C→S   38b  ACK 0x44
+#895  S→C   38b  ACK 0x21
+#896  C→S   38b  ACK 0x44
+#897  S→C   38b  ACK 0x21
+#898  C→S   38b  ACK 0x44
+#899  S→C   38b  ACK 0x21
+#900  C→S   38b  ACK 0x44
+#901  S→C   38b  ACK 0x21
+#902  C→S   38b  ACK 0x44
+#903  S→C   38b  ACK 0x21
+#904  C→S   38b  ACK 0x44
+#905  S→C   38b  ACK 0x21
+#906  C→S   38b  ACK 0x44
+#907  S→C   38b  ACK 0x21
+#908  C→S   38b  ACK 0x44
+#909  S→C  205b  Message 0x45: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#910  C→S   38b  ACK 0x45
+#911  S→C   38b  ACK 0x21
+#912  C→S   38b  ACK 0x45
+#913  S→C   38b  ACK 0x21
+#914  C→S   38b  ACK 0x45
+#915  S→C   38b  ACK 0x21
+#916  C→S   38b  ACK 0x45
+#917  S→C   38b  ACK 0x21
+#918  C→S   38b  ACK 0x45
+#919  S→C   38b  ACK 0x21
+#920  C→S   38b  ACK 0x45
+#921  S→C   38b  ACK 0x21
+#922  C→S   38b  ACK 0x45
+#923  S→C 1024b  FRAG 0x46 (0/3) 1002b
+#924  S→C 1024b  FRAG 0x46 (1/3) 1002b
+#925  S→C 1001b  Message 0x46: ServerBeginLinkingAnsweringPhase
+#926  C→S   38b  ACK 0x46
+#927  S→C   38b  ACK 0x21
+#928  C→S   38b  ACK 0x46
+#929  S→C   38b  ACK 0x21
+#930  C→S   38b  ACK 0x46
+#931  S→C   38b  ACK 0x21
+#932  C→S   38b  ACK 0x46
+#933  S→C   38b  ACK 0x21
+#934  C→S   38b  ACK 0x46
+#935  S→C   38b  ACK 0x21
+#936  C→S   38b  ACK 0x46
+#937  S→C   38b  ACK 0x21
+#938  C→S   38b  ACK 0x46
+#939  S→C   38b  ACK 0x21
+#940  C→S   38b  ACK 0x46
+#941  S→C   38b  ACK 0x21
+#942  C→S   38b  ACK 0x46
+#943  S→C   38b  ACK 0x21
+#944  C→S   38b  ACK 0x46
+#945  S→C   38b  ACK 0x21
+#946  C→S   38b  ACK 0x46
+#947  S→C   38b  ACK 0x21
+#948  C→S   38b  ACK 0x46
+#949  S→C   38b  ACK 0x21
+#950  C→S   38b  ACK 0x46
+#951  S→C   38b  ACK 0x21
+#952  C→S   38b  ACK 0x46
+#953  S→C   38b  ACK 0x21
+#954  C→S   38b  ACK 0x46
+#955  S→C   38b  ACK 0x21
+#956  C→S   38b  ACK 0x46
+#957  S→C   38b  ACK 0x21
+#958  C→S   38b  ACK 0x46
+#959  S→C   38b  ACK 0x21
+#960  C→S   38b  ACK 0x46
+#961  S→C   38b  ACK 0x21
+#962  C→S   38b  ACK 0x46
+#963  S→C   38b  ACK 0x21
+#964  C→S   38b  ACK 0x46
+#965  S→C   38b  ACK 0x21
+#966  C→S   38b  ACK 0x46
+#967  S→C   38b  ACK 0x21
+#968  C→S   38b  ACK 0x46
+#969  S→C   38b  ACK 0x21
+#970  C→S   38b  ACK 0x46
+#971  S→C   38b  ACK 0x21
+#972  C→S   38b  ACK 0x46
+#973  S→C   38b  ACK 0x21
+#974  C→S   38b  ACK 0x46
+#975  S→C   38b  ACK 0x21
+#976  C→S   38b  ACK 0x46
+#977  S→C   38b  ACK 0x21
+#978  C→S   38b  ACK 0x46
+#979  S→C   38b  ACK 0x21
+#980  C→S   38b  ACK 0x46
+#981  S→C   38b  ACK 0x21
+#982  C→S   38b  ACK 0x46
+#983  S→C   38b  ACK 0x21
+#984  C→S   38b  ACK 0x46
+#985  S→C   38b  ACK 0x21
+#986  C→S   38b  ACK 0x46
+#987  S→C   38b  ACK 0x21
+#988  C→S   38b  ACK 0x46
+#989  S→C   38b  ACK 0x21
+#990  C→S   38b  ACK 0x46
+#991  S→C   38b  ACK 0x21
+#992  C→S   38b  ACK 0x46
+#993  S→C   38b  ACK 0x21
+#994  C→S   38b  ACK 0x46
+#995  S→C   38b  ACK 0x21
+#996  C→S 1024b  FRAG 0x22 (0/2) 1002b
+#997  C→S  645b  Message 0x22: ClientLinkingAnswer
+#998  S→C   38b  ACK 0x22
+#999  S→C  205b  Message 0x47: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1000 C→S   38b  ACK 0x47
+#1001 S→C   38b  ACK 0x22
+#1002 C→S   38b  ACK 0x47
+#1003 S→C   38b  ACK 0x22
+#1004 C→S   38b  ACK 0x47
+#1005 S→C   38b  ACK 0x22
+#1006 C→S   38b  ACK 0x47
+#1007 S→C   38b  ACK 0x22
+#1008 C→S   38b  ACK 0x47
+#1009 S→C   38b  ACK 0x22
+#1010 C→S   38b  ACK 0x47
+#1011 S→C   38b  ACK 0x22
+#1012 C→S   38b  ACK 0x47
+#1013 S→C   38b  ACK 0x22
+#1014 C→S   38b  ACK 0x47
+#1015 S→C   38b  ACK 0x22
+#1016 C→S   38b  ACK 0x47
+#1017 S→C   38b  ACK 0x22
+#1018 C→S   38b  ACK 0x47
+#1019 S→C   38b  ACK 0x22
+#1020 C→S   38b  ACK 0x47
+#1021 S→C   38b  ACK 0x22
+#1022 C→S   38b  ACK 0x47
+#1023 S→C   38b  ACK 0x22
+#1024 C→S   38b  ACK 0x47
+#1025 S→C   38b  ACK 0x22
+#1026 C→S   38b  ACK 0x47
+#1027 S→C   38b  ACK 0x22
+#1028 S→C   95b  Message 0x48: ClientQuizCommandMessage(action=4, time=0.0)
+#1029 C→S   38b  ACK 0x48
+#1030 S→C   38b  ACK 0x22
+#1031 C→S   38b  ACK 0x48
+#1032 S→C   38b  ACK 0x22
+#1033 C→S   38b  ACK 0x48
+#1034 C→S   92b  Message 0x23: ContinuePressedResponseMessage
+#1035 S→C   38b  ACK 0x23
+#1036 S→C  205b  Message 0x49: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1037 C→S   38b  ACK 0x49
+#1038 S→C   38b  ACK 0x23
+#1039 C→S   38b  ACK 0x49
+#1040 S→C   38b  ACK 0x23
+#1041 C→S   38b  ACK 0x49
+#1042 S→C   38b  ACK 0x23
+#1043 C→S   38b  ACK 0x49
+#1044 S→C  882b  Message 0x4a: ServerCategorySelectChoices(4 choices: "Fairy Tales", "Mammals", "Literature", "Animal Tales")
+#1045 C→S   38b  ACK 0x4a
+#1046 S→C   38b  ACK 0x23
+#1047 C→S   38b  ACK 0x4a
+#1048 S→C   38b  ACK 0x23
+#1049 C→S   38b  ACK 0x4a
+#1050 C→S  116b  Message 0x24: ClientCategorySelectChoice(doorIndex=3)
+#1051 S→C   38b  ACK 0x24
+#1052 C→S   38b  ACK 0x4a
+#1053 S→C   38b  ACK 0x24
+#1054 S→C   99b  Message 0x4b: ServerRequestCategorySelectChoice
+#1055 C→S   38b  ACK 0x4b
+#1056 S→C   38b  ACK 0x24
+#1057 C→S   38b  ACK 0x4b
+#1058 S→C   38b  ACK 0x24
+#1059 C→S   38b  ACK 0x4b
+#1060 S→C   38b  ACK 0x24
+#1061 C→S   38b  ACK 0x4b
+#1062 S→C   38b  ACK 0x24
+#1063 C→S   38b  ACK 0x4b
+#1064 S→C   38b  ACK 0x24
+#1065 C→S   38b  ACK 0x4b
+#1066 S→C   38b  ACK 0x24
+#1067 C→S   38b  ACK 0x4b
+#1068 S→C   38b  ACK 0x24
+#1069 C→S   38b  ACK 0x4b
+#1070 S→C   38b  ACK 0x24
+#1071 C→S   38b  ACK 0x4b
+#1072 S→C   98b  Message 0x4c: ServerStopCategorySelectOverride
+#1073 C→S   38b  ACK 0x4c
+#1074 S→C  205b  Message 0x4d: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1075 C→S   38b  ACK 0x4d
+#1076 S→C  581b  Message 0x4e: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1077 C→S   38b  ACK 0x4e
+#1078 S→C   38b  ACK 0x24
+#1079 C→S   38b  ACK 0x4e
+#1080 S→C   38b  ACK 0x24
+#1081 C→S   38b  ACK 0x4e
+#1082 S→C  406b  Message 0x4f: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1083 C→S   38b  ACK 0x4f
+#1084 C→S  211b  Message 0x25: AllResourcesReceivedMessage(2 requirements)
+#1085 S→C   38b  ACK 0x25
+#1086 S→C   38b  ACK 0x25
+#1087 C→S   38b  ACK 0x4f
+#1088 S→C   38b  ACK 0x25
+#1089 C→S   38b  ACK 0x4f
+#1090 S→C   38b  ACK 0x25
+#1091 C→S   38b  ACK 0x4f
+#1092 S→C  211b  Message 0x50: ResourceRequirementsMessage(2 requirements)
+#1093 C→S   38b  ACK 0x50
+#1094 C→S  211b  Message 0x26: AllResourcesReceivedMessage(2 requirements)
+#1095 S→C   38b  ACK 0x26
+#1096 S→C  738b  Message 0x51: ServerBeginPowerPlayPhase
+#1097 C→S   38b  ACK 0x51
+#1098 C→S  211b  Message 0x27: AllResourcesReceivedMessage(2 requirements)
+#1099 S→C   38b  ACK 0x27
+#1100 S→C   38b  ACK 0x27
+#1101 C→S   38b  ACK 0x51
+#1102 S→C   38b  ACK 0x27
+#1103 C→S   38b  ACK 0x51
+#1104 S→C   38b  ACK 0x27
+#1105 C→S   38b  ACK 0x51
+#1106 S→C   38b  ACK 0x27
+#1107 C→S   38b  ACK 0x51
+#1108 C→S  132b  Message 0x28: ClientPowerPlayChoice
+#1109 S→C   38b  ACK 0x28
+#1110 S→C   94b  Message 0x52: ServerRequestPowerPlayChoice
+#1111 C→S   38b  ACK 0x52
+#1112 S→C  205b  Message 0x53: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1113 C→S   38b  ACK 0x53
+#1114 S→C   38b  ACK 0x28
+#1115 C→S   38b  ACK 0x53
+#1116 S→C   38b  ACK 0x28
+#1117 C→S   38b  ACK 0x53
+#1118 S→C   38b  ACK 0x28
+#1119 C→S   38b  ACK 0x53
+#1120 S→C   38b  ACK 0x28
+#1121 C→S   38b  ACK 0x53
+#1122 S→C   38b  ACK 0x28
+#1123 C→S   38b  ACK 0x53
+#1124 S→C   38b  ACK 0x28
+#1125 C→S   38b  ACK 0x53
+#1126 S→C   38b  ACK 0x28
+#1127 C→S   38b  ACK 0x53
+#1128 S→C   38b  ACK 0x28
+#1129 C→S   38b  ACK 0x53
+#1130 S→C   38b  ACK 0x28
+#1131 C→S   38b  ACK 0x53
+#1132 S→C   38b  ACK 0x28
+#1133 C→S   38b  ACK 0x53
+#1134 S→C   38b  ACK 0x28
+#1135 C→S   38b  ACK 0x53
+#1136 S→C   38b  ACK 0x28
+#1137 C→S   38b  ACK 0x53
+#1138 S→C   38b  ACK 0x28
+#1139 C→S   38b  ACK 0x53
+#1140 S→C   38b  ACK 0x28
+#1141 C→S   38b  ACK 0x53
+#1142 S→C   38b  ACK 0x28
+#1143 C→S   38b  ACK 0x53
+#1144 S→C   38b  ACK 0x28
+#1145 S→C  205b  Message 0x54: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#1146 C→S   38b  ACK 0x54
+#1147 S→C   38b  ACK 0x28
+#1148 C→S   38b  ACK 0x54
+#1149 S→C   38b  ACK 0x28
+#1150 C→S   38b  ACK 0x54
+#1151 S→C   38b  ACK 0x28
+#1152 C→S   38b  ACK 0x54
+#1153 S→C   38b  ACK 0x28
+#1154 C→S   38b  ACK 0x54
+#1155 S→C   38b  ACK 0x28
+#1156 C→S   38b  ACK 0x54
+#1157 S→C   38b  ACK 0x28
+#1158 C→S   38b  ACK 0x54
+#1159 S→C 1024b  FRAG 0x55 (0/2) 1002b
+#1160 S→C  133b  Message 0x55: ServerBeginTriviaAnsweringPhase(q="What metal shares its name with the Lone Ranger’s horse?", 4 answers, duration=15.0s)
+#1161 C→S   38b  NACK 0x55
+         [ 6] 0x02 (2)
+#1162 C→S   38b  ACK 0x55
+#1163 C→S  152b  Message 0x29: AllResourcesReceivedMessage(1 requirements)
+#1164 S→C   38b  ACK 0x29
+#1165 C→S   38b  ACK 0x55
+#1166 S→C   38b  ACK 0x29
+#1167 C→S  516b  Message 0x2a: ClientTriviaAnswer
+#1168 S→C   38b  ACK 0x2a
+#1169 C→S   38b  ACK 0x55
+#1170 S→C   38b  ACK 0x2a
+#1171 C→S   38b  ACK 0x55
+#1172 S→C   38b  ACK 0x2a
+#1173 S→C  205b  Message 0x56: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1174 C→S   38b  ACK 0x56
+#1175 S→C   38b  ACK 0x2a
+#1176 C→S   38b  ACK 0x56
+#1177 S→C   38b  ACK 0x2a
+#1178 C→S   38b  ACK 0x56
+#1179 S→C   38b  ACK 0x2a
+#1180 C→S   38b  ACK 0x56
+#1181 S→C   38b  ACK 0x2a
+#1182 C→S   38b  ACK 0x56
+#1183 S→C   38b  ACK 0x2a
+#1184 C→S   38b  ACK 0x56
+#1185 S→C   38b  ACK 0x2a
+#1186 C→S   38b  ACK 0x56
+#1187 S→C   38b  ACK 0x2a
+#1188 C→S   38b  ACK 0x56
+#1189 S→C   38b  ACK 0x2a
+#1190 C→S   38b  ACK 0x56
+#1191 S→C   38b  ACK 0x2a
+#1192 C→S   38b  ACK 0x56
+#1193 S→C   38b  ACK 0x2a
+#1194 C→S   38b  ACK 0x56
+#1195 S→C   38b  ACK 0x2a
+#1196 C→S   38b  ACK 0x56
+#1197 S→C   38b  ACK 0x2a
+#1198 C→S   38b  ACK 0x56
+#1199 S→C   38b  ACK 0x2a
+#1200 C→S   38b  ACK 0x56
+#1201 S→C   38b  ACK 0x2a
+#1202 C→S   38b  ACK 0x56
+#1203 S→C   95b  Message 0x57: ClientQuizCommandMessage(action=4, time=0.0)
+#1204 C→S   38b  ACK 0x57
+#1205 S→C   38b  ACK 0x2a
+#1206 C→S   38b  ACK 0x57
+#1207 S→C   38b  ACK 0x2a
+#1208 C→S   38b  ACK 0x57
+#1209 S→C   38b  ACK 0x2a
+#1210 C→S   38b  ACK 0x57
+#1211 S→C   38b  ACK 0x2a
+#1212 C→S   38b  ACK 0x57
+#1213 S→C  205b  Message 0x58: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1214 C→S   38b  ACK 0x58
+#1215 S→C   38b  ACK 0x2a
+#1216 C→S   38b  ACK 0x58
+#1217 S→C   38b  ACK 0x2a
+#1218 C→S   38b  ACK 0x58
+#1219 S→C   38b  ACK 0x2a
+#1220 C→S   38b  ACK 0x58
+#1221 S→C  913b  Message 0x59: ServerCategorySelectChoices(4 choices: "Horses", "Metals", "TV Action", "Elements & Compounds")
+#1222 C→S   38b  ACK 0x59
+#1223 S→C   38b  ACK 0x2a
+#1224 C→S   38b  ACK 0x59
+#1225 S→C   38b  ACK 0x2a
+#1226 C→S   38b  ACK 0x59
+#1227 S→C   38b  ACK 0x2a
+#1228 C→S   38b  ACK 0x59
+#1229 S→C   38b  ACK 0x2a
+#1230 C→S   38b  ACK 0x59
+#1231 C→S  116b  Message 0x2b: ClientCategorySelectChoice(doorIndex=0)
+#1232 S→C   38b  ACK 0x2b
+#1233 S→C   99b  Message 0x5a: ServerRequestCategorySelectChoice
+#1234 C→S   38b  ACK 0x5a
+#1235 S→C   38b  ACK 0x2b
+#1236 C→S   38b  ACK 0x5a
+#1237 S→C   38b  ACK 0x2b
+#1238 C→S   38b  ACK 0x5a
+#1239 S→C   38b  ACK 0x2b
+#1240 C→S   38b  ACK 0x5a
+#1241 S→C   38b  ACK 0x2b
+#1242 C→S   38b  ACK 0x5a
+#1243 S→C   38b  ACK 0x2b
+#1244 C→S   38b  ACK 0x5a
+#1245 S→C   98b  Message 0x5b: ServerStopCategorySelectOverride
+#1246 C→S   38b  ACK 0x5b
+#1247 S→C  205b  Message 0x5c: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1248 C→S   38b  ACK 0x5c
+#1249 S→C  581b  Message 0x5d: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1250 C→S   38b  ACK 0x5d
+#1251 S→C   38b  ACK 0x2b
+#1252 C→S   38b  ACK 0x5d
+#1253 S→C   38b  ACK 0x2b
+#1254 C→S   38b  ACK 0x5d
+#1255 S→C  406b  Message 0x5e: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1256 C→S   38b  ACK 0x5e
+#1257 C→S  211b  Message 0x2c: AllResourcesReceivedMessage(2 requirements)
+#1258 S→C   38b  ACK 0x2c
+#1259 C→S   38b  ACK 0x5e
+#1260 S→C   38b  ACK 0x2c
+#1261 S→C   38b  ACK 0x2c
+#1262 C→S   38b  ACK 0x5e
+#1263 S→C   38b  ACK 0x2c
+#1264 C→S   38b  ACK 0x5e
+#1265 S→C  211b  Message 0x5f: ResourceRequirementsMessage(2 requirements)
+#1266 C→S   38b  ACK 0x5f
+#1267 C→S  211b  Message 0x2d: AllResourcesReceivedMessage(2 requirements)
+#1268 S→C   38b  ACK 0x2d
+#1269 S→C  738b  Message 0x60: ServerBeginPowerPlayPhase
+#1270 C→S   38b  ACK 0x60
+#1271 C→S  211b  Message 0x2e: AllResourcesReceivedMessage(2 requirements)
+#1272 S→C   38b  ACK 0x2e
+#1273 C→S   38b  ACK 0x60
+#1274 S→C   38b  ACK 0x2e
+#1275 C→S   38b  ACK 0x60
+#1276 S→C   38b  ACK 0x2e
+#1277 S→C   38b  ACK 0x2e
+#1278 C→S   38b  ACK 0x60
+#1279 S→C   38b  ACK 0x2e
+#1280 C→S   38b  ACK 0x60
+#1281 S→C   38b  ACK 0x2e
+#1282 C→S   38b  ACK 0x60
+#1283 S→C   38b  ACK 0x2e
+#1284 C→S   38b  ACK 0x60
+#1285 S→C   38b  ACK 0x2e
+#1286 C→S   38b  ACK 0x60
+#1287 S→C   38b  ACK 0x2e
+#1288 C→S   38b  ACK 0x60
+#1289 S→C   38b  ACK 0x2e
+#1290 C→S   38b  ACK 0x60
+#1291 S→C   38b  ACK 0x2e
+#1292 C→S   38b  ACK 0x60
+#1293 C→S  132b  Message 0x2f: ClientPowerPlayChoice
+#1294 S→C   38b  ACK 0x2f
+#1295 S→C   94b  Message 0x61: ServerRequestPowerPlayChoice
+#1296 C→S   38b  ACK 0x61
+#1297 S→C  205b  Message 0x62: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1298 C→S   38b  ACK 0x62
+#1299 S→C   38b  ACK 0x2f
+#1300 C→S   38b  ACK 0x62
+#1301 S→C   38b  ACK 0x2f
+#1302 C→S   38b  ACK 0x62
+#1303 S→C   38b  ACK 0x2f
+#1304 C→S   38b  ACK 0x62
+#1305 S→C   38b  ACK 0x2f
+#1306 C→S   38b  ACK 0x62
+#1307 S→C   38b  ACK 0x2f
+#1308 C→S   38b  ACK 0x62
+#1309 S→C   38b  ACK 0x2f
+#1310 C→S   38b  ACK 0x62
+#1311 S→C   38b  ACK 0x2f
+#1312 C→S   38b  ACK 0x62
+#1313 S→C   38b  ACK 0x2f
+#1314 C→S   38b  ACK 0x62
+#1315 S→C   38b  ACK 0x2f
+#1316 C→S   38b  ACK 0x62
+#1317 S→C   38b  ACK 0x2f
+#1318 C→S   38b  ACK 0x62
+#1319 S→C   38b  ACK 0x2f
+#1320 C→S   38b  ACK 0x62
+#1321 S→C   38b  ACK 0x2f
+#1322 C→S   38b  ACK 0x62
+#1323 S→C   38b  ACK 0x2f
+#1324 C→S   38b  ACK 0x62
+#1325 S→C   38b  ACK 0x2f
+#1326 C→S   38b  ACK 0x62
+#1327 S→C   38b  ACK 0x2f
+#1328 C→S   38b  ACK 0x62
+#1329 S→C  205b  Message 0x63: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#1330 C→S   38b  ACK 0x63
+#1331 S→C   38b  ACK 0x2f
+#1332 C→S   38b  ACK 0x63
+#1333 S→C   38b  ACK 0x2f
+#1334 C→S   38b  ACK 0x63
+#1335 S→C   38b  ACK 0x2f
+#1336 C→S   38b  ACK 0x63
+#1337 S→C   38b  ACK 0x2f
+#1338 C→S   38b  ACK 0x63
+#1339 S→C   38b  ACK 0x2f
+#1340 C→S   38b  ACK 0x63
+#1341 S→C   38b  ACK 0x2f
+#1342 C→S   38b  ACK 0x63
+#1343 S→C 1024b  FRAG 0x64 (0/2) 1002b
+#1344 S→C  226b  Message 0x64: ServerBeginTriviaAnsweringPhase(q="What 90s sitcom did sad cartoon horse BoJack Horseman star in?", 4 answers, duration=15.0s)
+#1345 C→S   38b  ACK 0x64
+#1346 C→S  152b  Message 0x30: AllResourcesReceivedMessage(1 requirements)
+#1347 S→C   38b  ACK 0x30
+#1348 C→S   38b  ACK 0x64
+#1349 S→C   38b  ACK 0x30
+#1350 S→C   38b  ACK 0x30
+#1351 C→S   38b  ACK 0x64
+#1352 C→S  515b  Message 0x31: ClientTriviaAnswer
+#1353 S→C   38b  ACK 0x31
+#1354 S→C   38b  ACK 0x31
+#1355 C→S   38b  ACK 0x64
+#1356 S→C   38b  ACK 0x31
+#1357 C→S   38b  ACK 0x64
+#1358 S→C   38b  ACK 0x31
+#1359 C→S   38b  ACK 0x64
+#1360 S→C  205b  Message 0x65: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1361 C→S   38b  ACK 0x65
+#1362 S→C   38b  ACK 0x31
+#1363 C→S   38b  ACK 0x65
+#1364 S→C   38b  ACK 0x31
+#1365 C→S   38b  ACK 0x65
+#1366 S→C   38b  ACK 0x31
+#1367 C→S   38b  ACK 0x65
+#1368 S→C   38b  ACK 0x31
+#1369 C→S   38b  ACK 0x65
+#1370 S→C   38b  ACK 0x31
+#1371 C→S   38b  ACK 0x65
+#1372 S→C   38b  ACK 0x31
+#1373 C→S   38b  ACK 0x65
+#1374 S→C   38b  ACK 0x31
+#1375 C→S   38b  ACK 0x65
+#1376 S→C   38b  ACK 0x31
+#1377 C→S   38b  ACK 0x65
+#1378 S→C   38b  ACK 0x31
+#1379 C→S   38b  ACK 0x65
+#1380 S→C   38b  ACK 0x31
+#1381 C→S   38b  ACK 0x65
+#1382 S→C   38b  ACK 0x31
+#1383 C→S   38b  ACK 0x65
+#1384 S→C   38b  ACK 0x31
+#1385 C→S   38b  ACK 0x65
+#1386 S→C   38b  ACK 0x31
+#1387 C→S   38b  ACK 0x65
+#1388 S→C   38b  ACK 0x31
+#1389 C→S   38b  ACK 0x65
+#1390 S→C   38b  ACK 0x31
+#1391 C→S   38b  ACK 0x65
+#1392 S→C   38b  ACK 0x31
+#1393 S→C   95b  Message 0x66: ClientQuizCommandMessage(action=4, time=0.0)
+#1394 C→S   38b  ACK 0x66
+#1395 S→C   38b  ACK 0x31
+#1396 C→S   38b  ACK 0x66
+#1397 S→C   38b  ACK 0x31
+#1398 C→S   38b  ACK 0x66
+#1399 S→C  205b  Message 0x67: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1400 C→S   38b  ACK 0x67
+#1401 S→C   38b  ACK 0x31
+#1402 C→S   38b  ACK 0x67
+#1403 S→C   38b  ACK 0x31
+#1404 C→S   38b  ACK 0x67
+#1405 S→C   38b  ACK 0x31
+#1406 C→S   38b  ACK 0x67
+#1407 S→C  911b  Message 0x68: ServerCategorySelectChoices(4 choices: "Talking Animals", "US TV", "Comedy Shows", "Mammals")
+#1408 C→S   38b  ACK 0x68
+#1409 S→C   38b  ACK 0x31
+#1410 C→S   38b  ACK 0x68
+#1411 C→S  116b  Message 0x32: ClientCategorySelectChoice(doorIndex=1)
+#1412 S→C   38b  ACK 0x32
+#1413 C→S   38b  ACK 0x68
+#1414 S→C   38b  ACK 0x32
+#1415 S→C   38b  ACK 0x32
+#1416 C→S   38b  ACK 0x68
+#1417 S→C   99b  Message 0x69: ServerRequestCategorySelectChoice
+#1418 C→S   38b  ACK 0x69
+#1419 S→C   38b  ACK 0x32
+#1420 C→S   38b  ACK 0x69
+#1421 S→C   38b  ACK 0x32
+#1422 C→S   38b  ACK 0x69
+#1423 S→C   38b  ACK 0x32
+#1424 C→S   38b  ACK 0x69
+#1425 S→C   38b  ACK 0x32
+#1426 C→S   38b  ACK 0x69
+#1427 S→C   98b  Message 0x6a: ServerStopCategorySelectOverride
+#1428 C→S   38b  ACK 0x6a
+#1429 S→C  205b  Message 0x6b: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1430 C→S   38b  ACK 0x6b
+#1431 S→C  551b  Message 0x6c: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1432 C→S   38b  ACK 0x6c
+#1433 S→C   38b  ACK 0x32
+#1434 C→S   38b  ACK 0x6c
+#1435 S→C   38b  ACK 0x32
+#1436 C→S   38b  ACK 0x6c
+#1437 S→C   38b  ACK 0x32
+#1438 C→S   38b  ACK 0x6c
+#1439 S→C  406b  Message 0x6d: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1440 C→S   38b  ACK 0x6d
+#1441 C→S  211b  Message 0x33: AllResourcesReceivedMessage(2 requirements)
+#1442 S→C   38b  ACK 0x33
+#1443 S→C   38b  ACK 0x33
+#1444 C→S   38b  ACK 0x6d
+#1445 S→C   38b  ACK 0x33
+#1446 C→S   38b  ACK 0x6d
+#1447 S→C   38b  ACK 0x33
+#1448 C→S   38b  ACK 0x6d
+#1449 S→C  211b  Message 0x6e: ResourceRequirementsMessage(2 requirements)
+#1450 C→S   38b  ACK 0x6e
+#1451 C→S  211b  Message 0x34: AllResourcesReceivedMessage(2 requirements)
+#1452 S→C   38b  ACK 0x34
+#1453 S→C  738b  Message 0x6f: ServerBeginPowerPlayPhase
+#1454 C→S   38b  ACK 0x6f
+#1455 C→S  211b  Message 0x35: AllResourcesReceivedMessage(2 requirements)
+#1456 S→C   38b  ACK 0x35
+#1457 S→C   38b  ACK 0x35
+#1458 C→S   38b  ACK 0x6f
+#1459 S→C   38b  ACK 0x35
+#1460 C→S   38b  ACK 0x6f
+#1461 S→C   38b  ACK 0x35
+#1462 C→S  132b  Message 0x36: ClientPowerPlayChoice
+#1463 S→C   38b  ACK 0x36
+#1464 C→S   38b  ACK 0x6f
+#1465 S→C   38b  ACK 0x36
+#1466 S→C   94b  Message 0x70: ServerRequestPowerPlayChoice
+#1467 C→S   38b  ACK 0x70
+#1468 S→C  205b  Message 0x71: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1469 C→S   38b  ACK 0x71
+#1470 S→C   38b  ACK 0x36
+#1471 C→S   38b  ACK 0x71
+#1472 S→C   38b  ACK 0x36
+#1473 C→S   38b  ACK 0x71
+#1474 S→C   38b  ACK 0x36
+#1475 C→S   38b  ACK 0x71
+#1476 S→C   38b  ACK 0x36
+#1477 C→S   38b  ACK 0x71
+#1478 S→C   38b  ACK 0x36
+#1479 C→S   38b  ACK 0x71
+#1480 S→C   38b  ACK 0x36
+#1481 C→S   38b  ACK 0x71
+#1482 S→C   38b  ACK 0x36
+#1483 C→S   38b  ACK 0x71
+#1484 S→C   38b  ACK 0x36
+#1485 C→S   38b  ACK 0x71
+#1486 S→C   38b  ACK 0x36
+#1487 C→S   38b  ACK 0x71
+#1488 S→C   38b  ACK 0x36
+#1489 C→S   38b  ACK 0x71
+#1490 S→C   38b  ACK 0x36
+#1491 C→S   38b  ACK 0x71
+#1492 S→C   38b  ACK 0x36
+#1493 C→S   38b  ACK 0x71
+#1494 S→C   38b  ACK 0x36
+#1495 C→S   38b  ACK 0x71
+#1496 S→C   38b  ACK 0x36
+#1497 C→S   38b  ACK 0x71
+#1498 S→C   38b  ACK 0x36
+#1499 C→S   38b  ACK 0x71
+#1500 S→C   38b  ACK 0x36
+#1501 C→S   38b  ACK 0x71
+#1502 S→C  205b  Message 0x72: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#1503 C→S   38b  ACK 0x72
+#1504 S→C   38b  ACK 0x36
+#1505 C→S   38b  ACK 0x72
+#1506 S→C   38b  ACK 0x36
+#1507 C→S   38b  ACK 0x72
+#1508 S→C   38b  ACK 0x36
+#1509 C→S   38b  ACK 0x72
+#1510 S→C   38b  ACK 0x36
+#1511 C→S   38b  ACK 0x72
+#1512 S→C   38b  ACK 0x36
+#1513 C→S   38b  ACK 0x72
+#1514 S→C   38b  ACK 0x36
+#1515 C→S   38b  ACK 0x72
+#1516 S→C 1024b  FRAG 0x73 (0/2) 1002b
+#1517 S→C  162b  Message 0x73: ServerBeginTriviaAnsweringPhase(q="Which legendary movie director created “Twin Peaks?", 4 answers, duration=15.0s)
+#1518 C→S   38b  ACK 0x73
+#1519 C→S  152b  Message 0x37: AllResourcesReceivedMessage(1 requirements)
+#1520 S→C   38b  ACK 0x37
+#1521 C→S   38b  ACK 0x73
+#1522 S→C   38b  ACK 0x37
+#1523 C→S   38b  ACK 0x73
+#1524 S→C   38b  ACK 0x37
+#1525 C→S  516b  Message 0x38: ClientTriviaAnswer
+#1526 S→C   38b  ACK 0x38
+#1527 S→C   38b  ACK 0x38
+#1528 C→S   38b  ACK 0x73
+#1529 S→C   38b  ACK 0x38
+#1530 C→S   38b  ACK 0x73
+#1531 S→C  205b  Message 0x74: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1532 C→S   38b  ACK 0x74
+#1533 S→C   38b  ACK 0x38
+#1534 C→S   38b  ACK 0x74
+#1535 S→C   38b  ACK 0x38
+#1536 C→S   38b  ACK 0x74
+#1537 S→C   38b  ACK 0x38
+#1538 C→S   38b  ACK 0x74
+#1539 S→C   38b  ACK 0x38
+#1540 C→S   38b  ACK 0x74
+#1541 S→C   38b  ACK 0x38
+#1542 C→S   38b  ACK 0x74
+#1543 S→C   38b  ACK 0x38
+#1544 C→S   38b  ACK 0x74
+#1545 S→C   38b  ACK 0x38
+#1546 C→S   38b  ACK 0x74
+#1547 S→C   38b  ACK 0x38
+#1548 C→S   38b  ACK 0x74
+#1549 S→C   38b  ACK 0x38
+#1550 C→S   38b  ACK 0x74
+#1551 S→C   38b  ACK 0x38
+#1552 C→S   38b  ACK 0x74
+#1553 S→C   38b  ACK 0x38
+#1554 C→S   38b  ACK 0x74
+#1555 S→C   38b  ACK 0x38
+#1556 C→S   38b  ACK 0x74
+#1557 S→C   38b  ACK 0x38
+#1558 C→S   38b  ACK 0x74
+#1559 S→C   38b  ACK 0x38
+#1560 C→S   38b  ACK 0x74
+#1561 S→C   95b  Message 0x75: ClientQuizCommandMessage(action=4, time=0.0)
+#1562 C→S   38b  ACK 0x75
+#1563 S→C   38b  ACK 0x38
+#1564 C→S   38b  ACK 0x75
+#1565 S→C   38b  ACK 0x38
+#1566 C→S   38b  ACK 0x75
+#1567 S→C  205b  Message 0x76: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1568 C→S   38b  ACK 0x76
+#1569 S→C   38b  ACK 0x38
+#1570 C→S   38b  ACK 0x76
+#1571 S→C   38b  ACK 0x38
+#1572 C→S   38b  ACK 0x76
+#1573 S→C   38b  ACK 0x38
+#1574 C→S   38b  ACK 0x76
+#1575 S→C   38b  ACK 0x38
+#1576 C→S   38b  ACK 0x76
+#1577 S→C   38b  ACK 0x38
+#1578 C→S   38b  ACK 0x76
+#1579 S→C   38b  ACK 0x38
+#1580 C→S   38b  ACK 0x76
+#1581 S→C   38b  ACK 0x38
+#1582 C→S   38b  ACK 0x76
+#1583 S→C   38b  ACK 0x38
+#1584 C→S   38b  ACK 0x76
+#1585 S→C   38b  ACK 0x38
+#1586 S→C  459b  Message 0x77: 2 messages
+         ServerColourMessage(rainbow=false, roundType=3)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1587 C→S   38b  ACK 0x77
+#1588 S→C   38b  ACK 0x38
+#1589 C→S   38b  ACK 0x77
+#1590 S→C   38b  ACK 0x38
+#1591 C→S   38b  ACK 0x77
+#1592 S→C   38b  ACK 0x38
+#1593 C→S   38b  ACK 0x77
+#1594 S→C   38b  ACK 0x38
+#1595 C→S   38b  ACK 0x77
+#1596 S→C   38b  ACK 0x38
+#1597 C→S   38b  ACK 0x77
+#1598 S→C   38b  ACK 0x38
+#1599 C→S   38b  ACK 0x77
+#1600 S→C   38b  ACK 0x38
+#1601 C→S   38b  ACK 0x77
+#1602 S→C  406b  Message 0x78: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1603 C→S   38b  ACK 0x78
+#1604 C→S  211b  Message 0x39: AllResourcesReceivedMessage(2 requirements)
+#1605 S→C   38b  ACK 0x39
+#1606 S→C   38b  ACK 0x39
+#1607 C→S   38b  ACK 0x78
+#1608 S→C   38b  ACK 0x39
+#1609 C→S   38b  ACK 0x78
+#1610 S→C   38b  ACK 0x39
+#1611 C→S   38b  ACK 0x78
+#1612 S→C   38b  ACK 0x39
+#1613 C→S   38b  ACK 0x78
+#1614 S→C   38b  ACK 0x39
+#1615 C→S   38b  ACK 0x78
+#1616 S→C   38b  ACK 0x39
+#1617 C→S   38b  ACK 0x78
+#1618 S→C   38b  ACK 0x39
+#1619 C→S   38b  ACK 0x78
+#1620 S→C   38b  ACK 0x39
+#1621 C→S   38b  ACK 0x78
+#1622 S→C   38b  ACK 0x39
+#1623 C→S   38b  ACK 0x78
+#1624 S→C  205b  Message 0x79: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#1625 C→S   38b  ACK 0x79
+#1626 S→C   38b  ACK 0x39
+#1627 C→S   38b  ACK 0x79
+#1628 S→C   38b  ACK 0x39
+#1629 C→S   38b  ACK 0x79
+#1630 S→C   38b  ACK 0x39
+#1631 C→S   38b  ACK 0x79
+#1632 S→C   38b  ACK 0x39
+#1633 C→S   38b  ACK 0x79
+#1634 S→C   38b  ACK 0x39
+#1635 C→S   38b  ACK 0x79
+#1636 S→C   38b  ACK 0x39
+#1637 C→S   38b  ACK 0x79
+#1638 S→C 1024b  FRAG 0x7a (0/3) 1002b
+#1639 S→C 1024b  FRAG 0x7a (1/3) 1002b
+#1640 S→C  279b  Message 0x7a: ServerBeginSortingAnsweringPhase
+#1641 C→S   38b  ACK 0x7a
+#1642 S→C   38b  ACK 0x39
+#1643 C→S   38b  ACK 0x7a
+#1644 S→C   38b  ACK 0x39
+#1645 C→S   38b  ACK 0x7a
+#1646 S→C   38b  ACK 0x39
+#1647 C→S   38b  ACK 0x7a
+#1648 S→C   38b  ACK 0x39
+#1649 C→S   38b  ACK 0x7a
+#1650 S→C   38b  ACK 0x39
+#1651 C→S   38b  ACK 0x7a
+#1652 S→C   38b  ACK 0x39
+#1653 C→S   38b  ACK 0x7a
+#1654 S→C   38b  ACK 0x39
+#1655 C→S   38b  ACK 0x7a
+#1656 S→C   38b  ACK 0x39
+#1657 C→S   38b  ACK 0x7a
+#1658 S→C   38b  ACK 0x39
+#1659 C→S   38b  ACK 0x7a
+#1660 S→C   38b  ACK 0x39
+#1661 C→S   38b  ACK 0x7a
+#1662 S→C   38b  ACK 0x39
+#1663 C→S   38b  ACK 0x7a
+#1664 S→C   38b  ACK 0x39
+#1665 C→S   38b  ACK 0x7a
+#1666 S→C   38b  ACK 0x39
+#1667 C→S   38b  ACK 0x7a
+#1668 S→C   38b  ACK 0x39
+#1669 C→S   38b  ACK 0x7a
+#1670 S→C   38b  ACK 0x39
+#1671 C→S   38b  ACK 0x7a
+#1672 S→C   38b  ACK 0x39
+#1673 C→S   38b  ACK 0x7a
+#1674 S→C   38b  ACK 0x39
+#1675 C→S   38b  ACK 0x7a
+#1676 S→C   38b  ACK 0x39
+#1677 C→S   38b  ACK 0x7a
+#1678 S→C   38b  ACK 0x39
+#1679 C→S   38b  ACK 0x7a
+#1680 S→C   38b  ACK 0x39
+#1681 C→S   38b  ACK 0x7a
+#1682 C→S 1024b  FRAG 0x3a (0/3) 1002b
+#1683 C→S 1024b  FRAG 0x3a (1/3) 1002b
+#1684 C→S  250b  Message 0x3a: ClientSortingAnswer
+#1685 S→C   38b  ACK 0x3a
+#1686 S→C   38b  ACK 0x3a
+#1687 C→S   38b  ACK 0x7a
+#1688 S→C   38b  ACK 0x3a
+#1689 C→S   38b  ACK 0x7a
+#1690 S→C   38b  ACK 0x3a
+#1691 C→S   38b  ACK 0x7a
+#1692 S→C   38b  ACK 0x3a
+#1693 C→S   38b  ACK 0x7a
+#1694 S→C   38b  ACK 0x3a
+#1695 C→S   38b  ACK 0x7a
+#1696 S→C   38b  ACK 0x3a
+#1697 C→S   38b  ACK 0x7a
+#1698 S→C   38b  ACK 0x3a
+#1699 C→S   38b  ACK 0x7a
+#1700 S→C   38b  ACK 0x3a
+#1701 C→S   38b  ACK 0x7a
+#1702 S→C   38b  ACK 0x3a
+#1703 C→S   38b  ACK 0x7a
+#1704 S→C   38b  ACK 0x3a
+#1705 C→S   38b  ACK 0x7a
+#1706 S→C   38b  ACK 0x3a
+#1707 C→S   38b  ACK 0x7a
+#1708 S→C  205b  Message 0x7b: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1709 C→S   38b  ACK 0x7b
+#1710 S→C   38b  ACK 0x3a
+#1711 C→S   38b  ACK 0x7b
+#1712 S→C   38b  ACK 0x3a
+#1713 C→S   38b  ACK 0x7b
+#1714 S→C   38b  ACK 0x3a
+#1715 C→S   38b  ACK 0x7b
+#1716 S→C   38b  ACK 0x3a
+#1717 C→S   38b  ACK 0x7b
+#1718 S→C   38b  ACK 0x3a
+#1719 C→S   38b  ACK 0x7b
+#1720 S→C   38b  ACK 0x3a
+#1721 C→S   38b  ACK 0x7b
+#1722 S→C   38b  ACK 0x3a
+#1723 C→S   38b  ACK 0x7b
+#1724 S→C   38b  ACK 0x3a
+#1725 C→S   38b  ACK 0x7b
+#1726 S→C   38b  ACK 0x3a
+#1727 C→S   38b  ACK 0x7b
+#1728 S→C   38b  ACK 0x3a
+#1729 C→S   38b  ACK 0x7b
+#1730 S→C   38b  ACK 0x3a
+#1731 C→S   38b  ACK 0x7b
+#1732 S→C   38b  ACK 0x3a
+#1733 C→S   38b  ACK 0x7b
+#1734 S→C   38b  ACK 0x3a
+#1735 C→S   38b  ACK 0x7b
+#1736 S→C   38b  ACK 0x3a
+#1737 C→S   38b  ACK 0x7b
+#1738 S→C   38b  ACK 0x3a
+#1739 C→S   38b  ACK 0x7b
+#1740 S→C   38b  ACK 0x3a
+#1741 C→S   38b  ACK 0x7b
+#1742 S→C   38b  ACK 0x3a
+#1743 S→C   95b  Message 0x7c: ClientQuizCommandMessage(action=4, time=0.0)
+#1744 C→S   38b  ACK 0x7c
+#1745 S→C   38b  ACK 0x3a
+#1746 C→S   38b  ACK 0x7c
+#1747 C→S   92b  Message 0x3b: ContinuePressedResponseMessage
+#1748 S→C   38b  ACK 0x3b
+#1749 S→C  205b  Message 0x7d: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1750 C→S   38b  ACK 0x7d
+#1751 S→C   38b  ACK 0x3b
+#1752 C→S   38b  ACK 0x7d
+#1753 S→C   38b  ACK 0x3b
+#1754 C→S   38b  ACK 0x7d
+#1755 S→C   38b  ACK 0x3b
+#1756 C→S   38b  ACK 0x7d
+#1757 S→C  886b  Message 0x7e: ServerCategorySelectChoices(4 choices: "Directors", "The 90s", "Origin Stories", "Murder Mystery")
+#1758 C→S   38b  ACK 0x7e
+#1759 S→C   38b  ACK 0x3b
+#1760 C→S   38b  ACK 0x7e
+#1761 S→C   38b  ACK 0x3b
+#1762 C→S   38b  ACK 0x7e
+#1763 C→S  116b  Message 0x3c: ClientCategorySelectChoice(doorIndex=2)
+#1764 S→C   38b  ACK 0x3c
+#1765 C→S   38b  ACK 0x7e
+#1766 S→C   38b  ACK 0x3c
+#1767 S→C   99b  Message 0x7f: ServerRequestCategorySelectChoice
+#1768 C→S   38b  ACK 0x7f
+#1769 S→C   38b  ACK 0x3c
+#1770 C→S   38b  ACK 0x7f
+#1771 S→C   38b  ACK 0x3c
+#1772 C→S   38b  ACK 0x7f
+#1773 S→C   38b  ACK 0x3c
+#1774 C→S   38b  ACK 0x7f
+#1775 S→C   38b  ACK 0x3c
+#1776 C→S   38b  ACK 0x7f
+#1777 S→C   98b  Message 0x80: ServerStopCategorySelectOverride
+#1778 C→S   38b  ACK 0xffffff80
+#1779 S→C  205b  Message 0x81: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1780 C→S   38b  ACK 0xffffff81
+#1781 S→C  549b  Message 0x82: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1782 C→S   38b  ACK 0xffffff82
+#1783 S→C   38b  ACK 0x3c
+#1784 C→S   38b  ACK 0xffffff82
+#1785 S→C   38b  ACK 0x3c
+#1786 C→S   38b  ACK 0xffffff82
+#1787 S→C   38b  ACK 0x3c
+#1788 C→S   38b  ACK 0xffffff82
+#1789 S→C  406b  Message 0x83: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1790 C→S   38b  ACK 0xffffff83
+#1791 C→S  211b  Message 0x3d: AllResourcesReceivedMessage(2 requirements)
+#1792 S→C   38b  ACK 0x3d
+#1793 C→S   38b  ACK 0xffffff83
+#1794 S→C   38b  ACK 0x3d
+#1795 C→S   38b  ACK 0xffffff83
+#1796 S→C   38b  ACK 0x3d
+#1797 S→C   38b  ACK 0x3d
+#1798 C→S   38b  ACK 0xffffff83
+#1799 S→C  211b  Message 0x84: ResourceRequirementsMessage(2 requirements)
+#1800 C→S   38b  ACK 0xffffff84
+#1801 C→S  211b  Message 0x3e: AllResourcesReceivedMessage(2 requirements)
+#1802 S→C   38b  ACK 0x3e
+#1803 S→C  738b  Message 0x85: ServerBeginPowerPlayPhase
+#1804 C→S   38b  ACK 0xffffff85
+#1805 C→S  211b  Message 0x3f: AllResourcesReceivedMessage(2 requirements)
+#1806 S→C   38b  ACK 0x3f
+#1807 S→C   38b  ACK 0x3f
+#1808 C→S   38b  ACK 0xffffff85
+#1809 S→C   38b  ACK 0x3f
+#1810 C→S   38b  ACK 0xffffff85
+#1811 S→C   38b  ACK 0x3f
+#1812 C→S   38b  ACK 0xffffff85
+#1813 S→C   38b  ACK 0x3f
+#1814 C→S   38b  ACK 0xffffff85
+#1815 S→C   38b  ACK 0x3f
+#1816 C→S   38b  ACK 0xffffff85
+#1817 S→C   38b  ACK 0x3f
+#1818 C→S   38b  ACK 0xffffff85
+#1819 S→C   38b  ACK 0x3f
+#1820 C→S   38b  ACK 0xffffff85
+#1821 C→S  132b  Message 0x40: ClientPowerPlayChoice
+#1822 S→C   38b  ACK 0x40
+#1823 S→C   94b  Message 0x86: ServerRequestPowerPlayChoice
+#1824 C→S   38b  ACK 0xffffff86
+#1825 S→C  205b  Message 0x87: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1826 C→S   38b  ACK 0xffffff87
+#1827 S→C   38b  ACK 0x40
+#1828 C→S   38b  ACK 0xffffff87
+#1829 S→C   38b  ACK 0x40
+#1830 C→S   38b  ACK 0xffffff87
+#1831 S→C   38b  ACK 0x40
+#1832 C→S   38b  ACK 0xffffff87
+#1833 S→C   38b  ACK 0x40
+#1834 C→S   38b  ACK 0xffffff87
+#1835 S→C   38b  ACK 0x40
+#1836 C→S   38b  ACK 0xffffff87
+#1837 S→C   38b  ACK 0x40
+#1838 C→S   38b  ACK 0xffffff87
+#1839 S→C   38b  ACK 0x40
+#1840 C→S   38b  ACK 0xffffff87
+#1841 S→C   38b  ACK 0x40
+#1842 C→S   38b  ACK 0xffffff87
+#1843 S→C   38b  ACK 0x40
+#1844 C→S   38b  ACK 0xffffff87
+#1845 S→C   38b  ACK 0x40
+#1846 C→S   38b  ACK 0xffffff87
+#1847 S→C   38b  ACK 0x40
+#1848 C→S   38b  ACK 0xffffff87
+#1849 S→C   38b  ACK 0x40
+#1850 C→S   38b  ACK 0xffffff87
+#1851 S→C   38b  ACK 0x40
+#1852 C→S   38b  ACK 0xffffff87
+#1853 S→C   38b  ACK 0x40
+#1854 C→S   38b  ACK 0xffffff87
+#1855 S→C   38b  ACK 0x40
+#1856 S→C  205b  Message 0x88: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#1857 C→S   38b  ACK 0xffffff88
+#1858 S→C   38b  ACK 0x40
+#1859 C→S   38b  ACK 0xffffff88
+#1860 S→C   38b  ACK 0x40
+#1861 C→S   38b  ACK 0xffffff88
+#1862 S→C   38b  ACK 0x40
+#1863 C→S   38b  ACK 0xffffff88
+#1864 S→C   38b  ACK 0x40
+#1865 C→S   38b  ACK 0xffffff88
+#1866 S→C   38b  ACK 0x40
+#1867 C→S   38b  ACK 0xffffff88
+#1868 S→C   38b  ACK 0x40
+#1869 C→S   38b  ACK 0xffffff88
+#1870 S→C   38b  ACK 0x40
+#1871 C→S   38b  ACK 0xffffff88
+#1872 S→C 1024b  FRAG 0x89 (0/2) 1002b
+#1873 S→C  144b  Message 0x89: ServerBeginTriviaAnsweringPhase(q="Which Russian composer created “Swan Lake”, “Sleeping Beauty”, and “The Nutcracker”?", 4 answers, duration=15.0s)
+#1874 C→S   38b  ACK 0xffffff89
+#1875 C→S  152b  Message 0x41: AllResourcesReceivedMessage(1 requirements)
+#1876 S→C   38b  ACK 0x41
+#1877 S→C   38b  ACK 0x41
+#1878 C→S   38b  ACK 0xffffff89
+#1879 C→S  516b  Message 0x42: ClientTriviaAnswer
+#1880 S→C   38b  ACK 0x42
+#1881 C→S   38b  ACK 0xffffff89
+#1882 S→C   38b  ACK 0x42
+#1883 S→C  205b  Message 0x8a: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1884 C→S   38b  ACK 0xffffff8a
+#1885 S→C   38b  ACK 0x42
+#1886 C→S   38b  ACK 0xffffff8a
+#1887 S→C   38b  ACK 0x42
+#1888 C→S   38b  ACK 0xffffff8a
+#1889 S→C   38b  ACK 0x42
+#1890 C→S   38b  ACK 0xffffff8a
+#1891 S→C   38b  ACK 0x42
+#1892 C→S   38b  ACK 0xffffff8a
+#1893 S→C   38b  ACK 0x42
+#1894 C→S   38b  ACK 0xffffff8a
+#1895 S→C   38b  ACK 0x42
+#1896 C→S   38b  ACK 0xffffff8a
+#1897 S→C   38b  ACK 0x42
+#1898 C→S   38b  ACK 0xffffff8a
+#1899 S→C   38b  ACK 0x42
+#1900 C→S   38b  ACK 0xffffff8a
+#1901 S→C   38b  ACK 0x42
+#1902 C→S   38b  ACK 0xffffff8a
+#1903 S→C   38b  ACK 0x42
+#1904 C→S   38b  ACK 0xffffff8a
+#1905 S→C   38b  ACK 0x42
+#1906 C→S   38b  ACK 0xffffff8a
+#1907 S→C   38b  ACK 0x42
+#1908 C→S   38b  ACK 0xffffff8a
+#1909 S→C   38b  ACK 0x42
+#1910 C→S   38b  ACK 0xffffff8a
+#1911 S→C   38b  ACK 0x42
+#1912 C→S   38b  ACK 0xffffff8a
+#1913 S→C   38b  ACK 0x42
+#1914 C→S   38b  ACK 0xffffff8a
+#1915 S→C   38b  ACK 0x42
+#1916 C→S   38b  ACK 0xffffff8a
+#1917 S→C   38b  ACK 0x42
+#1918 C→S   38b  ACK 0xffffff8a
+#1919 S→C   38b  ACK 0x42
+#1920 C→S   38b  ACK 0xffffff8a
+#1921 S→C   38b  ACK 0x42
+#1922 C→S   38b  ACK 0xffffff8a
+#1923 S→C   38b  ACK 0x42
+#1924 S→C   95b  Message 0x8b: ClientQuizCommandMessage(action=4, time=0.0)
+#1925 C→S   38b  ACK 0xffffff8b
+#1926 S→C   38b  ACK 0x42
+#1927 C→S   38b  ACK 0xffffff8b
+#1928 S→C   38b  ACK 0x42
+#1929 C→S   38b  ACK 0xffffff8b
+#1930 S→C  205b  Message 0x8c: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1931 C→S   38b  ACK 0xffffff8c
+#1932 S→C   38b  ACK 0x42
+#1933 C→S   38b  ACK 0xffffff8c
+#1934 S→C   38b  ACK 0x42
+#1935 C→S   38b  ACK 0xffffff8c
+#1936 S→C   38b  ACK 0x42
+#1937 C→S   38b  ACK 0xffffff8c
+#1938 S→C  884b  Message 0x8d: ServerCategorySelectChoices(4 choices: "Classical Music", "Grimm", "People Of Europe", "Russians")
+#1939 C→S   38b  ACK 0xffffff8d
+#1940 S→C   38b  ACK 0x42
+#1941 C→S   38b  ACK 0xffffff8d
+#1942 S→C   38b  ACK 0x42
+#1943 C→S   38b  ACK 0xffffff8d
+#1944 S→C   38b  ACK 0x42
+#1945 C→S   38b  ACK 0xffffff8d
+#1946 S→C   38b  ACK 0x42
+#1947 C→S   38b  ACK 0xffffff8d
+#1948 S→C   38b  ACK 0x42
+#1949 C→S   38b  ACK 0xffffff8d
+#1950 S→C   38b  ACK 0x42
+#1951 C→S   38b  ACK 0xffffff8d
+#1952 C→S  116b  Message 0x43: ClientCategorySelectChoice(doorIndex=1)
+#1953 S→C   38b  ACK 0x43
+#1954 S→C   99b  Message 0x8e: ServerRequestCategorySelectChoice
+#1955 C→S   38b  ACK 0xffffff8e
+#1956 S→C   38b  ACK 0x43
+#1957 C→S   38b  ACK 0xffffff8e
+#1958 S→C   38b  ACK 0x43
+#1959 C→S   38b  ACK 0xffffff8e
+#1960 S→C   38b  ACK 0x43
+#1961 C→S   38b  ACK 0xffffff8e
+#1962 S→C   38b  ACK 0x43
+#1963 C→S   38b  ACK 0xffffff8e
+#1964 S→C   38b  ACK 0x43
+#1965 S→C   98b  Message 0x8f: ServerStopCategorySelectOverride
+#1966 C→S   38b  ACK 0xffffff8f
+#1967 S→C  205b  Message 0x90: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1968 C→S   38b  ACK 0xffffff90
+#1969 S→C  581b  Message 0x91: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1970 C→S   38b  ACK 0xffffff91
+#1971 S→C   38b  ACK 0x43
+#1972 C→S   38b  ACK 0xffffff91
+#1973 S→C   38b  ACK 0x43
+#1974 C→S   38b  ACK 0xffffff91
+#1975 S→C   38b  ACK 0x43
+#1976 C→S   38b  ACK 0xffffff91
+#1977 S→C  406b  Message 0x92: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#1978 C→S   38b  ACK 0xffffff92
+#1979 C→S  211b  Message 0x44: AllResourcesReceivedMessage(2 requirements)
+#1980 S→C   38b  ACK 0x44
+#1981 S→C   38b  ACK 0x44
+#1982 C→S   38b  ACK 0xffffff92
+#1983 S→C   38b  ACK 0x44
+#1984 C→S   38b  ACK 0xffffff92
+#1985 S→C   38b  ACK 0x44
+#1986 C→S   38b  ACK 0xffffff92
+#1987 S→C  211b  Message 0x93: ResourceRequirementsMessage(2 requirements)
+#1988 C→S   38b  ACK 0xffffff93
+#1989 C→S  211b  Message 0x45: AllResourcesReceivedMessage(2 requirements)
+#1990 S→C   38b  ACK 0x45
+#1991 S→C  738b  Message 0x94: ServerBeginPowerPlayPhase
+#1992 C→S   38b  ACK 0xffffff94
+#1993 C→S  211b  Message 0x46: AllResourcesReceivedMessage(2 requirements)
+#1994 S→C   38b  ACK 0x46
+#1995 C→S   38b  ACK 0xffffff94
+#1996 S→C   38b  ACK 0x46
+#1997 S→C   38b  ACK 0x46
+#1998 C→S   38b  ACK 0xffffff94
+#1999 S→C   38b  ACK 0x46
+#2000 C→S   38b  ACK 0xffffff94
+#2001 C→S  132b  Message 0x47: ClientPowerPlayChoice
+#2002 S→C   38b  ACK 0x47
+#2003 C→S   38b  ACK 0xffffff94
+#2004 S→C   38b  ACK 0x47
+#2005 S→C   38b  ACK 0x47
+#2006 C→S   38b  ACK 0xffffff94
+#2007 S→C   94b  Message 0x95: ServerRequestPowerPlayChoice
+#2008 C→S   38b  ACK 0xffffff95
+#2009 S→C  205b  Message 0x96: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2010 C→S   38b  ACK 0xffffff96
+#2011 S→C   38b  ACK 0x47
+#2012 C→S   38b  ACK 0xffffff96
+#2013 S→C   38b  ACK 0x47
+#2014 C→S   38b  ACK 0xffffff96
+#2015 S→C   38b  ACK 0x47
+#2016 C→S   38b  ACK 0xffffff96
+#2017 S→C   38b  ACK 0x47
+#2018 C→S   38b  ACK 0xffffff96
+#2019 S→C   38b  ACK 0x47
+#2020 C→S   38b  ACK 0xffffff96
+#2021 S→C   38b  ACK 0x47
+#2022 C→S   38b  ACK 0xffffff96
+#2023 S→C   38b  ACK 0x47
+#2024 C→S   38b  ACK 0xffffff96
+#2025 S→C   38b  ACK 0x47
+#2026 C→S   38b  ACK 0xffffff96
+#2027 S→C   38b  ACK 0x47
+#2028 C→S   38b  ACK 0xffffff96
+#2029 S→C   38b  ACK 0x47
+#2030 C→S   38b  ACK 0xffffff96
+#2031 S→C   38b  ACK 0x47
+#2032 C→S   38b  ACK 0xffffff96
+#2033 S→C   38b  ACK 0x47
+#2034 C→S   38b  ACK 0xffffff96
+#2035 S→C   38b  ACK 0x47
+#2036 C→S   38b  ACK 0xffffff96
+#2037 S→C   38b  ACK 0x47
+#2038 C→S   38b  ACK 0xffffff96
+#2039 S→C   38b  ACK 0x47
+#2040 C→S   38b  ACK 0xffffff96
+#2041 S→C  205b  Message 0x97: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2042 C→S   38b  ACK 0xffffff97
+#2043 S→C   38b  ACK 0x47
+#2044 C→S   38b  ACK 0xffffff97
+#2045 S→C   38b  ACK 0x47
+#2046 C→S   38b  ACK 0xffffff97
+#2047 S→C   38b  ACK 0x47
+#2048 C→S   38b  ACK 0xffffff97
+#2049 S→C   38b  ACK 0x47
+#2050 C→S   38b  ACK 0xffffff97
+#2051 S→C   38b  ACK 0x47
+#2052 C→S   38b  ACK 0xffffff97
+#2053 S→C   38b  ACK 0x47
+#2054 C→S   38b  ACK 0xffffff97
+#2055 S→C 1024b  FRAG 0x98 (0/2) 1002b
+#2056 S→C  165b  Message 0x98: ServerBeginTriviaAnsweringPhase(q="In which TV show do fairytale characters pop up in a small town in Maine?", 4 answers, duration=15.0s)
+#2057 C→S   38b  ACK 0xffffff98
+#2058 C→S  152b  Message 0x48: AllResourcesReceivedMessage(1 requirements)
+#2059 S→C   38b  ACK 0x48
+#2060 C→S   38b  ACK 0xffffff98
+#2061 S→C   38b  ACK 0x48
+#2062 C→S  516b  Message 0x49: ClientTriviaAnswer
+#2063 S→C   38b  ACK 0x49
+#2064 C→S   38b  ACK 0xffffff98
+#2065 S→C   38b  ACK 0x49
+#2066 S→C  205b  Message 0x99: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2067 C→S   38b  ACK 0xffffff99
+#2068 S→C   38b  ACK 0x49
+#2069 C→S   38b  ACK 0xffffff99
+#2070 S→C   38b  ACK 0x49
+#2071 C→S   38b  ACK 0xffffff99
+#2072 S→C   38b  ACK 0x49
+#2073 C→S   38b  ACK 0xffffff99
+#2074 S→C   38b  ACK 0x49
+#2075 C→S   38b  ACK 0xffffff99
+#2076 S→C   38b  ACK 0x49
+#2077 C→S   38b  ACK 0xffffff99
+#2078 S→C   38b  ACK 0x49
+#2079 C→S   38b  ACK 0xffffff99
+#2080 S→C   38b  ACK 0x49
+#2081 C→S   38b  ACK 0xffffff99
+#2082 S→C   38b  ACK 0x49
+#2083 C→S   38b  ACK 0xffffff99
+#2084 S→C   38b  ACK 0x49
+#2085 C→S   38b  ACK 0xffffff99
+#2086 S→C   38b  ACK 0x49
+#2087 C→S   38b  ACK 0xffffff99
+#2088 S→C   38b  ACK 0x49
+#2089 C→S   38b  ACK 0xffffff99
+#2090 S→C   38b  ACK 0x49
+#2091 C→S   38b  ACK 0xffffff99
+#2092 S→C   38b  ACK 0x49
+#2093 C→S   38b  ACK 0xffffff99
+#2094 S→C   38b  ACK 0x49
+#2095 C→S   38b  ACK 0xffffff99
+#2096 S→C   38b  ACK 0x49
+#2097 C→S   38b  ACK 0xffffff99
+#2098 S→C   38b  ACK 0x49
+#2099 C→S   38b  ACK 0xffffff99
+#2100 S→C   95b  Message 0x9a: ClientQuizCommandMessage(action=4, time=0.0)
+#2101 C→S   38b  ACK 0xffffff9a
+#2102 S→C   38b  ACK 0x49
+#2103 C→S   38b  ACK 0xffffff9a
+#2104 S→C   38b  ACK 0x49
+#2105 C→S   38b  ACK 0xffffff9a
+#2106 C→S   92b  Message 0x4a: ContinuePressedResponseMessage
+#2107 S→C   38b  ACK 0x4a
+#2108 S→C  205b  Message 0x9b: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2109 C→S   38b  ACK 0xffffff9b
+#2110 S→C   38b  ACK 0x4a
+#2111 C→S   38b  ACK 0xffffff9b
+#2112 S→C   38b  ACK 0x4a
+#2113 C→S   38b  ACK 0xffffff9b
+#2114 S→C   38b  ACK 0x4a
+#2115 C→S   38b  ACK 0xffffff9b
+#2116 S→C  930b  Message 0x9c: ServerCategorySelectChoices(4 choices: "Fantasy Worlds", "Childrens Fiction", "Fairy Tales", "Popular TV Shows")
+#2117 C→S   38b  ACK 0xffffff9c
+#2118 S→C   38b  ACK 0x4a
+#2119 C→S   38b  ACK 0xffffff9c
+#2120 S→C   38b  ACK 0x4a
+#2121 C→S   38b  ACK 0xffffff9c
+#2122 C→S  116b  Message 0x4b: ClientCategorySelectChoice(doorIndex=1)
+#2123 S→C   38b  ACK 0x4b
+#2124 C→S   38b  ACK 0xffffff9c
+#2125 S→C   38b  ACK 0x4b
+#2126 S→C   99b  Message 0x9d: ServerRequestCategorySelectChoice
+#2127 C→S   38b  ACK 0xffffff9d
+#2128 S→C   38b  ACK 0x4b
+#2129 C→S   38b  ACK 0xffffff9d
+#2130 S→C   38b  ACK 0x4b
+#2131 C→S   38b  ACK 0xffffff9d
+#2132 S→C   38b  ACK 0x4b
+#2133 C→S   38b  ACK 0xffffff9d
+#2134 S→C   38b  ACK 0x4b
+#2135 C→S   38b  ACK 0xffffff9d
+#2136 S→C   98b  Message 0x9e: ServerStopCategorySelectOverride
+#2137 C→S   38b  ACK 0xffffff9e
+#2138 S→C  205b  Message 0x9f: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2139 C→S   38b  ACK 0xffffff9f
+#2140 S→C  551b  Message 0xa0: 2 messages
+         ServerColourMessage(rainbow=false, roundType=1)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2141 C→S   38b  ACK 0xffffffa0
+#2142 S→C   38b  ACK 0x4b
+#2143 C→S   38b  ACK 0xffffffa0
+#2144 S→C   38b  ACK 0x4b
+#2145 C→S   38b  ACK 0xffffffa0
+#2146 S→C   38b  ACK 0x4b
+#2147 C→S   38b  ACK 0xffffffa0
+#2148 S→C  406b  Message 0xa1: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2149 C→S   38b  ACK 0xffffffa1
+#2150 C→S  211b  Message 0x4c: AllResourcesReceivedMessage(2 requirements)
+#2151 S→C   38b  ACK 0x4c
+#2152 S→C   38b  ACK 0x4c
+#2153 C→S   38b  ACK 0xffffffa1
+#2154 S→C   38b  ACK 0x4c
+#2155 C→S   38b  ACK 0xffffffa1
+#2156 S→C   38b  ACK 0x4c
+#2157 C→S   38b  ACK 0xffffffa1
+#2158 S→C  211b  Message 0xa2: ResourceRequirementsMessage(2 requirements)
+#2159 C→S   38b  ACK 0xffffffa2
+#2160 C→S  211b  Message 0x4d: AllResourcesReceivedMessage(2 requirements)
+#2161 S→C   38b  ACK 0x4d
+#2162 S→C  738b  Message 0xa3: ServerBeginPowerPlayPhase
+#2163 C→S   38b  ACK 0xffffffa3
+#2164 C→S  211b  Message 0x4e: AllResourcesReceivedMessage(2 requirements)
+#2165 S→C   38b  ACK 0x4e
+#2166 C→S   38b  ACK 0xffffffa3
+#2167 S→C   38b  ACK 0x4e
+#2168 S→C   38b  ACK 0x4e
+#2169 C→S   38b  ACK 0xffffffa3
+#2170 C→S  132b  Message 0x4f: ClientPowerPlayChoice
+#2171 S→C   38b  ACK 0x4f
+#2172 C→S   38b  ACK 0xffffffa3
+#2173 S→C   38b  ACK 0x4f
+#2174 S→C   94b  Message 0xa4: ServerRequestPowerPlayChoice
+#2175 C→S   38b  ACK 0xffffffa4
+#2176 S→C  205b  Message 0xa5: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2177 C→S   38b  ACK 0xffffffa5
+#2178 S→C   38b  ACK 0x4f
+#2179 C→S   38b  ACK 0xffffffa5
+#2180 S→C   38b  ACK 0x4f
+#2181 C→S   38b  ACK 0xffffffa5
+#2182 S→C   38b  ACK 0x4f
+#2183 C→S   38b  ACK 0xffffffa5
+#2184 S→C   38b  ACK 0x4f
+#2185 C→S   38b  ACK 0xffffffa5
+#2186 S→C   38b  ACK 0x4f
+#2187 C→S   38b  ACK 0xffffffa5
+#2188 S→C   38b  ACK 0x4f
+#2189 C→S   38b  ACK 0xffffffa5
+#2190 S→C   38b  ACK 0x4f
+#2191 C→S   38b  ACK 0xffffffa5
+#2192 S→C   38b  ACK 0x4f
+#2193 C→S   38b  ACK 0xffffffa5
+#2194 S→C   38b  ACK 0x4f
+#2195 C→S   38b  ACK 0xffffffa5
+#2196 S→C   38b  ACK 0x4f
+#2197 C→S   38b  ACK 0xffffffa5
+#2198 S→C   38b  ACK 0x4f
+#2199 C→S   38b  ACK 0xffffffa5
+#2200 S→C   38b  ACK 0x4f
+#2201 C→S   38b  ACK 0xffffffa5
+#2202 S→C   38b  ACK 0x4f
+#2203 C→S   38b  ACK 0xffffffa5
+#2204 S→C   38b  ACK 0x4f
+#2205 C→S   38b  ACK 0xffffffa5
+#2206 S→C   38b  ACK 0x4f
+#2207 C→S   38b  ACK 0xffffffa5
+#2208 S→C  205b  Message 0xa6: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2209 C→S   38b  ACK 0xffffffa6
+#2210 S→C   38b  ACK 0x4f
+#2211 C→S   38b  ACK 0xffffffa6
+#2212 S→C   38b  ACK 0x4f
+#2213 C→S   38b  ACK 0xffffffa6
+#2214 S→C   38b  ACK 0x4f
+#2215 C→S   38b  ACK 0xffffffa6
+#2216 S→C   38b  ACK 0x4f
+#2217 C→S   38b  ACK 0xffffffa6
+#2218 S→C   38b  ACK 0x4f
+#2219 C→S   38b  ACK 0xffffffa6
+#2220 S→C   38b  ACK 0x4f
+#2221 C→S   38b  ACK 0xffffffa6
+#2222 S→C 1024b  FRAG 0xa7 (0/2) 1002b
+#2223 S→C  109b  Message 0xa7: ServerBeginTriviaAnsweringPhase(q="Where do “Alice’s Adventures In Wonderland” begin?", 4 answers, duration=15.0s)
+#2224 C→S   38b  ACK 0xffffffa7
+#2225 C→S  152b  Message 0x50: AllResourcesReceivedMessage(1 requirements)
+#2226 S→C   38b  ACK 0x50
+#2227 C→S   38b  ACK 0xffffffa7
+#2228 S→C   38b  ACK 0x50
+#2229 C→S   38b  ACK 0xffffffa7
+#2230 S→C   38b  ACK 0x50
+#2231 S→C   38b  ACK 0x50
+#2232 C→S   38b  ACK 0xffffffa7
+#2233 C→S  515b  Message 0x51: ClientTriviaAnswer
+#2234 S→C   38b  ACK 0x51
+#2235 S→C  205b  Message 0xa8: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2236 C→S   38b  ACK 0xffffffa8
+#2237 S→C   38b  ACK 0x51
+#2238 C→S   38b  ACK 0xffffffa8
+#2239 S→C   38b  ACK 0x51
+#2240 C→S   38b  ACK 0xffffffa8
+#2241 S→C   38b  ACK 0x51
+#2242 C→S   38b  ACK 0xffffffa8
+#2243 S→C   38b  ACK 0x51
+#2244 C→S   38b  ACK 0xffffffa8
+#2245 S→C   38b  ACK 0x51
+#2246 C→S   38b  ACK 0xffffffa8
+#2247 S→C   38b  ACK 0x51
+#2248 C→S   38b  ACK 0xffffffa8
+#2249 S→C   38b  ACK 0x51
+#2250 C→S   38b  ACK 0xffffffa8
+#2251 S→C   38b  ACK 0x51
+#2252 C→S   38b  ACK 0xffffffa8
+#2253 S→C   38b  ACK 0x51
+#2254 C→S   38b  ACK 0xffffffa8
+#2255 S→C   38b  ACK 0x51
+#2256 C→S   38b  ACK 0xffffffa8
+#2257 S→C   38b  ACK 0x51
+#2258 C→S   38b  ACK 0xffffffa8
+#2259 S→C   38b  ACK 0x51
+#2260 C→S   38b  ACK 0xffffffa8
+#2261 S→C   38b  ACK 0x51
+#2262 C→S   38b  ACK 0xffffffa8
+#2263 S→C   38b  ACK 0x51
+#2264 C→S   38b  ACK 0xffffffa8
+#2265 S→C   38b  ACK 0x51
+#2266 C→S   38b  ACK 0xffffffa8
+#2267 S→C   38b  ACK 0x51
+#2268 C→S   38b  ACK 0xffffffa8
+#2269 S→C   38b  ACK 0x51
+#2270 C→S   38b  ACK 0xffffffa8
+#2271 S→C   38b  ACK 0x51
+#2272 S→C   95b  Message 0xa9: ClientQuizCommandMessage(action=4, time=0.0)
+#2273 C→S   38b  ACK 0xffffffa9
+#2274 S→C   38b  ACK 0x51
+#2275 C→S   38b  ACK 0xffffffa9
+#2276 S→C   38b  ACK 0x51
+#2277 C→S   38b  ACK 0xffffffa9
+#2278 S→C   38b  ACK 0x51
+#2279 C→S   92b  Message 0x52: ContinuePressedResponseMessage
+#2280 S→C   38b  ACK 0x52
+#2281 S→C  205b  Message 0xaa: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2282 C→S   38b  ACK 0xffffffaa
+#2283 S→C   38b  ACK 0x52
+#2284 C→S   38b  ACK 0xffffffaa
+#2285 S→C   38b  ACK 0x52
+#2286 C→S   38b  ACK 0xffffffaa
+#2287 S→C   38b  ACK 0x52
+#2288 C→S   38b  ACK 0xffffffaa
+#2289 S→C   38b  ACK 0x52
+#2290 C→S   38b  ACK 0xffffffaa
+#2291 S→C   38b  ACK 0x52
+#2292 C→S   38b  ACK 0xffffffaa
+#2293 S→C   38b  ACK 0x52
+#2294 C→S   38b  ACK 0xffffffaa
+#2295 S→C   38b  ACK 0x52
+#2296 C→S   38b  ACK 0xffffffaa
+#2297 S→C   38b  ACK 0x52
+#2298 C→S   38b  ACK 0xffffffaa
+#2299 S→C   38b  ACK 0x52
+#2300 C→S   38b  ACK 0xffffffaa
+#2301 S→C   38b  ACK 0x52
+#2302 C→S   38b  ACK 0xffffffaa
+#2303 S→C   38b  ACK 0x52
+#2304 C→S   38b  ACK 0xffffffaa
+#2305 S→C   38b  ACK 0x52
+#2306 C→S   38b  ACK 0xffffffaa
+#2307 S→C  458b  Message 0xab: 2 messages
+         ServerColourMessage(rainbow=true, roundType=5)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2308 C→S   38b  ACK 0xffffffab
+#2309 S→C   38b  ACK 0x52
+#2310 C→S   38b  ACK 0xffffffab
+#2311 S→C   38b  ACK 0x52
+#2312 C→S   38b  ACK 0xffffffab
+#2313 S→C   38b  ACK 0x52
+#2314 C→S   38b  ACK 0xffffffab
+#2315 S→C   38b  ACK 0x52
+#2316 C→S   38b  ACK 0xffffffab
+#2317 S→C   38b  ACK 0x52
+#2318 C→S   38b  ACK 0xffffffab
+#2319 S→C   38b  ACK 0x52
+#2320 C→S   38b  ACK 0xffffffab
+#2321 S→C   38b  ACK 0x52
+#2322 C→S   38b  ACK 0xffffffab
+#2323 S→C   38b  ACK 0x52
+#2324 C→S   38b  ACK 0xffffffab
+#2325 S→C   38b  ACK 0x52
+#2326 C→S   38b  ACK 0xffffffab
+#2327 S→C   38b  ACK 0x52
+#2328 C→S   38b  ACK 0xffffffab
+#2329 S→C   38b  ACK 0x52
+#2330 C→S   38b  ACK 0xffffffab
+#2331 S→C   38b  ACK 0x52
+#2332 C→S   38b  ACK 0xffffffab
+#2333 S→C   38b  ACK 0x52
+#2334 C→S   38b  ACK 0xffffffab
+#2335 S→C   38b  ACK 0x52
+#2336 C→S   38b  ACK 0xffffffab
+#2337 S→C   38b  ACK 0x52
+#2338 C→S   38b  ACK 0xffffffab
+#2339 S→C   38b  ACK 0x52
+#2340 C→S   38b  ACK 0xffffffab
+#2341 S→C   38b  ACK 0x52
+#2342 C→S   38b  ACK 0xffffffab
+#2343 S→C   38b  ACK 0x52
+#2344 C→S   38b  ACK 0xffffffab
+#2345 S→C   38b  ACK 0x52
+#2346 C→S   38b  ACK 0xffffffab
+#2347 S→C   38b  ACK 0x52
+#2348 C→S   38b  ACK 0xffffffab
+#2349 S→C   38b  ACK 0x52
+#2350 C→S   38b  ACK 0xffffffab
+#2351 S→C   38b  ACK 0x52
+#2352 C→S   38b  ACK 0xffffffab
+#2353 S→C   38b  ACK 0x52
+#2354 C→S   38b  ACK 0xffffffab
+#2355 S→C   38b  ACK 0x52
+#2356 C→S   38b  ACK 0xffffffab
+#2357 S→C   38b  ACK 0x52
+#2358 C→S   38b  ACK 0xffffffab
+#2359 S→C   38b  ACK 0x52
+#2360 C→S   38b  ACK 0xffffffab
+#2361 S→C   38b  ACK 0x52
+#2362 C→S   38b  ACK 0xffffffab
+#2363 S→C   38b  ACK 0x52
+#2364 C→S   38b  ACK 0xffffffab
+#2365 S→C   38b  ACK 0x52
+#2366 C→S   38b  ACK 0xffffffab
+#2367 S→C   38b  ACK 0x52
+#2368 C→S   38b  ACK 0xffffffab
+#2369 S→C   38b  ACK 0x52
+#2370 C→S   38b  ACK 0xffffffab
+#2371 S→C   38b  ACK 0x52
+#2372 C→S   38b  ACK 0xffffffab
+#2373 S→C   38b  ACK 0x52
+#2374 C→S   38b  ACK 0xffffffab
+#2375 S→C   38b  ACK 0x52
+#2376 C→S   38b  ACK 0xffffffab
+#2377 S→C   38b  ACK 0x52
+#2378 C→S   38b  ACK 0xffffffab
+#2379 S→C   38b  ACK 0x52
+#2380 S→C   38b  ACK 0x52
+#2381 C→S   38b  ACK 0xffffffab
+#2382 S→C   38b  ACK 0x52
+#2383 C→S   38b  ACK 0xffffffab
+#2384 S→C   38b  ACK 0x52
+#2385 C→S   38b  ACK 0xffffffab
+#2386 S→C   38b  ACK 0x52
+#2387 C→S   38b  ACK 0xffffffab
+#2388 S→C   38b  ACK 0x52
+#2389 C→S   38b  ACK 0xffffffab
+#2390 S→C   38b  ACK 0x52
+#2391 C→S   38b  ACK 0xffffffab
+#2392 S→C   38b  ACK 0x52
+#2393 C→S   38b  ACK 0xffffffab
+#2394 S→C   38b  ACK 0x52
+#2395 C→S   38b  ACK 0xffffffab
+#2396 S→C   38b  ACK 0x52
+#2397 C→S   38b  ACK 0xffffffab
+#2398 S→C   38b  ACK 0x52
+#2399 C→S   38b  ACK 0xffffffab
+#2400 S→C   38b  ACK 0x52
+#2401 C→S   38b  ACK 0xffffffab
+#2402 S→C  406b  Message 0xac: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2403 C→S   38b  ACK 0xffffffac
+#2404 S→C  211b  Message 0xad: ResourceRequirementsMessage(2 requirements)
+#2405 C→S   38b  ACK 0xffffffad
+#2406 C→S  211b  Message 0x53: AllResourcesReceivedMessage(2 requirements)
+#2407 S→C   38b  ACK 0x53
+#2408 C→S  211b  Message 0x54: AllResourcesReceivedMessage(2 requirements)
+#2409 S→C   38b  ACK 0x54
+#2410 S→C  539b  Message 0xae: ServerBeginPowerPlayPhase
+#2411 C→S   38b  ACK 0xffffffae
+#2412 C→S  211b  Message 0x55: AllResourcesReceivedMessage(2 requirements)
+#2413 S→C   38b  ACK 0x55
+#2414 S→C   38b  ACK 0x55
+#2415 C→S   38b  ACK 0xffffffae
+#2416 C→S  132b  Message 0x56: ClientPowerPlayChoice
+#2417 S→C   38b  ACK 0x56
+#2418 C→S   38b  ACK 0xffffffae
+#2419 S→C   38b  ACK 0x56
+#2420 S→C   38b  ACK 0x56
+#2421 C→S   38b  ACK 0xffffffae
+#2422 S→C   94b  Message 0xaf: ServerRequestPowerPlayChoice
+#2423 C→S   38b  ACK 0xffffffaf
+#2424 S→C  205b  Message 0xb0: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2425 C→S   38b  ACK 0xffffffb0
+#2426 S→C   38b  ACK 0x56
+#2427 C→S   38b  ACK 0xffffffb0
+#2428 S→C   38b  ACK 0x56
+#2429 C→S   38b  ACK 0xffffffb0
+#2430 S→C   38b  ACK 0x56
+#2431 C→S   38b  ACK 0xffffffb0
+#2432 S→C   38b  ACK 0x56
+#2433 C→S   38b  ACK 0xffffffb0
+#2434 S→C   38b  ACK 0x56
+#2435 C→S   38b  ACK 0xffffffb0
+#2436 S→C   38b  ACK 0x56
+#2437 C→S   38b  ACK 0xffffffb0
+#2438 S→C   38b  ACK 0x56
+#2439 C→S   38b  ACK 0xffffffb0
+#2440 S→C   38b  ACK 0x56
+#2441 C→S   38b  ACK 0xffffffb0
+#2442 S→C   38b  ACK 0x56
+#2443 C→S   38b  ACK 0xffffffb0
+#2444 S→C   38b  ACK 0x56
+#2445 C→S   38b  ACK 0xffffffb0
+#2446 S→C   38b  ACK 0x56
+#2447 C→S   38b  ACK 0xffffffb0
+#2448 S→C   38b  ACK 0x56
+#2449 C→S   38b  ACK 0xffffffb0
+#2450 S→C   38b  ACK 0x56
+#2451 C→S   38b  ACK 0xffffffb0
+#2452 S→C   38b  ACK 0x56
+#2453 C→S   38b  ACK 0xffffffb0
+#2454 S→C   38b  ACK 0x56
+#2455 C→S   38b  ACK 0xffffffb0
+#2456 S→C   38b  ACK 0x56
+#2457 C→S   38b  ACK 0xffffffb0
+#2458 S→C   38b  ACK 0x56
+#2459 C→S   38b  ACK 0xffffffb0
+#2460 S→C   38b  ACK 0x56
+#2461 C→S   38b  ACK 0xffffffb0
+#2462 S→C   38b  ACK 0x56
+#2463 S→C  205b  Message 0xb1: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2464 C→S   38b  ACK 0xffffffb1
+#2465 S→C   38b  ACK 0x56
+#2466 C→S   38b  ACK 0xffffffb1
+#2467 S→C   38b  ACK 0x56
+#2468 C→S   38b  ACK 0xffffffb1
+#2469 S→C   38b  ACK 0x56
+#2470 C→S   38b  ACK 0xffffffb1
+#2471 S→C   38b  ACK 0x56
+#2472 C→S   38b  ACK 0xffffffb1
+#2473 S→C   38b  ACK 0x56
+#2474 C→S   38b  ACK 0xffffffb1
+#2475 S→C   38b  ACK 0x56
+#2476 C→S   38b  ACK 0xffffffb1
+#2477 S→C   38b  ACK 0x56
+#2478 C→S   38b  ACK 0xffffffb1
+#2479 S→C 1024b  FRAG 0xb2 (0/2) 1002b
+#2480 S→C  137b  Message 0xb2: ServerBeginTriviaAnsweringPhase(q="Who won seven Formula One championships between 1994 and 2004?", 4 answers, duration=15.0s)
+#2481 C→S   38b  ACK 0xffffffb2
+#2482 C→S  152b  Message 0x57: AllResourcesReceivedMessage(1 requirements)
+#2483 S→C   38b  ACK 0x57
+#2484 C→S   38b  ACK 0xffffffb2
+#2485 S→C   38b  ACK 0x57
+#2486 C→S   38b  ACK 0xffffffb2
+#2487 S→C   38b  ACK 0x57
+#2488 S→C   38b  ACK 0x57
+#2489 C→S   38b  ACK 0xffffffb2
+#2490 C→S  516b  Message 0x58: ClientTriviaAnswer
+#2491 S→C   38b  ACK 0x58
+#2492 C→S   38b  ACK 0xffffffb2
+#2493 S→C   38b  ACK 0x58
+#2494 S→C  205b  Message 0xb3: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2495 C→S   38b  ACK 0xffffffb3
+#2496 S→C   38b  ACK 0x58
+#2497 C→S   38b  ACK 0xffffffb3
+#2498 S→C   38b  ACK 0x58
+#2499 C→S   38b  ACK 0xffffffb3
+#2500 S→C   38b  ACK 0x58
+#2501 C→S   38b  ACK 0xffffffb3
+#2502 S→C   38b  ACK 0x58
+#2503 C→S   38b  ACK 0xffffffb3
+#2504 S→C   38b  ACK 0x58
+#2505 C→S   38b  ACK 0xffffffb3
+#2506 S→C   38b  ACK 0x58
+#2507 C→S   38b  ACK 0xffffffb3
+#2508 S→C   38b  ACK 0x58
+#2509 C→S   38b  ACK 0xffffffb3
+#2510 S→C  205b  Message 0xb4: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2511 C→S   38b  ACK 0xffffffb4
+#2512 S→C  406b  Message 0xb5: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2513 C→S   38b  ACK 0xffffffb5
+#2514 S→C  211b  Message 0xb6: ResourceRequirementsMessage(2 requirements)
+#2515 C→S   38b  ACK 0xffffffb6
+#2516 C→S  211b  Message 0x59: AllResourcesReceivedMessage(2 requirements)
+#2517 S→C   38b  ACK 0x59
+#2518 C→S  211b  Message 0x5a: AllResourcesReceivedMessage(2 requirements)
+#2519 S→C   38b  ACK 0x5a
+#2520 S→C  539b  Message 0xb7: ServerBeginPowerPlayPhase
+#2521 C→S   38b  ACK 0xffffffb7
+#2522 C→S  211b  Message 0x5b: AllResourcesReceivedMessage(2 requirements)
+#2523 S→C   38b  ACK 0x5b
+#2524 C→S   38b  ACK 0xffffffb7
+#2525 S→C   38b  ACK 0x5b
+#2526 C→S  132b  Message 0x5c: ClientPowerPlayChoice
+#2527 S→C   38b  ACK 0x5c
+#2528 S→C   38b  ACK 0x5c
+#2529 C→S   38b  ACK 0xffffffb7
+#2530 S→C   38b  ACK 0x5c
+#2531 C→S   38b  ACK 0xffffffb7
+#2532 S→C   94b  Message 0xb8: ServerRequestPowerPlayChoice
+#2533 C→S   38b  ACK 0xffffffb8
+#2534 S→C  205b  Message 0xb9: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2535 C→S   38b  ACK 0xffffffb9
+#2536 S→C   38b  ACK 0x5c
+#2537 C→S   38b  ACK 0xffffffb9
+#2538 S→C   38b  ACK 0x5c
+#2539 C→S   38b  ACK 0xffffffb9
+#2540 S→C   38b  ACK 0x5c
+#2541 C→S   38b  ACK 0xffffffb9
+#2542 S→C   38b  ACK 0x5c
+#2543 C→S   38b  ACK 0xffffffb9
+#2544 S→C   38b  ACK 0x5c
+#2545 C→S   38b  ACK 0xffffffb9
+#2546 S→C   38b  ACK 0x5c
+#2547 C→S   38b  ACK 0xffffffb9
+#2548 S→C   38b  ACK 0x5c
+#2549 C→S   38b  ACK 0xffffffb9
+#2550 S→C   38b  ACK 0x5c
+#2551 S→C  205b  Message 0xba: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2552 C→S   38b  ACK 0xffffffba
+#2553 S→C   38b  ACK 0x5c
+#2554 C→S   38b  ACK 0xffffffba
+#2555 S→C   38b  ACK 0x5c
+#2556 C→S   38b  ACK 0xffffffba
+#2557 S→C   38b  ACK 0x5c
+#2558 C→S   38b  ACK 0xffffffba
+#2559 S→C   38b  ACK 0x5c
+#2560 C→S   38b  ACK 0xffffffba
+#2561 S→C   38b  ACK 0x5c
+#2562 C→S   38b  ACK 0xffffffba
+#2563 S→C   38b  ACK 0x5c
+#2564 C→S   38b  ACK 0xffffffba
+#2565 S→C 1024b  FRAG 0xbb (0/2) 1002b
+#2566 S→C  129b  Message 0xbb: ServerBeginTriviaAnsweringPhase(q="Who created the characters of Miss Marple and Hercule Poirot?", 4 answers, duration=15.0s)
+#2567 C→S   38b  ACK 0xffffffbb
+#2568 C→S  152b  Message 0x5d: AllResourcesReceivedMessage(1 requirements)
+#2569 S→C   38b  ACK 0x5d
+#2570 C→S   38b  ACK 0xffffffbb
+#2571 S→C   38b  ACK 0x5d
+#2572 C→S   38b  ACK 0xffffffbb
+#2573 S→C   38b  ACK 0x5d
+#2574 C→S   38b  ACK 0xffffffbb
+#2575 S→C   38b  ACK 0x5d
+#2576 S→C   38b  ACK 0x5d
+#2577 C→S   38b  ACK 0xffffffbb
+#2578 S→C   38b  ACK 0x5d
+#2579 C→S   38b  ACK 0xffffffbb
+#2580 C→S  515b  Message 0x5e: ClientTriviaAnswer
+#2581 S→C   38b  ACK 0x5e
+#2582 S→C   38b  ACK 0x5e
+#2583 C→S   38b  ACK 0xffffffbb
+#2584 S→C   38b  ACK 0x5e
+#2585 C→S   38b  ACK 0xffffffbb
+#2586 S→C  205b  Message 0xbc: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2587 C→S   38b  ACK 0xffffffbc
+#2588 S→C   38b  ACK 0x5e
+#2589 C→S   38b  ACK 0xffffffbc
+#2590 S→C   38b  ACK 0x5e
+#2591 C→S   38b  ACK 0xffffffbc
+#2592 S→C   38b  ACK 0x5e
+#2593 C→S   38b  ACK 0xffffffbc
+#2594 S→C   38b  ACK 0x5e
+#2595 C→S   38b  ACK 0xffffffbc
+#2596 S→C   38b  ACK 0x5e
+#2597 C→S   38b  ACK 0xffffffbc
+#2598 S→C   38b  ACK 0x5e
+#2599 C→S   38b  ACK 0xffffffbc
+#2600 S→C   38b  ACK 0x5e
+#2601 C→S   38b  ACK 0xffffffbc
+#2602 S→C  205b  Message 0xbd: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2603 C→S   38b  ACK 0xffffffbd
+#2604 S→C  406b  Message 0xbe: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2605 C→S   38b  ACK 0xffffffbe
+#2606 S→C  211b  Message 0xbf: ResourceRequirementsMessage(2 requirements)
+#2607 C→S  211b  Message 0x5f: AllResourcesReceivedMessage(2 requirements)
+#2608 C→S   38b  ACK 0xffffffbf
+#2609 S→C   38b  ACK 0x5f
+#2610 C→S  211b  Message 0x60: AllResourcesReceivedMessage(2 requirements)
+#2611 S→C   38b  ACK 0x60
+#2612 S→C  539b  Message 0xc0: ServerBeginPowerPlayPhase
+#2613 C→S   38b  ACK 0xffffffc0
+#2614 C→S  211b  Message 0x61: AllResourcesReceivedMessage(2 requirements)
+#2615 S→C   38b  ACK 0x61
+#2616 S→C   38b  ACK 0x61
+#2617 C→S   38b  ACK 0xffffffc0
+#2618 S→C   38b  ACK 0x61
+#2619 C→S   38b  ACK 0xffffffc0
+#2620 S→C   38b  ACK 0x61
+#2621 C→S   38b  ACK 0xffffffc0
+#2622 C→S  132b  Message 0x62: ClientPowerPlayChoice
+#2623 S→C   38b  ACK 0x62
+#2624 C→S   38b  ACK 0xffffffc0
+#2625 S→C   38b  ACK 0x62
+#2626 S→C   94b  Message 0xc1: ServerRequestPowerPlayChoice
+#2627 C→S   38b  ACK 0xffffffc1
+#2628 S→C  205b  Message 0xc2: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2629 C→S   38b  ACK 0xffffffc2
+#2630 S→C   38b  ACK 0x62
+#2631 C→S   38b  ACK 0xffffffc2
+#2632 S→C   38b  ACK 0x62
+#2633 C→S   38b  ACK 0xffffffc2
+#2634 S→C   38b  ACK 0x62
+#2635 C→S   38b  ACK 0xffffffc2
+#2636 S→C   38b  ACK 0x62
+#2637 C→S   38b  ACK 0xffffffc2
+#2638 S→C   38b  ACK 0x62
+#2639 C→S   38b  ACK 0xffffffc2
+#2640 S→C   38b  ACK 0x62
+#2641 C→S   38b  ACK 0xffffffc2
+#2642 S→C   38b  ACK 0x62
+#2643 C→S   38b  ACK 0xffffffc2
+#2644 S→C   38b  ACK 0x62
+#2645 S→C  205b  Message 0xc3: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2646 C→S   38b  ACK 0xffffffc3
+#2647 S→C   38b  ACK 0x62
+#2648 C→S   38b  ACK 0xffffffc3
+#2649 S→C   38b  ACK 0x62
+#2650 C→S   38b  ACK 0xffffffc3
+#2651 S→C   38b  ACK 0x62
+#2652 C→S   38b  ACK 0xffffffc3
+#2653 S→C   38b  ACK 0x62
+#2654 C→S   38b  ACK 0xffffffc3
+#2655 S→C   38b  ACK 0x62
+#2656 C→S   38b  ACK 0xffffffc3
+#2657 S→C   38b  ACK 0x62
+#2658 C→S   38b  ACK 0xffffffc3
+#2659 S→C 1024b  FRAG 0xc4 (0/2) 1002b
+#2660 S→C  107b  Message 0xc4: ServerBeginTriviaAnsweringPhase(q="In which city was President John F. Kennedy assassinated?", 4 answers, duration=15.0s)
+#2661 C→S   38b  ACK 0xffffffc4
+#2662 C→S  152b  Message 0x63: AllResourcesReceivedMessage(1 requirements)
+#2663 S→C   38b  ACK 0x63
+#2664 C→S   38b  ACK 0xffffffc4
+#2665 S→C   38b  ACK 0x63
+#2666 C→S  516b  Message 0x64: ClientTriviaAnswer
+#2667 S→C   38b  ACK 0x64
+#2668 S→C   38b  ACK 0x64
+#2669 C→S   38b  ACK 0xffffffc4
+#2670 S→C  205b  Message 0xc5: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2671 C→S   38b  ACK 0xffffffc5
+#2672 S→C   38b  ACK 0x64
+#2673 C→S   38b  ACK 0xffffffc5
+#2674 S→C   38b  ACK 0x64
+#2675 C→S   38b  ACK 0xffffffc5
+#2676 S→C   38b  ACK 0x64
+#2677 C→S   38b  ACK 0xffffffc5
+#2678 S→C   38b  ACK 0x64
+#2679 C→S   38b  ACK 0xffffffc5
+#2680 S→C   38b  ACK 0x64
+#2681 C→S   38b  ACK 0xffffffc5
+#2682 S→C   38b  ACK 0x64
+#2683 C→S   38b  ACK 0xffffffc5
+#2684 S→C   38b  ACK 0x64
+#2685 C→S   38b  ACK 0xffffffc5
+#2686 S→C   38b  ACK 0x64
+#2687 C→S   38b  ACK 0xffffffc5
+#2688 S→C  205b  Message 0xc6: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2689 C→S   38b  ACK 0xffffffc6
+#2690 S→C  406b  Message 0xc7: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2691 C→S   38b  ACK 0xffffffc7
+#2692 S→C  211b  Message 0xc8: ResourceRequirementsMessage(2 requirements)
+#2693 C→S   38b  ACK 0xffffffc8
+#2694 C→S  211b  Message 0x65: AllResourcesReceivedMessage(2 requirements)
+#2695 S→C   38b  ACK 0x65
+#2696 C→S  211b  Message 0x66: AllResourcesReceivedMessage(2 requirements)
+#2697 S→C   38b  ACK 0x66
+#2698 S→C  539b  Message 0xc9: ServerBeginPowerPlayPhase
+#2699 C→S   38b  ACK 0xffffffc9
+#2700 C→S  211b  Message 0x67: AllResourcesReceivedMessage(2 requirements)
+#2701 S→C   38b  ACK 0x67
+#2702 C→S   38b  ACK 0xffffffc9
+#2703 S→C   38b  ACK 0x67
+#2704 S→C   38b  ACK 0x67
+#2705 C→S   38b  ACK 0xffffffc9
+#2706 S→C   38b  ACK 0x67
+#2707 C→S   38b  ACK 0xffffffc9
+#2708 C→S  132b  Message 0x68: ClientPowerPlayChoice
+#2709 S→C   38b  ACK 0x68
+#2710 S→C   94b  Message 0xca: ServerRequestPowerPlayChoice
+#2711 C→S   38b  ACK 0xffffffca
+#2712 S→C  205b  Message 0xcb: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2713 C→S   38b  ACK 0xffffffcb
+#2714 S→C   38b  ACK 0x68
+#2715 C→S   38b  ACK 0xffffffcb
+#2716 S→C   38b  ACK 0x68
+#2717 C→S   38b  ACK 0xffffffcb
+#2718 S→C   38b  ACK 0x68
+#2719 C→S   38b  ACK 0xffffffcb
+#2720 S→C   38b  ACK 0x68
+#2721 C→S   38b  ACK 0xffffffcb
+#2722 S→C   38b  ACK 0x68
+#2723 C→S   38b  ACK 0xffffffcb
+#2724 S→C   38b  ACK 0x68
+#2725 C→S   38b  ACK 0xffffffcb
+#2726 S→C   38b  ACK 0x68
+#2727 C→S   38b  ACK 0xffffffcb
+#2728 S→C   38b  ACK 0x68
+#2729 S→C  205b  Message 0xcc: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2730 C→S   38b  ACK 0xffffffcc
+#2731 S→C   38b  ACK 0x68
+#2732 C→S   38b  ACK 0xffffffcc
+#2733 S→C   38b  ACK 0x68
+#2734 C→S   38b  ACK 0xffffffcc
+#2735 S→C   38b  ACK 0x68
+#2736 C→S   38b  ACK 0xffffffcc
+#2737 S→C   38b  ACK 0x68
+#2738 C→S   38b  ACK 0xffffffcc
+#2739 S→C   38b  ACK 0x68
+#2740 C→S   38b  ACK 0xffffffcc
+#2741 S→C   38b  ACK 0x68
+#2742 C→S   38b  ACK 0xffffffcc
+#2743 S→C 1024b  FRAG 0xcd (0/2) 1002b
+#2744 S→C  105b  Message 0xcd: ServerBeginTriviaAnsweringPhase(q="By what name was pirate Edward Teach better known?", 4 answers, duration=15.0s)
+#2745 C→S   38b  ACK 0xffffffcd
+#2746 C→S  152b  Message 0x69: AllResourcesReceivedMessage(1 requirements)
+#2747 S→C   38b  ACK 0x69
+#2748 S→C   38b  ACK 0x69
+#2749 C→S   38b  ACK 0xffffffcd
+#2750 S→C   38b  ACK 0x69
+#2751 C→S   38b  ACK 0xffffffcd
+#2752 S→C   38b  ACK 0x69
+#2753 C→S   38b  ACK 0xffffffcd
+#2754 S→C   38b  ACK 0x69
+#2755 C→S   38b  ACK 0xffffffcd
+#2756 C→S  515b  Message 0x6a: ClientTriviaAnswer
+#2757 S→C   38b  ACK 0x6a
+#2758 C→S   38b  ACK 0xffffffcd
+#2759 S→C   38b  ACK 0x6a
+#2760 S→C  205b  Message 0xce: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2761 C→S   38b  ACK 0xffffffce
+#2762 S→C   38b  ACK 0x6a
+#2763 C→S   38b  ACK 0xffffffce
+#2764 S→C   38b  ACK 0x6a
+#2765 C→S   38b  ACK 0xffffffce
+#2766 S→C   38b  ACK 0x6a
+#2767 C→S   38b  ACK 0xffffffce
+#2768 S→C   38b  ACK 0x6a
+#2769 C→S   38b  ACK 0xffffffce
+#2770 S→C   38b  ACK 0x6a
+#2771 C→S   38b  ACK 0xffffffce
+#2772 S→C   38b  ACK 0x6a
+#2773 C→S   38b  ACK 0xffffffce
+#2774 S→C   38b  ACK 0x6a
+#2775 C→S   38b  ACK 0xffffffce
+#2776 S→C  205b  Message 0xcf: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2777 C→S   38b  ACK 0xffffffcf
+#2778 S→C  406b  Message 0xd0: 2 messages
+         ResourceRequirementsMessage(2 requirements)
+         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2779 C→S   38b  ACK 0xffffffd0
+#2780 S→C  211b  Message 0xd1: ResourceRequirementsMessage(2 requirements)
+#2781 C→S  211b  Message 0x6b: AllResourcesReceivedMessage(2 requirements)
+#2782 C→S   38b  ACK 0xffffffd1
+#2783 S→C   38b  ACK 0x6b
+#2784 C→S  211b  Message 0x6c: AllResourcesReceivedMessage(2 requirements)
+#2785 S→C   38b  ACK 0x6c
+#2786 S→C  539b  Message 0xd2: ServerBeginPowerPlayPhase
+#2787 C→S   38b  ACK 0xffffffd2
+#2788 C→S  211b  Message 0x6d: AllResourcesReceivedMessage(2 requirements)
+#2789 S→C   38b  ACK 0x6d
+#2790 S→C   38b  ACK 0x6d
+#2791 C→S   38b  ACK 0xffffffd2
+#2792 S→C   38b  ACK 0x6d
+#2793 C→S   38b  ACK 0xffffffd2
+#2794 S→C   38b  ACK 0x6d
+#2795 C→S   38b  ACK 0xffffffd2
+#2796 S→C   38b  ACK 0x6d
+#2797 C→S   38b  ACK 0xffffffd2
+#2798 S→C   38b  ACK 0x6d
+#2799 C→S   38b  ACK 0xffffffd2
+#2800 C→S  132b  Message 0x6e: ClientPowerPlayChoice
+#2801 S→C   38b  ACK 0x6e
+#2802 S→C   94b  Message 0xd3: ServerRequestPowerPlayChoice
+#2803 C→S   38b  ACK 0xffffffd3
+#2804 S→C  205b  Message 0xd4: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2805 C→S   38b  ACK 0xffffffd4
+#2806 S→C   38b  ACK 0x6e
+#2807 C→S   38b  ACK 0xffffffd4
+#2808 S→C   38b  ACK 0x6e
+#2809 C→S   38b  ACK 0xffffffd4
+#2810 S→C   38b  ACK 0x6e
+#2811 C→S   38b  ACK 0xffffffd4
+#2812 S→C   38b  ACK 0x6e
+#2813 C→S   38b  ACK 0xffffffd4
+#2814 S→C   38b  ACK 0x6e
+#2815 C→S   38b  ACK 0xffffffd4
+#2816 S→C   38b  ACK 0x6e
+#2817 C→S   38b  ACK 0xffffffd4
+#2818 S→C   38b  ACK 0x6e
+#2819 C→S   38b  ACK 0xffffffd4
+#2820 S→C   38b  ACK 0x6e
+#2821 S→C  205b  Message 0xd5: ClientHoldingScreenCommandMessage(action=5, type=9, text="")
+#2822 C→S   38b  ACK 0xffffffd5
+#2823 S→C   38b  ACK 0x6e
+#2824 C→S   38b  ACK 0xffffffd5
+#2825 S→C   38b  ACK 0x6e
+#2826 C→S   38b  ACK 0xffffffd5
+#2827 S→C   38b  ACK 0x6e
+#2828 C→S   38b  ACK 0xffffffd5
+#2829 S→C   38b  ACK 0x6e
+#2830 C→S   38b  ACK 0xffffffd5
+#2831 S→C   38b  ACK 0x6e
+#2832 C→S   38b  ACK 0xffffffd5
+#2833 S→C   38b  ACK 0x6e
+#2834 C→S   38b  ACK 0xffffffd5
+#2835 S→C 1024b  FRAG 0xd6 (0/2) 1002b
+#2836 S→C  118b  Message 0xd6: ServerBeginTriviaAnsweringPhase(q="Which member of his family did James Whistler paint in 1871?", 4 answers, duration=15.0s)
+#2837 C→S   38b  ACK 0xffffffd6
+#2838 C→S  152b  Message 0x6f: AllResourcesReceivedMessage(1 requirements)
+#2839 S→C   38b  ACK 0x6f
+#2840 C→S   38b  ACK 0xffffffd6
+#2841 S→C   38b  ACK 0x6f
+#2842 C→S   38b  ACK 0xffffffd6
+#2843 S→C   38b  ACK 0x6f
+#2844 C→S  516b  Message 0x70: ClientTriviaAnswer
+#2845 S→C   38b  ACK 0x70
+#2846 C→S   38b  ACK 0xffffffd6
+#2847 S→C   38b  ACK 0x70
+#2848 C→S   38b  ACK 0xffffffd6
+#2849 S→C   38b  ACK 0x70
+#2850 C→S   38b  ACK 0xffffffd6
+#2851 S→C   38b  ACK 0x70
+#2852 S→C  205b  Message 0xd7: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2853 C→S   38b  ACK 0xffffffd7
+#2854 S→C   38b  ACK 0x70
+#2855 C→S   38b  ACK 0xffffffd7
+#2856 S→C   38b  ACK 0x70
+#2857 C→S   38b  ACK 0xffffffd7
+#2858 S→C   38b  ACK 0x70
+#2859 C→S   38b  ACK 0xffffffd7
+#2860 S→C   38b  ACK 0x70
+#2861 C→S   38b  ACK 0xffffffd7
+#2862 S→C   38b  ACK 0x70
+#2863 C→S   38b  ACK 0xffffffd7
+#2864 S→C   38b  ACK 0x70
+#2865 C→S   38b  ACK 0xffffffd7
+#2866 S→C  205b  Message 0xd8: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2867 C→S   38b  ACK 0xffffffd8
+#2868 S→C   38b  ACK 0x70
+#2869 C→S   38b  ACK 0xffffffd8
+#2870 S→C   38b  ACK 0x70
+#2871 C→S   38b  ACK 0xffffffd8
+#2872 S→C   38b  ACK 0x70
+#2873 C→S   38b  ACK 0xffffffd8
+#2874 S→C   38b  ACK 0x70
+#2875 C→S   38b  ACK 0xffffffd8
+#2876 S→C   38b  ACK 0x70
+#2877 C→S   38b  ACK 0xffffffd8
+#2878 S→C   38b  ACK 0x70
+#2879 C→S   38b  ACK 0xffffffd8
+#2880 S→C   38b  ACK 0x70
+#2881 C→S   38b  ACK 0xffffffd8
+#2882 S→C   38b  ACK 0x70
+#2883 C→S   38b  ACK 0xffffffd8
+#2884 S→C   38b  ACK 0x70
+#2885 C→S   38b  ACK 0xffffffd8
+#2886 S→C   38b  ACK 0x70
+#2887 C→S   38b  ACK 0xffffffd8
+#2888 S→C   38b  ACK 0x70
+#2889 C→S   38b  ACK 0xffffffd8
+#2890 S→C   38b  ACK 0x70
+#2891 C→S   38b  ACK 0xffffffd8
+#2892 S→C   38b  ACK 0x70
+#2893 C→S   38b  ACK 0xffffffd8
+#2894 S→C   38b  ACK 0x70
+#2895 C→S   38b  ACK 0xffffffd8
+#2896 S→C   38b  ACK 0x70
+#2897 C→S   38b  ACK 0xffffffd8
+#2898 S→C   38b  ACK 0x70
+#2899 C→S   38b  ACK 0xffffffd8
+#2900 S→C   38b  ACK 0x70
+#2901 C→S   38b  ACK 0xffffffd8
+#2902 S→C   38b  ACK 0x70
+#2903 C→S   38b  ACK 0xffffffd8
+#2904 S→C   38b  ACK 0x70
+#2905 C→S   38b  ACK 0xffffffd8
+#2906 S→C   38b  ACK 0x70
+#2907 C→S   38b  ACK 0xffffffd8
+#2908 S→C   38b  ACK 0x70
+#2909 C→S   38b  ACK 0xffffffd8
+#2910 S→C   38b  ACK 0x70
+#2911 C→S   38b  ACK 0xffffffd8
+#2912 S→C   38b  ACK 0x70
+#2913 C→S   38b  ACK 0xffffffd8
+#2914 S→C   38b  ACK 0x70
+#2915 C→S   38b  ACK 0xffffffd8
+#2916 S→C   38b  ACK 0x70
+#2917 C→S   38b  ACK 0xffffffd8
+#2918 S→C   38b  ACK 0x70
+#2919 C→S   38b  ACK 0xffffffd8
+#2920 S→C   38b  ACK 0x70
+#2921 C→S   38b  ACK 0xffffffd8
+#2922 S→C   38b  ACK 0x70
+#2923 C→S   38b  ACK 0xffffffd8
+#2924 S→C   38b  ACK 0x70
+#2925 C→S   38b  ACK 0xffffffd8
+#2926 S→C   38b  ACK 0x70
+#2927 C→S   38b  ACK 0xffffffd8
+#2928 S→C   38b  ACK 0x70
+#2929 C→S   38b  ACK 0xffffffd8
+#2930 S→C   38b  ACK 0x70
+#2931 C→S   38b  ACK 0xffffffd8
+#2932 S→C   38b  ACK 0x70
+#2933 C→S   38b  ACK 0xffffffd8
+#2934 S→C   38b  ACK 0x70
+#2935 C→S   38b  ACK 0xffffffd8
+#2936 S→C   38b  ACK 0x70
+#2937 C→S   38b  ACK 0xffffffd8
+#2938 S→C   38b  ACK 0x70
+#2939 C→S   38b  ACK 0xffffffd8
+#2940 S→C   38b  ACK 0x70
+#2941 S→C   38b  ACK 0x70
+#2942 C→S   38b  ACK 0xffffffd8
+#2943 S→C   38b  ACK 0x70
+#2944 C→S   38b  ACK 0xffffffd8
+#2945 S→C   38b  ACK 0x70
+#2946 C→S   38b  ACK 0xffffffd8
+#2947 S→C   97b  Message 0xd9: ServerRequestEndOfGameFactCount
+#2948 C→S   38b  ACK 0xffffffd9
+#2949 C→S  105b  Message 0x71: ClientEndOfGameFactCount
+#2950 S→C   38b  ACK 0x71
+#2951 S→C  121b  Message 0xda: ClientEndOfGameFactCommandMessage
+#2952 C→S   38b  ACK 0xffffffda
+#2953 S→C   38b  ACK 0x71
+#2954 C→S   38b  ACK 0xffffffda
+#2955 S→C   38b  ACK 0x71
+#2956 C→S   38b  ACK 0xffffffda
+#2957 S→C   38b  ACK 0x71
+#2958 C→S   38b  ACK 0xffffffda
+#2959 S→C   38b  ACK 0x71
+#2960 C→S   38b  ACK 0xffffffda
+#2961 S→C   38b  ACK 0x71
+#2962 C→S   38b  ACK 0xffffffda
+#2963 S→C   38b  ACK 0x71
+#2964 C→S   38b  ACK 0xffffffda
+#2965 S→C   38b  ACK 0x71
+#2966 C→S   38b  ACK 0xffffffda
+#2967 S→C   38b  ACK 0x71
+#2968 C→S   38b  ACK 0xffffffda
+#2969 S→C   38b  ACK 0x71
+#2970 C→S   38b  ACK 0xffffffda
+#2971 S→C   38b  ACK 0x71
+#2972 C→S   38b  ACK 0xffffffda
+#2973 S→C   38b  ACK 0x71
+#2974 C→S   38b  ACK 0xffffffda
+#2975 S→C   38b  ACK 0x71
+#2976 C→S   38b  ACK 0xffffffda
+#2977 S→C   38b  ACK 0x71
+#2978 C→S   38b  ACK 0xffffffda
+#2979 S→C   38b  ACK 0x71
+#2980 C→S   38b  ACK 0xffffffda
+#2981 S→C   38b  ACK 0x71
+#2982 C→S   38b  ACK 0xffffffda
+#2983 S→C   38b  ACK 0x71
+#2984 S→C   95b  Message 0xdb: ClientQuizCommandMessage(action=4, time=0.0)
+#2985 C→S   38b  ACK 0xffffffdb
+#2986 S→C   38b  ACK 0x71
+#2987 C→S   38b  ACK 0xffffffdb
+#2988 C→S   92b  Message 0x72: ContinuePressedResponseMessage
+#2989 S→C   38b  ACK 0x72
+#2990 S→C  205b  Message 0xdc: ClientHoldingScreenCommandMessage(action=5, type=4, text="")
+#2991 C→S   38b  ACK 0xffffffdc
+#2992 S→C   38b  ACK 0x72
+#2993 C→S   38b  ACK 0xffffffdc
+#2994 S→C   38b  ACK 0x72
+#2995 C→S   38b  ACK 0xffffffdc
+#2996 S→C   38b  ACK 0x72
+#2997 C→S   38b  ACK 0xffffffdc
+#2998 S→C   38b  ACK 0x72
+#2999 C→S   38b  ACK 0xffffffdc
+#3000 S→C   38b  ACK 0x72
+#3001 C→S   38b  ACK 0xffffffdc
+#3002 S→C   38b  ACK 0x72
+#3003 C→S   38b  ACK 0xffffffdc
+#3004 S→C   38b  ACK 0x72
+#3005 C→S   38b  ACK 0xffffffdc
+#3006 S→C   38b  ACK 0x72
+#3007 C→S   38b  ACK 0xffffffdc
+#3008 S→C   38b  ACK 0x72
+#3009 C→S   38b  ACK 0xffffffdc
+#3010 S→C  258b  Message 0xdd: 3 messages
+         ClientGameIDMessage(gameId=183bcb7c2-2554-4f78-b7bc-4bb6bce3a3d6)
+         ClientQuizCommandMessage(action=15, time=0.0)
+         PlayerLeftMessage(playerId=2)
+#3011 C→S   38b  ACK 0xffffffdd
+#3012 S→C  955b  Message 0xde: 9 messages
+         ClientQuizCommandMessage(action=31, time=0.0)
+         ServerAvatarStatusMessage(id=COWGIRL, available=true)
+         ServerAvatarStatusMessage(id=GOFF, available=true)
+         ServerAvatarStatusMessage(id=HOTDOGMAN, available=true)
+         ServerAvatarStatusMessage(id=LOVER, available=true)
+         ServerAvatarStatusMessage(id=MOUNTAINEER, available=true)
+         ServerAvatarStatusMessage(id=SCIENTIST, available=true)
+         ServerAvatarStatusMessage(id=SPACEMAN, available=true)
+         ServerAvatarStatusMessage(id=MAGICIAN, available=true)
+#3013 C→S   38b  ACK 0xffffffde
+#3014 C→S  373b  Message 0x73: 2 messages
+         ClientRequestAvatarStatusMessage
+         DeviceInfoMessage(model="Genymobile Pixel 9", os="Android OS 11 / API-30 (RQ1A.210105.003/857)")
+#3015 S→C   38b  ACK 0x73
+#3016 S→C  883b  Message 0xdf: 8 messages
+         ServerAvatarStatusMessage(id=COWGIRL, available=true)
+         ServerAvatarStatusMessage(id=GOFF, available=true)
+         ServerAvatarStatusMessage(id=HOTDOGMAN, available=true)
+         ServerAvatarStatusMessage(id=LOVER, available=true)
+         ServerAvatarStatusMessage(id=MOUNTAINEER, available=true)
+         ServerAvatarStatusMessage(id=SCIENTIST, available=true)
+         ServerAvatarStatusMessage(id=SPACEMAN, available=true)
+         ServerAvatarStatusMessage(id=MAGICIAN, available=true)
+#3017 C→S   38b  ACK 0xffffffdf
+#3018 S→C   38b  ACK 0x73
+#3019 C→S   38b  ACK 0xffffffdf
+#3020 S→C   38b  ACK 0x73
+#3021 C→S   38b  ACK 0xffffffdf
+
+=== Summary: 1531 server packets, 1490 client packets, 3021 total ===

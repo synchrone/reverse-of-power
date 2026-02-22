@@ -24,7 +24,7 @@ class CategorySelectionFragment : Fragment() {
     private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
 
     private var categoryChoices: List<CategoryChoice> = emptyList()
-    private var selectionEnabled = false
+    private var selectionEnabled = true
     private var selectedDoorIndex: Int? = null
 
     // Default colors
@@ -93,8 +93,6 @@ class CategorySelectionFragment : Fragment() {
         }
         categorySelectCb = {
             activity?.runOnUiThread {
-                enableSelection()
-                // Re-send if already picked, otherwise send -1 (no choice)
                 networkManager.sendCategorySelection(selectedDoorIndex ?: -1)
             }
         }
@@ -153,12 +151,6 @@ class CategorySelectionFragment : Fragment() {
         if (selectedDoorIndex != null) {
             highlightSelectedDoor(selectedDoorIndex!!)
         }
-    }
-
-    private fun enableSelection() {
-        selectionEnabled = true
-        val columns = listOf(binding.doorColumn0, binding.doorColumn1, binding.doorColumn2, binding.doorColumn3)
-        columns.forEach { it.alpha = 1.0f }
     }
 
     private fun highlightSelectedDoor(selectedIndex: Int) {
