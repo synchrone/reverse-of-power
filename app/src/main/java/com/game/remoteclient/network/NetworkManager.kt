@@ -88,6 +88,8 @@ class NetworkManager private constructor() {
     var pendingLinking: ServerBeginLinkingAnsweringPhase? = null
     // Pending category override for when message arrives before fragment is ready
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
+    // Pending category select request for when message arrives before fragment is ready
+    var pendingCategorySelectRequest: Boolean = false
 
     companion object {
         @Volatile
@@ -191,7 +193,12 @@ class NetworkManager private constructor() {
             }
 
             is ServerRequestCategorySelectChoice -> {
-                onCategorySelectRequest?.invoke()
+                Log.d(TAG, "ServerRequestCategorySelectChoice: callback=${onCategorySelectRequest != null}")
+                if (onCategorySelectRequest != null) {
+                    onCategorySelectRequest?.invoke()
+                } else {
+                    pendingCategorySelectRequest = true
+                }
             }
 
             is ServerBeginTriviaAnsweringPhase -> {
