@@ -1,5 +1,6 @@
 package com.game.remoteclient.network
 
+import android.content.Context
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
 import com.game.protocol.ClientHoldingScreenCommandMessage
@@ -14,6 +15,7 @@ import com.game.protocol.ClientLinkingAnswerEntry
 import com.game.protocol.ClientPowerPlayChoice
 import com.game.protocol.ClientStopCategorySelectOverrideResponse
 import com.game.protocol.GameMessage
+import com.game.protocol.RejoiningClientOwnProfileMessage
 import com.game.protocol.GameProtocolClient
 import com.game.protocol.InterfaceVersionMessage
 import com.game.protocol.ServerAvatarRequestResponseMessage
@@ -46,7 +48,7 @@ class NetworkManager private constructor() {
 
     private var protocolClient: GameProtocolClient? = null
     private var currentServer: GameServer? = null
-    private var deviceUID: String = UUID.randomUUID().toString().replace("-", "") // e.g: "b2f3f8eb0cf4ef4b2359871d35495225"
+    private lateinit var deviceUID: String
     private var selectedAvatarId: String? = null
 
     private val _gameState = MutableStateFlow(GameState.DISCONNECTED)
@@ -71,6 +73,11 @@ class NetworkManager private constructor() {
     var onCategoryOverrideMessage: ((ServerBeginCategorySelectOverride) -> Unit)? = null
     var onStopCategoryOverride: ((ServerStopCategorySelectOverride) -> Unit)? = null
     var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
+    var onRejoining: ((RejoiningClientOwnProfileMessage) -> Unit)? = null
+
+    // Reconnection state
+    var isRejoining: Boolean = false
+        private set
 
     // Avatar selection state
     var isAvatarConfirmed: Boolean = false
@@ -100,6 +107,16 @@ class NetworkManager private constructor() {
                 instance ?: NetworkManager().also { instance = it }
             }
         }
+    }
+
+    fun init(context: Context) {
+        val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
+        deviceUID = prefs.getString("device_uid", null) ?: run {
+            val uid = UUID.randomUUID().toString().replace("-", "")
+            prefs.edit().putString("device_uid", uid).apply()
+            uid
+        }
+        Log.d(TAG, "Device UID: $deviceUID")
     }
 
     suspend fun scanForServers(subnet: String = "192.168.1"): List<GameServer> = withContext(Dispatchers.IO) {
@@ -155,6 +172,12 @@ class NetworkManager private constructor() {
         when (message) {
             is InterfaceVersionMessage -> {
                 _gameState.value = GameState.CONNECTED
+            }
+
+            is RejoiningClientOwnProfileMessage -> {
+                isRejoining = true
+                Log.d(TAG, "Rejoining as ${message.Name} with avatar ${message.AvatarID}")
+                onRejoining?.invoke(message)
             }
 
             is ServerAvatarStatusMessage -> {
@@ -355,6 +378,7 @@ class NetworkManager private constructor() {
         protocolClient = null
         currentServer = null
         selectedAvatarId = null
+        isRejoining = false
         availableAvatars.clear()
         _gameState.value = GameState.DISCONNECTED
         Log.d(TAG, "Disconnected from server")

@@ -95,6 +95,13 @@ class ServerDiscoveryFragment : Fragment() {
         binding.scanningText.text = "Connecting to server..."
         binding.scanningText.visibility = View.VISIBLE
 
+        // Listen for rejoin before connecting — server may send it during handshake
+        networkManager.onRejoining = { _ ->
+            activity?.runOnUiThread {
+                findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
+            }
+        }
+
         lifecycleScope.launch {
             try {
                 val success = networkManager.connectToServer(server)
@@ -103,21 +110,24 @@ class ServerDiscoveryFragment : Fragment() {
                 binding.scanningText.visibility = View.GONE
                 binding.connectButton.isEnabled = true
 
-                if (success) {
-                    // Navigate to name entry screen
+                if (success && !networkManager.isRejoining) {
+                    // Normal flow — navigate to name entry screen
                     val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
                     findNavController().navigate(action)
-                } else {
+                } else if (!success) {
+                    networkManager.onRejoining = null
                     Toast.makeText(
                         requireContext(),
                         "Failed to connect to ${server.fullAddress}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                // If isRejoining, the onRejoining callback already navigated
             } catch (e: Exception) {
                 binding.scanningProgress.visibility = View.GONE
                 binding.scanningText.visibility = View.GONE
                 binding.connectButton.isEnabled = true
+                networkManager.onRejoining = null
                 Toast.makeText(
                     requireContext(),
                     "Connection error: ${e.message}",
@@ -129,6 +139,7 @@ class ServerDiscoveryFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        networkManager.onRejoining = null
         _binding = null
     }
 }
