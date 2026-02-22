@@ -8,15 +8,26 @@ import com.game.protocol.ClientTriviaAnswer
 import com.game.protocol.ContinuePressedResponseMessage
 import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.ClientRequestAvatarMessage
+import com.game.protocol.ClientCategorySelectOverride
+import com.game.protocol.ClientLinkingAnswer
+import com.game.protocol.ClientLinkingAnswerEntry
+import com.game.protocol.ClientPowerPlayChoice
+import com.game.protocol.ClientStopCategorySelectOverrideResponse
 import com.game.protocol.GameMessage
 import com.game.protocol.GameProtocolClient
 import com.game.protocol.InterfaceVersionMessage
 import com.game.protocol.ServerAvatarRequestResponseMessage
 import com.game.protocol.ServerAvatarStatusMessage
+import com.game.protocol.ServerBeginCategorySelectOverride
+import com.game.protocol.ServerBeginLinkingAnsweringPhase
+import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
+import com.game.protocol.ServerCategorySelectOverrideSuccess
 import com.game.protocol.ServerCategorySelectChoices
 import com.game.protocol.ServerColourMessage
 import com.game.protocol.ServerRequestCategorySelectChoice
+import com.game.protocol.ServerRequestPowerPlayChoice
+import com.game.protocol.ServerStopCategorySelectOverride
 import com.game.protocol.StartGameButtonPressedResponseMessage
 import com.game.remoteclient.models.GameServer
 import com.game.remoteclient.models.GameState
@@ -54,6 +65,12 @@ class NetworkManager private constructor() {
     var onCategoryChoicesMessage: ((ServerCategorySelectChoices) -> Unit)? = null
     var onCategorySelectRequest: (() -> Unit)? = null
     var onTriviaMessage: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
+    var onPowerPlayMessage: ((ServerBeginPowerPlayPhase) -> Unit)? = null
+    var onPowerPlayRequest: (() -> Unit)? = null
+    var onLinkingMessage: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
+    var onCategoryOverrideMessage: ((ServerBeginCategorySelectOverride) -> Unit)? = null
+    var onStopCategoryOverride: ((ServerStopCategorySelectOverride) -> Unit)? = null
+    var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
 
     // Avatar selection state
     var isAvatarConfirmed: Boolean = false
@@ -65,6 +82,12 @@ class NetworkManager private constructor() {
     var pendingCategoryChoices: ServerCategorySelectChoices? = null
     // Pending trivia for when message arrives before fragment is ready
     var pendingTrivia: ServerBeginTriviaAnsweringPhase? = null
+    // Pending power play for when message arrives before fragment is ready
+    var pendingPowerPlay: ServerBeginPowerPlayPhase? = null
+    // Pending linking for when message arrives before fragment is ready
+    var pendingLinking: ServerBeginLinkingAnsweringPhase? = null
+    // Pending category override for when message arrives before fragment is ready
+    var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
 
     companion object {
         @Volatile
@@ -176,6 +199,33 @@ class NetworkManager private constructor() {
                 onTriviaMessage?.invoke(message)
             }
 
+            is ServerBeginPowerPlayPhase -> {
+                pendingPowerPlay = message
+                onPowerPlayMessage?.invoke(message)
+            }
+
+            is ServerRequestPowerPlayChoice -> {
+                onPowerPlayRequest?.invoke()
+            }
+
+            is ServerBeginLinkingAnsweringPhase -> {
+                pendingLinking = message
+                onLinkingMessage?.invoke(message)
+            }
+
+            is ServerBeginCategorySelectOverride -> {
+                pendingCategoryOverride = message
+                onCategoryOverrideMessage?.invoke(message)
+            }
+
+            is ServerStopCategorySelectOverride -> {
+                onStopCategoryOverride?.invoke(message)
+            }
+
+            is ServerCategorySelectOverrideSuccess -> {
+                onCategoryOverrideSuccess?.invoke(message)
+            }
+
             else -> return false
         }
         return true
@@ -215,6 +265,40 @@ class NetworkManager private constructor() {
                 ChosenAnswerDisplayIndex = answerIndex,
                 AnswerTime = answerTime
             ))
+        }
+    }
+
+    fun sendLinkingAnswer(correctCount: Int, answers: List<ClientLinkingAnswerEntry>) {
+        Log.d(TAG, "Linking answer: $correctCount correct, ${answers.size} attempts")
+        scope.launch {
+            protocolClient?.sendMessage(ClientLinkingAnswer(
+                ClientLinkingCorrectAnswerCount = correctCount,
+                ClientAnswers = answers
+            ))
+        }
+    }
+
+    fun sendPowerPlayChoice(powerPlaySlotIndex: Int, targetSlotIndices: List<Int>) {
+        Log.d(TAG, "Power play choice: slot=$powerPlaySlotIndex targets=$targetSlotIndices")
+        scope.launch {
+            protocolClient?.sendMessage(ClientPowerPlayChoice(
+                PowerPlaySlotIndex = powerPlaySlotIndex,
+                TargetSlotIndex = targetSlotIndices
+            ))
+        }
+    }
+
+    fun sendCategorySelectOverride(durationSeconds: Double) {
+        Log.d(TAG, "Category select override after ${durationSeconds}s")
+        scope.launch {
+            protocolClient?.sendMessage(ClientCategorySelectOverride(DurationSeconds = durationSeconds))
+        }
+    }
+
+    fun sendStopCategoryOverrideResponse(overrideSent: Boolean) {
+        Log.d(TAG, "Stop category override response: overrideSent=$overrideSent")
+        scope.launch {
+            protocolClient?.sendMessage(ClientStopCategorySelectOverrideResponse(OverrideSent = overrideSent))
         }
     }
 

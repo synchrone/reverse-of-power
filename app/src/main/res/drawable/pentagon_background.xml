@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Pentagon fill -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M50,5 L97,37 L79,90 L21,90 L3,37 Z" />
+
+    <!-- Pentagon border -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFD700"
+        android:strokeWidth="3"
+        android:pathData="M50,5 L97,37 L79,90 L21,90 L3,37 Z" />
+</vector>

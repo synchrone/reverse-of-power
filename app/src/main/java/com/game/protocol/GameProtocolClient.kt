@@ -96,12 +96,12 @@ class GameProtocolClient(
     // ==================== Core Messaging ====================
 
     fun sendMessage(msg: GameMessage) {
-        Log.i(TAG, "> Sending message: ${msg.TypeString}")
+        Log.i(TAG, "> Sending message: $msg")
         sendRawUDP(encoder.encodeMessage(msg))
     }
 
     private fun sendAck(messageId: Int) = synchronized(sendLock) {
-        Log.d(TAG, "> ACK $messageId")
+//        Log.d(TAG, "> ACK $messageId")
         sendRawUDP(encoder.encodeAck(messageId))
     }
 
@@ -161,7 +161,7 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.Ack -> {
-                Log.d(TAG, "< ACK ${decoded.messageId}")
+//                Log.d(TAG, "< ACK ${decoded.messageId}")
             }
 
             is DecodedPacket.Nack -> {
@@ -169,7 +169,7 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.Fragment -> {
-                Log.d(TAG, "< FRAG ${decoded.messageId} (${decoded.idx+1}/${decoded.total}) l=${decoded.size}")
+//                Log.d(TAG, "< FRAG ${decoded.messageId} (${decoded.idx+1}/${decoded.total}) l=${decoded.size}")
             }
 
             is DecodedPacket.DataMessage -> {

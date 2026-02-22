@@ -8,19 +8,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/holdingText"
+    <com.game.remoteclient.ui.RetroTvView
+        android:id="@+id/retroTv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:shadowColor="#CC000000"
-        android:shadowDx="0"
-        android:shadowDy="0"
-        android:shadowRadius="8"
-        android:padding="24dp" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>
