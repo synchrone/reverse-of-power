@@ -7,9 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import kotlin.math.cos
 import kotlin.math.min
-import kotlin.math.sin
 
 class RetroTvView @JvmOverloads constructor(
     context: Context,
@@ -17,22 +15,28 @@ class RetroTvView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var foregroundColor = Color.WHITE
+    private val eggshell = Color.parseColor("#F0EAD6")
+    private var fillColor = Color.TRANSPARENT
+
+    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = fillColor
+        style = Paint.Style.FILL
+    }
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = foregroundColor
+        color = eggshell
         style = Paint.Style.FILL
     }
 
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = foregroundColor
+        color = eggshell
         style = Paint.Style.STROKE
         strokeWidth = 8f
         strokeCap = Paint.Cap.ROUND
     }
 
     private val textPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = foregroundColor
+        color = eggshell
         textAlign = Paint.Align.CENTER
         isFakeBoldText = true
     }
@@ -43,11 +47,9 @@ class RetroTvView @JvmOverloads constructor(
             invalidate()
         }
 
-    fun setForegroundColor(color: Int) {
-        foregroundColor = color
-        paint.color = color
-        strokePaint.color = color
-        textPaint.color = color
+    fun setFillColor(color: Int) {
+        fillColor = color
+        fillPaint.color = color
         invalidate()
     }
 
@@ -56,7 +58,12 @@ class RetroTvView @JvmOverloads constructor(
 
         val centerX = width / 2f
         val centerY = height / 2f
-        val size = min(width, height) * 0.9f
+        val size = min(width, height) * 0.6f
+
+        // Rotate and stretch the entire drawing
+        canvas.save()
+        canvas.rotate(-10f, centerX, centerY)
+        canvas.scale(1.2f, 1f, centerX, centerY)
 
         // TV screen dimensions
         val tvWidth = size * 0.7f
@@ -89,24 +96,42 @@ class RetroTvView @JvmOverloads constructor(
         canvas.drawCircle(centerX - antennaWidth, antennaTopY, ballRadius, paint)
         canvas.drawCircle(centerX + antennaWidth, antennaTopY, ballRadius, paint)
 
-        // Antenna base (small trapezoid/triangle shape)
+        // Antenna base
         val baseWidth = size * 0.06f
-        val baseHeight = size * 0.05f
         canvas.drawCircle(centerX, antennaBaseY, baseWidth * 0.5f, paint)
 
         // Draw scalloped border around TV
         drawScallopedRect(canvas, tvLeft, tvTop, tvRight, tvBottom, size * 0.04f)
 
-        // Draw text
+        // Word-wrap text to fit within the TV width
         textPaint.textSize = size * 0.1f
-        val lines = text.split("\n")
-        val lineHeight = textPaint.fontSpacing
-        val totalTextHeight = lineHeight * lines.size
-        val startY = centerY + size * 0.1f - totalTextHeight / 2 + lineHeight * 0.7f
+        val maxTextWidth = tvWidth * 0.85f
+        val wrappedLines = mutableListOf<String>()
+        for (line in text.split("\n")) {
+            val words = line.split(" ")
+            var current = ""
+            for (word in words) {
+                val test = if (current.isEmpty()) word else "$current $word"
+                if (textPaint.measureText(test) > maxTextWidth && current.isNotEmpty()) {
+                    wrappedLines.add(current)
+                    current = word
+                } else {
+                    current = test
+                }
+            }
+            if (current.isNotEmpty()) wrappedLines.add(current)
+        }
 
-        for ((index, line) in lines.withIndex()) {
+        val lineHeight = textPaint.fontSpacing
+        val totalTextHeight = lineHeight * wrappedLines.size
+        val tvCenterY = (tvTop + tvBottom) / 2
+        val startY = tvCenterY - totalTextHeight / 2 + lineHeight * 0.7f
+
+        for ((index, line) in wrappedLines.withIndex()) {
             canvas.drawText(line, centerX, startY + index * lineHeight, textPaint)
         }
+
+        canvas.restore()
     }
 
     private fun drawScallopedRect(
@@ -121,9 +146,15 @@ class RetroTvView @JvmOverloads constructor(
         val height = bottom - top
         val cornerRadius = scallop * 1.5f
 
-        // Draw rounded rectangle background
+        // Fill the TV screen background
         val rect = RectF(left, top, right, bottom)
-        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint)
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, fillPaint)
+
+        // Draw rounded rectangle border (stroke)
+        val borderPaint = Paint(strokePaint).apply {
+            strokeWidth = scallop * 0.6f
+        }
+        canvas.drawRoundRect(rect, cornerRadius, cornerRadius, borderPaint)
 
         // Draw scallops around the border
         val scallopRadius = scallop * 0.8f

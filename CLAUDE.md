@@ -101,7 +101,7 @@ Client                          Server
 - **Avatar**: ClientRequestAvatarStatusMessage, ServerAvatarStatusMessage, ClientRequestAvatarMessage, ServerAvatarRequestResponseMessage (prefixed `KnowledgeIsPower.`)
 - **Profile**: ClientPlayerProfileMessage, DeviceInfoMessage
 - **Images**: ClientImageResourceContentTransferMessage, ImageResourceContentTransferMessage
-- **Game flow**: ClientQuizCommandMessage (actions: 14=game begins, 15/29/30=exit states, 31=ready screen), ClientHoldingScreenCommandMessage, StartGameButtonPressedResponseMessage
+- **Game flow**: ClientQuizCommandMessage (actions: 14=game begins, 15=exit, 29=paused, 30=unpaused/look at TV, 31=ready screen), ClientHoldingScreenCommandMessage, StartGameButtonPressedResponseMessage
 - **Category**: ServerCategorySelectChoices, ServerRequestCategorySelectChoice, ClientCategorySelectChoice, ServerBeginCategorySelectOverride, ServerStopCategorySelectOverride (prefixed `KnowledgeIsPower.`)
 - **Trivia**: ServerBeginTriviaAnsweringPhase (prefixed `KnowledgeIsPower.`)
 - **Players**: PlayerJoinedMessage, PlayerLeftMessage, PlayerNameQuizStateMessage
