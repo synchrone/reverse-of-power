@@ -138,21 +138,24 @@ class CategorySelectionFragment : Fragment() {
         val doors = listOf(binding.door0, binding.door1, binding.door2, binding.door3)
         val labels = listOf(binding.label0, binding.label1, binding.label2, binding.label3)
 
-        // Enable selection immediately — the ServerRequestCategorySelectChoice
-        // message may arrive before or after, but we should be ready to tap
-        selectionEnabled = true
-
         columns.forEachIndexed { index, column ->
             if (index < categoryChoices.size) {
                 val choice = categoryChoices[index]
                 column.visibility = View.VISIBLE
-                column.alpha = 1.0f
                 doors[index].doorIndex = index
                 doors[index].setDoorColor(colorTintToInt(choice.Colour))
                 labels[index].text = choice.DisplayText
             } else {
                 column.visibility = View.INVISIBLE
             }
+        }
+
+        // Preserve existing selection; otherwise enable selection
+        if (selectedDoorIndex != null) {
+            highlightSelectedDoor(selectedDoorIndex!!)
+        } else {
+            selectionEnabled = true
+            columns.forEach { it.alpha = 1.0f }
         }
     }
 

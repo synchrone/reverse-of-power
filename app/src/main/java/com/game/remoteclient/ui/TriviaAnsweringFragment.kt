@@ -2,6 +2,7 @@ package com.game.remoteclient.ui
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ class TriviaAnsweringFragment : Fragment() {
 
     private var answered = false
     private var questionStartTime = 0L
+    private var timer: CountDownTimer? = null
 
     private var triviaCb: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
     private var holdingScreenCb: ((com.game.protocol.ClientHoldingScreenCommandMessage) -> Unit)? = null
@@ -82,6 +84,7 @@ class TriviaAnsweringFragment : Fragment() {
                 button.setOnClickListener {
                     if (!answered) {
                         answered = true
+                        timer?.cancel()
                         val answerTime = (SystemClock.elapsedRealtime() - questionStartTime) / 1000.0
                         highlightSelected(buttons, index)
                         Log.d("TriviaAnswering", "Selected answer $index: ${answer.DisplayText} (${answerTime}s)")
@@ -92,6 +95,19 @@ class TriviaAnsweringFragment : Fragment() {
                 button.visibility = View.INVISIBLE
             }
         }
+
+        // Send a "no answer" response when time runs out
+        timer?.cancel()
+        val durationMs = (trivia.QuestionDuration * 1000).toLong()
+        timer = object : CountDownTimer(durationMs, durationMs) {
+            override fun onTick(millisUntilFinished: Long) {}
+            override fun onFinish() {
+                if (_binding == null || answered) return
+                answered = true
+                Log.d("TriviaAnswering", "Time expired, sending no-answer")
+                networkManager.sendTriviaAnswer(-1, trivia.QuestionDuration)
+            }
+        }.start()
     }
 
     private fun highlightSelected(buttons: List<Button>, selectedIndex: Int) {
@@ -115,6 +131,7 @@ class TriviaAnsweringFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        timer?.cancel()
         if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
         _binding = null
