@@ -53,16 +53,16 @@ class ProtocolEncoder {
     // ==================== Framed Packets (0xAE7F header) ====================
 
     /**
-     * Encode a single GameMessage as one UDP packet.
+     * Encode a single GameMessage as one or more UDP packets (fragmented if needed).
      */
-    fun encodeMessage(msg: GameMessage): ByteArray {
+    fun encodeMessage(msg: GameMessage): List<ByteArray> {
         val jsonBytes = encodeJson(msg)
         val body = ByteBuffer.allocate(jsonBytes.size + 10).order(ByteOrder.LITTLE_ENDIAN)
         body.put(bytes(0x33, 0x29)) // magic
         body.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
         body.putInt(jsonBytes.size)
         body.put(jsonBytes)
-        return wrapPayload(body.array())
+        return wrapAndChunk(body.array())
     }
 
     /**
@@ -97,7 +97,7 @@ class ProtocolEncoder {
             ImageGUID = imageGuid,
             ImgType = imgType
         )
-        val controlPacket = encodeMessage(controlMsg)
+        val controlPackets = encodeMessage(controlMsg)
 
         val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
         payloadBuffer.put(bytes(0x33, 0x29))  // magic
@@ -106,7 +106,7 @@ class ProtocolEncoder {
         payloadBuffer.put(imageData)
 
         val imagePackets = wrapAndChunk(payloadBuffer.array())
-        return listOf(controlPacket) + imagePackets
+        return controlPackets + imagePackets
     }
 
     // ==================== Internal ====================
