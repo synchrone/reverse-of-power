@@ -58,9 +58,18 @@ data class AllResourcesReceivedMessage(
 @Serializable
 data class ClientQuizCommandMessage(
     override val TypeString: String = "ClientQuizCommandMessage",
-    val action: Int, // 14 = show ready button; 4 = show continue button; 5 = pick power play; 31 = go back to name selection screen; 29, 30, 15 = something around exiting to Player Name screen
+    val action: Int,
     val time: Double
-) : GameMessage()
+) : GameMessage() {
+    companion object {
+        const val ACTION_CONTINUE = 4
+        const val ACTION_READY = 14
+        const val ACTION_EXIT = 15
+        const val ACTION_PAUSED = 29
+        const val ACTION_UNPAUSED = 30
+        const val ACTION_RESET_TO_NAME = 31
+    }
+}
 
 @Serializable // 1
 data class ClientRequestAvatarStatusMessage(
@@ -295,6 +304,37 @@ data class ServerBeginTriviaAnsweringPhase(
     val BackgroundTint: ColorTint,
     val PrimaryTint: ColorTint,
     val SecondaryTint: ColorTint
+) : GameMessage()
+
+@Serializable
+data class LinkingAnswer(
+    val DisplayText: String,
+    val AnswerID: String,
+    val MatchIndex: Int,
+    val Direction: Int
+)
+
+@Serializable
+data class ServerBeginLinkingAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginLinkingAnsweringPhase",
+    val QuestionID: String,
+    val QuestionText: String,
+    val QuestionDuration: Double,
+    val LinkingAnswers: List<LinkingAnswer>
+) : GameMessage()
+
+@Serializable
+data class ClientLinkingAnswerEntry(
+    val FromID: String,
+    val ToID: String,
+    val Correct: Boolean
+)
+
+@Serializable
+data class ClientLinkingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientLinkingAnswer",
+    val ClientLinkingCorrectAnswerCount: Int,
+    val ClientAnswers: List<ClientLinkingAnswerEntry>
 ) : GameMessage()
 
 @Serializable

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="160dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="12dp"
+    android:layout_margin="8dp"
+    android:background="@android:color/transparent">
+
+    <!-- Power play icon placeholder (colored circle) -->
+    <View
+        android:id="@+id/powerPlayIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/circle_background" />
+
+    <TextView
+        android:id="@+id/powerPlayName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        tools:text="BOMBLES" />
+
+    <TextView
+        android:id="@+id/powerPlayDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#CCFFFFFF"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        tools:text="Throw bombs over answers" />
+
+</LinearLayout>

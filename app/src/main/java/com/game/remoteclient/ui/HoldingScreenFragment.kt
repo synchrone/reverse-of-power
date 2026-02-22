@@ -11,6 +11,8 @@ import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.ColorTint
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
+import com.game.protocol.ServerBeginLinkingAnsweringPhase
+import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerColourMessage
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -26,7 +28,7 @@ class HoldingScreenFragment : Fragment() {
     // Default colors (beige/taupe from screenshot)
     private var backgroundColor = Color.parseColor("#C4B8A8")
     private var backgroundSecondary = Color.parseColor("#D4C8B8")
-    private var foregroundColor = Color.WHITE
+    private var foregroundColor = Color.TRANSPARENT
 
     // Store references to our callbacks so we only clear our own
     private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
@@ -34,6 +36,8 @@ class HoldingScreenFragment : Fragment() {
     private var categoryCb: ((com.game.protocol.ServerCategorySelectChoices) -> Unit)? = null
     private var triviaCb: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
     private var quizCb: ((ClientQuizCommandMessage) -> Unit)? = null
+    private var powerPlayCb: ((ServerBeginPowerPlayPhase) -> Unit)? = null
+    private var linkingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -65,9 +69,18 @@ class HoldingScreenFragment : Fragment() {
             activity?.runOnUiThread { navigateToTriviaAnswering() }
         }
         quizCb = { message ->
-            if (message.action == 4) {
-                activity?.runOnUiThread { navigateToContinue() }
+            activity?.runOnUiThread {
+                when (message.action) {
+                    ClientQuizCommandMessage.ACTION_CONTINUE -> navigateToContinue()
+                    ClientQuizCommandMessage.ACTION_RESET_TO_NAME -> navigateToNameEntry()
+                }
             }
+        }
+        powerPlayCb = { _ ->
+            activity?.runOnUiThread { navigateToPowerPlay() }
+        }
+        linkingCb = { _ ->
+            activity?.runOnUiThread { navigateToLinkingAnswers() }
         }
 
         networkManager.onHoldingScreenMessage = holdingScreenCb
@@ -75,6 +88,8 @@ class HoldingScreenFragment : Fragment() {
         networkManager.onCategoryChoicesMessage = categoryCb
         networkManager.onTriviaMessage = triviaCb
         networkManager.onQuizCommand = quizCb
+        networkManager.onPowerPlayMessage = powerPlayCb
+        networkManager.onLinkingMessage = linkingCb
     }
 
     private fun navigateToCategorySelection() {
@@ -89,14 +104,36 @@ class HoldingScreenFragment : Fragment() {
         findNavController().navigate(R.id.action_holdingScreen_to_continue)
     }
 
-    private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
-        binding.holdingText.text = message.HoldingScreenText.replace("\\n", "\n")
+    private fun navigateToPowerPlay() {
+        findNavController().navigate(R.id.action_holdingScreen_to_powerPlay)
     }
 
+    private fun navigateToLinkingAnswers() {
+        findNavController().navigate(R.id.action_holdingScreen_to_linkingAnswers)
+    }
+
+    private fun navigateToNameEntry() {
+        findNavController().popBackStack(R.id.nameEntryFragment, false)
+    }
+
+    private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
+        val text = message.HoldingScreenText.replace("\\n", "\n")
+        binding.retroTv.text = text.ifEmpty { "Look at the TV" }
+    }
+
+    private fun isBlack(tint: ColorTint): Boolean =
+        tint.r == 0f && tint.g == 0f && tint.b == 0f
+
     private fun handleColourMessage(message: ServerColourMessage) {
-        backgroundColor = colorTintToInt(message.BackgroundTint)
-        foregroundColor = colorTintToInt(message.PrimaryTint)
-        backgroundSecondary = colorTintToInt(message.SecondaryTint)
+        if (isBlack(message.BackgroundTint) && isBlack(message.PrimaryTint) && isBlack(message.SecondaryTint)) {
+            backgroundColor = Color.parseColor("#C4B8A8")
+            backgroundSecondary = Color.parseColor("#D4C8B8")
+            foregroundColor = Color.TRANSPARENT
+        } else {
+            backgroundColor = colorTintToInt(message.BackgroundTint)
+            foregroundColor = colorTintToInt(message.PrimaryTint)
+            backgroundSecondary = colorTintToInt(message.SecondaryTint)
+        }
         applyColors()
     }
 
@@ -111,7 +148,7 @@ class HoldingScreenFragment : Fragment() {
 
     private fun applyColors() {
         binding.sunburstBackground.setColors(backgroundColor, backgroundSecondary)
-        binding.holdingText.setTextColor(foregroundColor)
+        binding.retroTv.setFillColor(foregroundColor)
     }
 
     override fun onDestroyView() {
@@ -121,6 +158,8 @@ class HoldingScreenFragment : Fragment() {
         if (networkManager.onCategoryChoicesMessage === categoryCb) networkManager.onCategoryChoicesMessage = null
         if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
         if (networkManager.onQuizCommand === quizCb) networkManager.onQuizCommand = null
+        if (networkManager.onPowerPlayMessage === powerPlayCb) networkManager.onPowerPlayMessage = null
+        if (networkManager.onLinkingMessage === linkingCb) networkManager.onLinkingMessage = null
         _binding = null
     }
 }

@@ -232,6 +232,8 @@ class ProtocolDecoder {
                     json.decodeFromString<ServerCategorySelectOverrideSuccess>(jsonStr)
                 typeString.contains("ServerBeginTriviaAnsweringPhase") ->
                     json.decodeFromString<ServerBeginTriviaAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginLinkingAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginLinkingAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginPowerPlayPhase") ->
                     json.decodeFromString<ServerBeginPowerPlayPhase>(jsonStr)
                 typeString.contains("ServerRequestPowerPlayChoice") ->
@@ -264,6 +266,8 @@ class ProtocolDecoder {
                     json.decodeFromString<ClientPowerPlayChoice>(jsonStr)
                 typeString.contains("ClientTriviaAnswer") ->
                     json.decodeFromString<ClientTriviaAnswer>(jsonStr)
+                typeString.contains("ClientLinkingAnswer") ->
+                    json.decodeFromString<ClientLinkingAnswer>(jsonStr)
                 else -> null
             }
 

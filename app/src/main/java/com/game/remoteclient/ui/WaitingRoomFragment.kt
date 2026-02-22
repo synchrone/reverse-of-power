@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.game.protocol.ClientQuizCommandMessage
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentWaitingRoomBinding
@@ -41,7 +42,7 @@ class WaitingRoomFragment : Fragment() {
 
     private fun observeMessages() {
         networkManager.onQuizCommand = { message ->
-            if (message.action == 14) {
+            if (message.action == ClientQuizCommandMessage.ACTION_READY) {
                 activity?.runOnUiThread {
                     showReadyButton()
                 }

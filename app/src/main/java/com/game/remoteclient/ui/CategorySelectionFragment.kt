@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.game.protocol.CategoryChoice
 import com.game.protocol.ColorTint
+import com.game.protocol.ServerBeginCategorySelectOverride
 import com.game.protocol.ServerCategorySelectChoices
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -24,6 +25,7 @@ class CategorySelectionFragment : Fragment() {
 
     private var categoryChoices: List<CategoryChoice> = emptyList()
     private var selectionEnabled = false
+    private var selectedDoorIndex: Int? = null
 
     // Default colors
     private var backgroundColor = Color.parseColor("#C4B8A8")
@@ -33,6 +35,7 @@ class CategorySelectionFragment : Fragment() {
     private var categorySelectCb: (() -> Unit)? = null
     private var holdingScreenCb: ((com.game.protocol.ClientHoldingScreenCommandMessage) -> Unit)? = null
     private var triviaCb: ((com.game.protocol.ServerBeginTriviaAnsweringPhase) -> Unit)? = null
+    private var categoryOverrideCb: ((ServerBeginCategorySelectOverride) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,6 +72,7 @@ class CategorySelectionFragment : Fragment() {
             column.setOnClickListener {
                 Log.d("CategorySelection", "Door $index tapped, selectionEnabled=$selectionEnabled, choices=${categoryChoices.size}")
                 if (selectionEnabled && index < categoryChoices.size) {
+                    selectedDoorIndex = index
                     networkManager.sendCategorySelection(index)
                     selectionEnabled = false
                     highlightSelectedDoor(index)
@@ -82,7 +86,12 @@ class CategorySelectionFragment : Fragment() {
             activity?.runOnUiThread { updateCategoryChoices(message) }
         }
         categorySelectCb = {
-            activity?.runOnUiThread { enableSelection() }
+            activity?.runOnUiThread {
+                enableSelection()
+                selectedDoorIndex?.let { index ->
+                    networkManager.sendCategorySelection(index)
+                }
+            }
         }
         holdingScreenCb = { _ ->
             activity?.runOnUiThread { navigateToHoldingScreen() }
@@ -90,11 +99,15 @@ class CategorySelectionFragment : Fragment() {
         triviaCb = { _ ->
             activity?.runOnUiThread { navigateToTriviaAnswering() }
         }
+        categoryOverrideCb = { _ ->
+            activity?.runOnUiThread { navigateToPowerPick() }
+        }
 
         networkManager.onCategoryChoicesMessage = categoryCb
         networkManager.onCategorySelectRequest = categorySelectCb
         networkManager.onHoldingScreenMessage = holdingScreenCb
         networkManager.onTriviaMessage = triviaCb
+        networkManager.onCategoryOverrideMessage = categoryOverrideCb
     }
 
     private fun navigateToHoldingScreen() {
@@ -103,6 +116,10 @@ class CategorySelectionFragment : Fragment() {
 
     private fun navigateToTriviaAnswering() {
         findNavController().navigate(R.id.action_categorySelection_to_triviaAnswering)
+    }
+
+    private fun navigateToPowerPick() {
+        findNavController().navigate(R.id.action_categorySelection_to_powerPick)
     }
 
     private fun updateCategoryChoices(message: ServerCategorySelectChoices) {
@@ -127,7 +144,7 @@ class CategorySelectionFragment : Fragment() {
                 column.alpha = 1.0f
                 doors[index].doorIndex = index
                 doors[index].setDoorColor(colorTintToInt(choice.Colour))
-                labels[index].text = "${choice.DisplayText}($index)"
+                labels[index].text = choice.DisplayText
             } else {
                 column.visibility = View.INVISIBLE
             }
@@ -166,6 +183,7 @@ class CategorySelectionFragment : Fragment() {
         if (networkManager.onCategorySelectRequest === categorySelectCb) networkManager.onCategorySelectRequest = null
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
         if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
+        if (networkManager.onCategoryOverrideMessage === categoryOverrideCb) networkManager.onCategoryOverrideMessage = null
         _binding = null
     }
 }

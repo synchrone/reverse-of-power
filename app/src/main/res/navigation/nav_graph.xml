@@ -68,6 +68,12 @@
         <action
             android:id="@+id/action_holdingScreen_to_continue"
             app:destination="@id/continueFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_powerPlay"
+            app:destination="@id/powerPlayFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_linkingAnswers"
+            app:destination="@id/linkingAnswersFragment" />
     </fragment>
 
     <fragment
@@ -79,7 +85,15 @@
             app:destination="@id/triviaAnsweringFragment"
             app:popUpTo="@id/holdingScreenFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_categorySelection_to_powerPick"
+            app:destination="@id/powerPickFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/powerPickFragment"
+        android:name="com.game.remoteclient.ui.PowerPickFragment"
+        android:label="Power Pick" />
 
     <fragment
         android:id="@+id/triviaAnsweringFragment"
@@ -90,5 +104,15 @@
         android:id="@+id/continueFragment"
         android:name="com.game.remoteclient.ui.ContinueFragment"
         android:label="Continue" />
+
+    <fragment
+        android:id="@+id/powerPlayFragment"
+        android:name="com.game.remoteclient.ui.PowerPlayFragment"
+        android:label="Power Play" />
+
+    <fragment
+        android:id="@+id/linkingAnswersFragment"
+        android:name="com.game.remoteclient.ui.LinkingAnswersFragment"
+        android:label="Linking Answers" />
 
 </navigation>
