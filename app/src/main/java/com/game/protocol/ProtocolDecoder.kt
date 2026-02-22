@@ -212,6 +212,10 @@ class ProtocolDecoder {
                     json.decodeFromString<ClientGameIDMessage>(jsonStr)
                 typeString == "ClientHoldingScreenCommandMessage" ->
                     json.decodeFromString<ClientHoldingScreenCommandMessage>(jsonStr)
+                typeString == "RejoiningClientOwnProfileMessage" ->
+                    json.decodeFromString<RejoiningClientOwnProfileMessage>(jsonStr)
+                typeString == "RequestResourceMessage" ->
+                    json.decodeFromString<RequestResourceMessage>(jsonStr)
                 typeString == "PlayerJoinedMessage" ->
                     json.decodeFromString<PlayerJoinedMessage>(jsonStr)
                 typeString == "PlayerLeftMessage" ->

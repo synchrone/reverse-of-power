@@ -1,0 +1,11 @@
+#!/bin/bash
+DEV="${1:-6c49ca35}"
+PS4="${2:-192.168.1.152}"
+
+echo "Capturing... press Ctrl+C to stop"
+adb -s $DEV shell "chmod +x /data/tshark && /data/tshark -f 'udp and host $PS4' -w /data/kip.pcapng" &
+ADB_PID=$!
+trap "kill -INT $ADB_PID 2>/dev/null" INT
+wait $ADB_PID
+trap - INT
+adb -s $DEV pull /data/kip.pcapng docs/kip-$(date +%s).pcapng

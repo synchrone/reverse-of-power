@@ -1,0 +1,48 @@
+#!/bin/bash
+# Replay a pcapng file through the protocol decoder and dump decoded output.
+# Usage: ./pcap-replay <pcapng-file> [output-file]
+# If output-file is omitted, prints to stdout.
+
+set -euo pipefail
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <pcapng-file> [output-file]" >&2
+    exit 1
+fi
+
+PCAP_FILE="$1"
+OUTPUT_FILE="${2:-}"
+
+if [ ! -f "$PCAP_FILE" ]; then
+    echo "File not found: $PCAP_FILE" >&2
+    exit 1
+fi
+
+./gradlew testDebugUnitTest \
+    -Dpcap.file="$PCAP_FILE" \
+    --tests "PcapReplayTest" \
+    --quiet 2>/dev/null
+
+XML_FILE="app/build/test-results/testDebugUnitTest/TEST-com.game.protocol.PcapReplayTest.xml"
+
+if [ ! -f "$XML_FILE" ]; then
+    echo "Test result not found. Did the test run?" >&2
+    exit 1
+fi
+
+if [ -n "$OUTPUT_FILE" ]; then
+    python3 -c "
+import xml.etree.ElementTree as ET
+tree = ET.parse('$XML_FILE')
+for so in tree.getroot().findall('.//system-out'):
+    print(so.text or '', end='')
+" > "$OUTPUT_FILE"
+    echo "Written to $OUTPUT_FILE"
+else
+    python3 -c "
+import xml.etree.ElementTree as ET
+tree = ET.parse('$XML_FILE')
+for so in tree.getroot().findall('.//system-out'):
+    print(so.text or '', end='')
+"
+fi
