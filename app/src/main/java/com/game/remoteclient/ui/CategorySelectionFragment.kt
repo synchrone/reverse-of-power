@@ -64,6 +64,12 @@ class CategorySelectionFragment : Fragment() {
             updateCategoryChoices(choices)
             networkManager.pendingCategoryChoices = null
         }
+
+        // Handle category select request that arrived before this fragment was ready
+        if (networkManager.pendingCategorySelectRequest) {
+            networkManager.pendingCategorySelectRequest = false
+            networkManager.sendCategorySelection(selectedDoorIndex ?: -1)
+        }
     }
 
     private fun setupDoorClickListeners() {
@@ -88,9 +94,8 @@ class CategorySelectionFragment : Fragment() {
         categorySelectCb = {
             activity?.runOnUiThread {
                 enableSelection()
-                selectedDoorIndex?.let { index ->
-                    networkManager.sendCategorySelection(index)
-                }
+                // Re-send if already picked, otherwise send -1 (no choice)
+                networkManager.sendCategorySelection(selectedDoorIndex ?: -1)
             }
         }
         holdingScreenCb = { _ ->
