@@ -236,11 +236,14 @@ class GameProtocolClient(
 
     private fun checkResourceComplete(guid: String) {
         receivedResourceGUIDs.add(guid)
-        if (pendingResourceGUIDs.remove(guid) && pendingResourceGUIDs.isEmpty()) {
-            val reqs = pendingRequirements ?: return
+        pendingResourceGUIDs.remove(guid)
+
+        Log.d(TAG, "Resource $guid received, sending AllResourcesReceivedMessage")
+        val req = ResourceRequirement(GUID = guid, Rqrmnt = 0)
+        sendMessage(AllResourcesReceivedMessage(Requirements = listOf(req)))
+
+        if (pendingResourceGUIDs.isEmpty() && pendingRequirements != null) {
             pendingRequirements = null
-            Log.d(TAG, "All ${reqs.size} resources received, sending AllResourcesReceivedMessage")
-            sendMessage(AllResourcesReceivedMessage(Requirements = reqs))
         }
     }
 
