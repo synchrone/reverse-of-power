@@ -155,12 +155,6 @@ class GameProtocolClient(
         val decoded = decoder.decode(data)
 
         when (decoded) {
-            is DecodedPacket.GameInProgress -> {
-                Log.e(TAG, "< Game in progress - cannot join")
-                connectionError = "Game in progress"
-                connectionDeferred?.complete(Unit)
-            }
-
             is DecodedPacket.ConnectionInit -> {
                 Log.d(TAG, "< 0x8a, 0x33, 0xFF (4)")
                 isConnected = true
