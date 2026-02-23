@@ -25,7 +25,10 @@
       "Bash(/tmp/claude-1000/-home-syn-code-reverse-of-power/be60f532-b5cc-468b-9241-3cba1c39889b/scratchpad/extract_pcap.py:*)",
       "Bash(git stash:*)",
       "Bash(file:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
