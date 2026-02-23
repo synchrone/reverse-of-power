@@ -72,12 +72,14 @@ class AvatarSelectionFragment : Fragment() {
 
         networkManager.onAvatarsChanged = {
             activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
                 updateAvatarList()
             }
         }
 
         networkManager.onAvatarRequestResponse = { response ->
             activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
                 if (response.AvatarID == selectedAvatar?.AvatarID) {
                     updateContinueButton()
                     if (!response.Available) {
