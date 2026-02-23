@@ -315,7 +315,7 @@ data class ServerBeginTriviaAnsweringPhase(
     val Answers: List<TriviaAnswer>,
     val PowerPlays: List<ActivePowerPlay>,
     val PowerPlayPlayers: List<PowerPlayPlayer>,
-    val RoundType: Int,
+    val RoundType: Int, // 1 = normal, 5 = finals, meaning you cannot answer wrong, it will indicate failure, penalize with 2s or blocked screen and have you retry
     val BackgroundTint: ColorTint,
     val PrimaryTint: ColorTint,
     val SecondaryTint: ColorTint

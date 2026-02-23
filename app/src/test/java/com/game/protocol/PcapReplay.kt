@@ -131,6 +131,8 @@ object PcapReplay {
                 }.joinToString("\n         ")
                 "NACK 0x%02x\n         $nonZero".format(decoded.messageId)
             }
+            is DecodedPacket.GameInProgress ->
+                "GameInProgress"
             is DecodedPacket.ConnectionInit ->
                 "ConnectionInit"
             is DecodedPacket.DeviceUID ->
@@ -162,71 +164,37 @@ object PcapReplay {
 
     private fun formatMessage(msg: GameMessage): String {
         val typeName = msg.TypeString.substringAfterLast(".")
-        return when (msg) {
-            is InterfaceVersionMessage ->
-                "$typeName(version=${msg.InterfaceVersion})"
-            is SessionStateMessage ->
-                "$typeName(sessionId=${msg.SessionID})"
-            is AssignPlayerIDAndSlotMessage ->
-                "$typeName(playerId=${msg.PlayerID}, slotId=${msg.SlotID}, name=\"${msg.DisplayName}\")"
-            is ResourceRequirementsMessage ->
-                "$typeName(${msg.Requirements.size} requirements)"
-            is AllResourcesReceivedMessage ->
-                "$typeName(${msg.Requirements.size} requirements)"
-            is ServerAvatarStatusMessage ->
-                "$typeName(id=${msg.AvatarID}, available=${msg.Available})"
-            is ServerAvatarRequestResponseMessage ->
-                "$typeName(requestId=${msg.RequestID}, id=${msg.AvatarID}, available=${msg.Available})"
-            is ClientQuizCommandMessage ->
-                "$typeName(action=${msg.action}, time=${msg.time})"
-            is ClientGameIDMessage ->
-                "$typeName(gameId=${msg.GameID})"
-            is ClientHoldingScreenCommandMessage ->
-                "$typeName(action=${msg.action}, type=${msg.HoldingScreenType}, text=\"${msg.HoldingScreenText}\")"
-            is PlayerJoinedMessage ->
-                "$typeName(currentId=${msg.CurrentPlayerID}, oldId=${msg.OldPlayerID}, slotId=${msg.SlotID})"
-            is PlayerLeftMessage ->
-                "$typeName(playerId=${msg.PlayerID})"
-            is PlayerNameQuizStateMessage ->
-                "$typeName(name=\"${msg.PlayerName}\", playerId=${msg.PlayerID})"
-            is ServerColourMessage ->
-                "$typeName(rainbow=${msg.Rainbow}, roundType=${msg.RoundType})"
-            is ServerCategorySelectChoices ->
-                "$typeName(${msg.CategoryChoices.size} choices: ${msg.CategoryChoices.joinToString { "\"${it.DisplayText}\"" }})"
-            is ServerRequestCategorySelectChoice ->
-                typeName
-            is ServerBeginCategorySelectOverride ->
-                "$typeName(duration=${msg.DurationSeconds}s, door=${msg.DoorIndex})"
-            is ServerStopCategorySelectOverride ->
-                typeName
-            is ServerCategorySelectOverrideSuccess ->
-                "$typeName(success=${msg.CategorySelectOverrideSuccess}, player=\"${msg.CategorySelectOverridePlayerName}\")"
-            is ServerBeginTriviaAnsweringPhase ->
-                "$typeName(q=\"${msg.QuestionText}\", ${msg.Answers.size} answers, duration=${msg.QuestionDuration}s)"
-            is ImageResourceContentTransferMessage ->
-                "$typeName(transferId=${msg.TransferID}, guid=${msg.ImageGUID}, ack=${msg.Acknowledge})"
-            is ClientRequestPlayerIDMessage ->
-                "$typeName(uid=${msg.UID})"
-            is ClientRequestAvatarStatusMessage ->
-                typeName
-            is ClientRequestAvatarMessage ->
-                "$typeName(requestId=${msg.RequestID}, avatarId=${msg.AvatarID})"
-            is ClientPlayerProfileMessage ->
-                "$typeName(name=\"${msg.playerName}\", card=${msg.playerCardId})"
-            is DeviceInfoMessage ->
-                "$typeName(model=\"${msg.DeviceModel}\", os=\"${msg.DeviceOperatingSystem}\")"
-            is ClientImageResourceContentTransferMessage ->
-                "$typeName(transferId=${msg.TransferID}, guid=${msg.ImageGUID}, type=${msg.ImgType})"
-            is StartGameButtonPressedResponseMessage ->
-                "$typeName(response=${msg.Response})"
-            is ClientCategorySelectChoice ->
-                "$typeName(doorIndex=${msg.ChosenCategoryIndex})"
-            is ClientCategorySelectOverride ->
-                "$typeName(duration=${msg.DurationSeconds}s)"
-            is ClientStopCategorySelectOverrideResponse ->
-                "$typeName(overrideSent=${msg.OverrideSent})"
-            else ->
-                "$typeName"
+        val fields = formatFields(msg, exclude = setOf("TypeString"))
+        return if (fields.isEmpty()) typeName else "$typeName($fields)"
+    }
+
+    private fun formatFields(obj: Any, exclude: Set<String> = emptySet()): String {
+        return obj::class.java.declaredFields
+            .filter { it.name !in exclude && !it.isSynthetic }
+            .mapNotNull { field ->
+                field.isAccessible = true
+                val value = field.get(obj) ?: return@mapNotNull "${field.name}=null"
+                "${field.name}=${formatValue(value)}"
+            }
+            .joinToString(", ")
+    }
+
+    private fun formatValue(value: Any?): String {
+        return when (value) {
+            null -> "null"
+            is String -> "\"$value\""
+            is Number, is Boolean -> value.toString()
+            is ByteArray -> "${value.size}b"
+            is List<*> -> {
+                if (value.isEmpty()) "[]"
+                else "[${value.joinToString(", ") { formatValue(it) }}]"
+            }
+            is Enum<*> -> value.name
+            else -> {
+                // For data classes / nested objects, recurse into fields
+                val fields = formatFields(value)
+                if (fields.isNotEmpty()) "{$fields}" else value.toString()
+            }
         }
     }
 }
