@@ -24,6 +24,7 @@ class ServerDiscoveryFragment : Fragment() {
     private lateinit var serverAdapter: ServerAdapter
 
     private var manualEntryExpanded = false
+    private var navigated = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +38,7 @@ class ServerDiscoveryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        navigated = false
         setupRecyclerView()
         setupListeners()
         startServerScan()
@@ -109,11 +111,35 @@ class ServerDiscoveryFragment : Fragment() {
         binding.scanningContainer.visibility = View.VISIBLE
         binding.scanningText.text = "Connecting to server..."
 
+        // Listen for rejoin — server sends this during handshake if we were previously connected
         networkManager.onRejoining = { _ ->
             activity?.runOnUiThread {
-                if (_binding != null) {
-                    findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
+                if (_binding == null || navigated) return@runOnUiThread
+                navigated = true
+                findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
+            }
+        }
+
+        // Listen for quiz command action=31 — server is ready for avatar selection
+        networkManager.onQuizCommand = { cmd ->
+            if (cmd.action == 31) {
+                activity?.runOnUiThread {
+                    if (_binding == null || navigated) return@runOnUiThread
+                    navigated = true
+                    binding.scanningContainer.visibility = View.GONE
+                    binding.connectButton.isEnabled = true
+                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
+                    findNavController().navigate(action)
                 }
+            }
+        }
+
+        // Listen for holding screen — game already in progress
+        networkManager.onHoldingScreenMessage = { _ ->
+            activity?.runOnUiThread {
+                if (_binding == null || navigated) return@runOnUiThread
+                navigated = true
+                findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
             }
         }
 
@@ -122,25 +148,22 @@ class ServerDiscoveryFragment : Fragment() {
                 val success = networkManager.connectToServer(server)
                 if (_binding == null) return@launch
 
-                binding.scanningContainer.visibility = View.GONE
-                binding.connectButton.isEnabled = true
-
-                if (success && !networkManager.isRejoining) {
-                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
-                    findNavController().navigate(action)
-                } else if (!success) {
-                    networkManager.onRejoining = null
+                if (!success) {
+                    binding.scanningContainer.visibility = View.GONE
+                    binding.connectButton.isEnabled = true
+                    clearCallbacks()
                     Toast.makeText(
                         requireContext(),
                         "Failed to connect to ${server.fullAddress}",
                         Toast.LENGTH_LONG
                     ).show()
                 }
+                // If success, wait for quiz command or holding screen callback to navigate
             } catch (e: Exception) {
                 if (_binding == null) return@launch
                 binding.scanningContainer.visibility = View.GONE
                 binding.connectButton.isEnabled = true
-                networkManager.onRejoining = null
+                clearCallbacks()
                 Toast.makeText(
                     requireContext(),
                     "Connection error: ${e.message}",
@@ -150,9 +173,15 @@ class ServerDiscoveryFragment : Fragment() {
         }
     }
 
+    private fun clearCallbacks() {
+        networkManager.onRejoining = null
+        networkManager.onQuizCommand = null
+        networkManager.onHoldingScreenMessage = null
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        networkManager.onRejoining = null
+        clearCallbacks()
         _binding = null
     }
 }
