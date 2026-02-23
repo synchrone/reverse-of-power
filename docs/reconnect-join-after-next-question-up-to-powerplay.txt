@@ -7,122 +7,90 @@ Extracted 130 UDP packets
 #3    C→S   44b  DeviceUID: b2f3f8eb0cf4ef4b2359871d35495225
 #4    S→C    8b  Unknown: 4e dd 96 66 3b 27 4f 35
 #5    S→C   38b  ConnectionInit
-#6    S→C  113b  Message 0x347: InterfaceVersionMessage(version=KIP_2016-11-14-1222)
-#7    C→S   38b  NACK 0x47
-         [ 3] 0x03 (3)
-#8    S→C   90b  Message 0x348: SessionStateMessage(sessionId=500469084)
-#9    C→S   38b  NACK 0x48
-         [ 3] 0x03 (3)
-#10   C→S  118b  Message 0x1a: ClientRequestPlayerIDMessage(uid=b2f3f8eb0cf4ef4b2359871d35495225)
+#6    S→C  113b  Message 0x347: InterfaceVersionMessage(Companion=com.game.protocol.InterfaceVersionMessage$Companion@273444fe, InterfaceVersion="KIP_2016-11-14-1222")
+#7    C→S   38b  ACK 0x347
+#8    S→C   90b  Message 0x348: SessionStateMessage(Companion=com.game.protocol.SessionStateMessage$Companion@7ce026d3, SessionID=500469084)
+#9    C→S   38b  ACK 0x348
+#10   C→S  118b  Message 0x1a: ClientRequestPlayerIDMessage(Companion=com.game.protocol.ClientRequestPlayerIDMessage$Companion@5890e879, UID="b2f3f8eb0cf4ef4b2359871d35495225")
 #11   S→C   38b  ACK 0x1a
-#12   S→C  152b  Message 0x349: AssignPlayerIDAndSlotMessage(playerId=45, slotId=1, name="tttt")
-#13   C→S   38b  NACK 0x49
-         [ 3] 0x03 (3)
+#12   S→C  152b  Message 0x349: AssignPlayerIDAndSlotMessage(Companion=com.game.protocol.AssignPlayerIDAndSlotMessage$Companion@221a3fa4, PlayerID=45, SlotID=1, UDPPortOffset=0, DisplayName="tttt", PSNID="")
+#13   C→S   38b  ACK 0x349
 #14   S→C  466b  Message 0x34a: 4 messages
-         ResourceRequirementsMessage(0 requirements)
-         ClientHoldingScreenCommandMessage(action=5, type=8, text="")
-         PlayerJoinedMessage(currentId=41, oldId=41, slotId=0)
-         PlayerNameQuizStateMessage(name="ggg", playerId=41)
-#15   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
-#16   C→S   94b  Message 0x1b: AllResourcesReceivedMessage(0 requirements)
+         ResourceRequirementsMessage(Companion=com.game.protocol.ResourceRequirementsMessage$Companion@4bdeaabb, Requirements=[], $childSerializers=[Lkotlin.Lazy;@65987993)
+         ClientHoldingScreenCommandMessage(Companion=com.game.protocol.ClientHoldingScreenCommandMessage$Companion@71075444, action=5, time=0.0, HoldingScreenText="", HoldingScreenType=8, OtherPlayerIndex=-1, ShowPortraitPhotoControls=false)
+         PlayerJoinedMessage(Companion=com.game.protocol.PlayerJoinedMessage$Companion@4d1bf319, CurrentPlayerID=41, OldPlayerID=41, SlotID=0)
+         PlayerNameQuizStateMessage(Companion=com.game.protocol.PlayerNameQuizStateMessage$Companion@6f53b8a, PlayerName="ggg", PlayerID=41)
+#15   C→S   38b  ACK 0x34a
+#16   C→S   94b  Message 0x1b: AllResourcesReceivedMessage(Companion=com.game.protocol.AllResourcesReceivedMessage$Companion@7a5ceedd, Requirements=[], $childSerializers=[Lkotlin.Lazy;@4201c465)
 #17   S→C   38b  ACK 0x1b
-#18   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#18   C→S   38b  ACK 0x34a
 #19   S→C   38b  ACK 0x1b
 #20   S→C   38b  ACK 0x1b
-#21   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#21   C→S   38b  ACK 0x34a
 #22   S→C   38b  ACK 0x1b
-#23   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#23   C→S   38b  ACK 0x34a
 #24   S→C   38b  ACK 0x1b
-#25   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#25   C→S   38b  ACK 0x34a
 #26   S→C   38b  ACK 0x1b
-#27   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#27   C→S   38b  ACK 0x34a
 #28   S→C   38b  ACK 0x1b
-#29   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#29   C→S   38b  ACK 0x34a
 #30   S→C   38b  ACK 0x1b
-#31   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#31   C→S   38b  ACK 0x34a
 #32   S→C   38b  ACK 0x1b
-#33   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#33   C→S   38b  ACK 0x34a
 #34   S→C   38b  ACK 0x1b
-#35   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#35   C→S   38b  ACK 0x34a
 #36   S→C   38b  ACK 0x1b
-#37   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#37   C→S   38b  ACK 0x34a
 #38   S→C   38b  ACK 0x1b
-#39   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#39   C→S   38b  ACK 0x34a
 #40   S→C   38b  ACK 0x1b
-#41   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#41   C→S   38b  ACK 0x34a
 #42   S→C   38b  ACK 0x1b
-#43   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#43   C→S   38b  ACK 0x34a
 #44   S→C   38b  ACK 0x1b
-#45   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#45   C→S   38b  ACK 0x34a
 #46   S→C   38b  ACK 0x1b
-#47   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#47   C→S   38b  ACK 0x34a
 #48   S→C   38b  ACK 0x1b
-#49   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#49   C→S   38b  ACK 0x34a
 #50   S→C   38b  ACK 0x1b
-#51   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#51   C→S   38b  ACK 0x34a
 #52   S→C   38b  ACK 0x1b
-#53   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#53   C→S   38b  ACK 0x34a
 #54   S→C   38b  ACK 0x1b
-#55   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#55   C→S   38b  ACK 0x34a
 #56   S→C   38b  ACK 0x1b
-#57   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#57   C→S   38b  ACK 0x34a
 #58   S→C   38b  ACK 0x1b
-#59   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#59   C→S   38b  ACK 0x34a
 #60   S→C   38b  ACK 0x1b
-#61   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#61   C→S   38b  ACK 0x34a
 #62   S→C   38b  ACK 0x1b
-#63   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#63   C→S   38b  ACK 0x34a
 #64   S→C   38b  ACK 0x1b
-#65   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#65   C→S   38b  ACK 0x34a
 #66   S→C   38b  ACK 0x1b
-#67   C→S   38b  NACK 0x4a
-         [ 3] 0x03 (3)
+#67   C→S   38b  ACK 0x34a
 #68   S→C  879b  Message 0x34b: 4 messages
-         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
-         RejoiningClientOwnProfileMessage
-         ClientGameIDMessage(gameId=29ffe2dae-1695-4cea-927a-efe9a832fa29)
-         ServerColourMessage(rainbow=false, roundType=1)
-#69   C→S   38b  NACK 0x4b
-         [ 3] 0x03 (3)
+         ClientHoldingScreenCommandMessage(Companion=com.game.protocol.ClientHoldingScreenCommandMessage$Companion@71075444, action=5, time=0.0, HoldingScreenText="", HoldingScreenType=4, OtherPlayerIndex=-1, ShowPortraitPhotoControls=false)
+         RejoiningClientOwnProfileMessage(Companion=com.game.protocol.RejoiningClientOwnProfileMessage$Companion@48e1f6c7, Name="tttt", PortraitGUID="d5455281-10a2-45ac-b227-2e983d587ee0", Colour={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=255.0, g=255.0, b=255.0, a=255.0}, AvatarID="COWGIRL")
+         ClientGameIDMessage(Companion=com.game.protocol.ClientGameIDMessage$Companion@480d3575, GameID="29ffe2dae-1695-4cea-927a-efe9a832fa29")
+         ServerColourMessage(Companion=com.game.protocol.ServerColourMessage$Companion@f1da57d, BackgroundTint={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=0.5058824, g=0.9764706, b=0.49019608, a=1.0}, PrimaryTint={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=0.3254902, g=0.75686276, b=0.3137255, a=1.0}, SecondaryTint={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=0.21960784, g=0.64705884, b=0.20392157, a=1.0}, Rainbow=false, RoundType=1)
+#69   C→S   38b  ACK 0x34b
 #70   S→C  406b  Message 0x34c: 2 messages
-         ResourceRequirementsMessage(2 requirements)
-         ClientHoldingScreenCommandMessage(action=5, type=4, text="")
-#71   C→S   38b  NACK 0x4c
-         [ 3] 0x03 (3)
-#72   C→S  125b  Message 0x1c: RequestResourceMessage
+         ResourceRequirementsMessage(Companion=com.game.protocol.ResourceRequirementsMessage$Companion@4bdeaabb, Requirements=[{Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="d5455281-10a2-45ac-b227-2e983d587ee0", Rqrmnt=1}, {Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Rqrmnt=1}], $childSerializers=[Lkotlin.Lazy;@65987993)
+         ClientHoldingScreenCommandMessage(Companion=com.game.protocol.ClientHoldingScreenCommandMessage$Companion@71075444, action=5, time=0.0, HoldingScreenText="", HoldingScreenType=4, OtherPlayerIndex=-1, ShowPortraitPhotoControls=false)
+#71   C→S   38b  ACK 0x34c
+#72   C→S  125b  Message 0x1c: RequestResourceMessage(Companion=com.game.protocol.RequestResourceMessage$Companion@5e7cd6cc, ResourceGUID="d5455281-10a2-45ac-b227-2e983d587ee0")
 #73   S→C   38b  ACK 0x1c
 #74   C→S  240b  Message 0x1d: 2 messages
-         RequestResourceMessage
-         RequestResourceMessage
-#75   S→C  172b  Message 0x34d: ImageResourceContentTransferMessage(transferId=2106, guid=d5455281-10a2-45ac-b227-2e983d587ee0, ack=true)
+         RequestResourceMessage(Companion=com.game.protocol.RequestResourceMessage$Companion@5e7cd6cc, ResourceGUID="d5455281-10a2-45ac-b227-2e983d587ee0")
+         RequestResourceMessage(Companion=com.game.protocol.RequestResourceMessage$Companion@5e7cd6cc, ResourceGUID="e8d84719-46d3-4b77-b8ef-7fb750115f88")
+#75   S→C  172b  Message 0x34d: ImageResourceContentTransferMessage(Companion=com.game.protocol.ImageResourceContentTransferMessage$Companion@6e2829c7, TransferID=2106, ImageGUID="d5455281-10a2-45ac-b227-2e983d587ee0", Acknowledge=true, image=null)
 #76   S→C   38b  ACK 0x1d
-#77   C→S   38b  NACK 0x4d
-         [ 3] 0x03 (3)
+#77   C→S   38b  ACK 0x34d
 #78   S→C 1024b  FRAG 0x34e (0/18) 1002b
 #79   S→C 1024b  FRAG 0x34e (1/18) 1002b
 #80   S→C 1024b  FRAG 0x34e (2/18) 1002b
@@ -140,12 +108,10 @@ Extracted 130 UDP packets
 #92   S→C 1024b  FRAG 0x34e (14/18) 1002b
 #93   S→C 1024b  FRAG 0x34e (15/18) 1002b
 #94   S→C 1024b  FRAG 0x34e (16/18) 1002b
-#95   S→C  292b  ImageData msgId=0x34e transferId=2106 jpeg=17290b
-#96   C→S   38b  NACK 0x4e
-         [ 3] 0x03 (3)
-#97   S→C  172b  Message 0x34f: ImageResourceContentTransferMessage(transferId=2107, guid=e8d84719-46d3-4b77-b8ef-7fb750115f88, ack=true)
-#98   C→S   38b  NACK 0x4f
-         [ 3] 0x03 (3)
+#95   S→C  292b  ImageData msgId=0x34e transferId=2106 jpeg=17294b
+#96   C→S   38b  ACK 0x34e
+#97   S→C  172b  Message 0x34f: ImageResourceContentTransferMessage(Companion=com.game.protocol.ImageResourceContentTransferMessage$Companion@6e2829c7, TransferID=2107, ImageGUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Acknowledge=true, image=null)
+#98   C→S   38b  ACK 0x34f
 #99   S→C 1024b  FRAG 0x350 (0/10) 1002b
 #100  S→C 1024b  FRAG 0x350 (1/10) 1002b
 #101  S→C 1024b  FRAG 0x350 (2/10) 1002b
@@ -155,36 +121,28 @@ Extracted 130 UDP packets
 #105  S→C 1024b  FRAG 0x350 (6/10) 1002b
 #106  S→C 1024b  FRAG 0x350 (7/10) 1002b
 #107  S→C 1024b  FRAG 0x350 (8/10) 1002b
-#108  S→C  174b  ImageData msgId=0x350 transferId=2107 jpeg=9156b
-#109  C→S   38b  NACK 0x50
-         [ 3] 0x03 (3)
-#110  C→S  211b  Message 0x1e: AllResourcesReceivedMessage(2 requirements)
+#108  S→C  174b  ImageData msgId=0x350 transferId=2107 jpeg=9160b
+#109  C→S   38b  ACK 0x350
+#110  C→S  211b  Message 0x1e: AllResourcesReceivedMessage(Companion=com.game.protocol.AllResourcesReceivedMessage$Companion@7a5ceedd, Requirements=[{Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="d5455281-10a2-45ac-b227-2e983d587ee0", Rqrmnt=1}, {Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Rqrmnt=1}], $childSerializers=[Lkotlin.Lazy;@4201c465)
 #111  S→C   38b  ACK 0x1e
 #112  S→C   38b  ACK 0x1e
-#113  C→S   38b  NACK 0x50
-         [ 3] 0x03 (3)
+#113  C→S   38b  ACK 0x350
 #114  S→C   38b  ACK 0x1e
-#115  C→S   38b  NACK 0x50
-         [ 3] 0x03 (3)
+#115  C→S   38b  ACK 0x350
 #116  S→C   38b  ACK 0x1e
-#117  S→C  211b  Message 0x351: ResourceRequirementsMessage(2 requirements)
-#118  C→S   38b  NACK 0x51
-         [ 3] 0x03 (3)
-#119  C→S  211b  Message 0x1f: AllResourcesReceivedMessage(2 requirements)
+#117  S→C  211b  Message 0x351: ResourceRequirementsMessage(Companion=com.game.protocol.ResourceRequirementsMessage$Companion@4bdeaabb, Requirements=[{Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="d5455281-10a2-45ac-b227-2e983d587ee0", Rqrmnt=1}, {Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Rqrmnt=1}], $childSerializers=[Lkotlin.Lazy;@65987993)
+#118  C→S   38b  ACK 0x351
+#119  C→S  211b  Message 0x1f: AllResourcesReceivedMessage(Companion=com.game.protocol.AllResourcesReceivedMessage$Companion@7a5ceedd, Requirements=[{Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="d5455281-10a2-45ac-b227-2e983d587ee0", Rqrmnt=1}, {Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Rqrmnt=1}], $childSerializers=[Lkotlin.Lazy;@4201c465)
 #120  S→C   38b  ACK 0x1f
-#121  S→C  739b  Message 0x352: ServerBeginPowerPlayPhase
-#122  C→S   38b  NACK 0x52
-         [ 3] 0x03 (3)
-#123  C→S  211b  Message 0x20: AllResourcesReceivedMessage(2 requirements)
+#121  S→C  739b  Message 0x352: ServerBeginPowerPlayPhase(Companion=com.game.protocol.ServerBeginPowerPlayPhase$Companion@210ab13f, PowerPlays=[{Companion=com.game.protocol.PowerPlay$Companion@20b2475a, DisplayIndex=0, PowerType=5, PowerTarget=2, PowerPlayTargets=[0], New=false, TargetCount=1, $childSerializers=[Lkotlin.Lazy;@7857fe2}, {Companion=com.game.protocol.PowerPlay$Companion@20b2475a, DisplayIndex=1, PowerType=4, PowerTarget=2, PowerPlayTargets=[0], New=false, TargetCount=1, $childSerializers=[Lkotlin.Lazy;@7857fe2}, {Companion=com.game.protocol.PowerPlay$Companion@20b2475a, DisplayIndex=2, PowerType=7, PowerTarget=2, PowerPlayTargets=[0], New=false, TargetCount=1, $childSerializers=[Lkotlin.Lazy;@7857fe2}], PowerPlayPlayers=[{Companion=com.game.protocol.PowerPlayPlayer$Companion@6f15d60e, SlotIndex=0, Name="ggg", ImageGUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Colour={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=255.0, g=255.0, b=255.0, a=255.0}, Self=false, Away=false}, {Companion=com.game.protocol.PowerPlayPlayer$Companion@6f15d60e, SlotIndex=1, Name="tttt", ImageGUID="d5455281-10a2-45ac-b227-2e983d587ee0", Colour={Companion=com.game.protocol.ColorTint$Companion@55cb6996, r=255.0, g=255.0, b=255.0, a=255.0}, Self=true, Away=false}], RoundType=1, $childSerializers=[Lkotlin.Lazy;@1be2019a)
+#122  C→S   38b  ACK 0x352
+#123  C→S  211b  Message 0x20: AllResourcesReceivedMessage(Companion=com.game.protocol.AllResourcesReceivedMessage$Companion@7a5ceedd, Requirements=[{Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="e8d84719-46d3-4b77-b8ef-7fb750115f88", Rqrmnt=1}, {Companion=com.game.protocol.ResourceRequirement$Companion@38467116, GUID="d5455281-10a2-45ac-b227-2e983d587ee0", Rqrmnt=1}], $childSerializers=[Lkotlin.Lazy;@4201c465)
 #124  S→C   38b  ACK 0x20
-#125  C→S   38b  NACK 0x52
-         [ 3] 0x03 (3)
+#125  C→S   38b  ACK 0x352
 #126  S→C   38b  ACK 0x20
 #127  S→C   38b  ACK 0x20
-#128  C→S   38b  NACK 0x52
-         [ 3] 0x03 (3)
+#128  C→S   38b  ACK 0x352
 #129  S→C   38b  ACK 0x20
-#130  C→S   38b  NACK 0x52
-         [ 3] 0x03 (3)
+#130  C→S   38b  ACK 0x352
 
 === Summary: 78 server packets, 52 client packets, 130 total ===
