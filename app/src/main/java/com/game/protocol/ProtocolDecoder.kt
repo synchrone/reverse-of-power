@@ -71,11 +71,12 @@ class ProtocolDecoder {
                 if (data.sliceArray(2..5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))) {
                     DecodedPacket.ConnectionInit(data)
                 } else {
-                    val payload = data.sliceArray(3 until data.size)
+                    val messageId = ByteBuffer.wrap(data, 2, 4).order(ByteOrder.LITTLE_ENDIAN).int
+                    val payload = data.sliceArray(6 until data.size)
                     if (payload.any { it != 0.toByte() }) {
-                        DecodedPacket.Nack(data[2].toInt(), payload)
+                        DecodedPacket.Nack(messageId, payload)
                     } else {
-                        DecodedPacket.Ack(data[2].toInt())
+                        DecodedPacket.Ack(messageId)
                     }
                 }
             }
@@ -176,7 +177,7 @@ class ProtocolDecoder {
                 DecodedPacket.DataMessage(messageId, messages)
             }
             -520103681 -> { // 0xFFD8FFE0 - JPEG
-                val jpeg = data.sliceArray(buffer.position() until data.size)
+                val jpeg = data.sliceArray(buffer.position()-4 until data.size)
                 DecodedPacket.ImageData(messageId, transferId, jpeg.size, jpeg)
             }
             else -> {
