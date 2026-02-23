@@ -70,10 +70,16 @@ class PowerPlayFragment : Fragment() {
 
     private fun observeMessages() {
         holdingScreenCb = { _ ->
-            activity?.runOnUiThread { navigateToHoldingScreen() }
+            activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
+                navigateToHoldingScreen()
+            }
         }
         powerPlayRequestCb = {
-            activity?.runOnUiThread { onPowerPlayRequested() }
+            activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
+                onPowerPlayRequested()
+            }
         }
 
         networkManager.onHoldingScreenMessage = holdingScreenCb
