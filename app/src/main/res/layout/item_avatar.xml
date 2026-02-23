@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:textSize="16sp"
-            android:textColor="@color/text_primary" />
+            android:textColor="?android:attr/textColorPrimary" />
 
         <TextView
             android:id="@+id/avatarStatus"

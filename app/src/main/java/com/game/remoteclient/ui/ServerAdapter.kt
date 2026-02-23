@@ -30,9 +30,9 @@ class ServerAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(server: GameServer) {
-            binding.serverName.text = server.name ?: "Game Server"
-            binding.serverAddress.text = server.fullAddress
-            binding.playerCount.text = "${server.playerCount} players"
+            binding.serverName.text = server.name ?: "PlayStation"
+            binding.serverAddress.text = server.ipAddress
+            binding.consoleType.text = server.consoleType ?: "PS"
 
             binding.root.setOnClickListener {
                 onServerClick(server)

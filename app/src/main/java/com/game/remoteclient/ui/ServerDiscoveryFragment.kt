@@ -23,6 +23,8 @@ class ServerDiscoveryFragment : Fragment() {
     private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
     private lateinit var serverAdapter: ServerAdapter
 
+    private var manualEntryExpanded = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,27 +63,41 @@ class ServerDiscoveryFragment : Fragment() {
                 Toast.makeText(requireContext(), "Please enter an IP address", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.rescanButton.setOnClickListener {
+            startServerScan()
+        }
+
+        binding.manualEntryHeader.setOnClickListener {
+            manualEntryExpanded = !manualEntryExpanded
+            binding.ipEntryCard.visibility = if (manualEntryExpanded) View.VISIBLE else View.GONE
+            binding.expandIcon.rotation = if (manualEntryExpanded) 180f else 0f
+        }
     }
 
     private fun startServerScan() {
-        binding.scanningProgress.visibility = View.VISIBLE
-        binding.scanningText.visibility = View.VISIBLE
+        binding.scanningContainer.visibility = View.VISIBLE
         binding.noServersText.visibility = View.GONE
+        binding.rescanButton.isEnabled = false
+        serverAdapter.submitList(emptyList())
 
         lifecycleScope.launch {
             try {
                 val servers = networkManager.scanForServers()
-                binding.scanningProgress.visibility = View.GONE
-                binding.scanningText.visibility = View.GONE
+                if (_binding == null) return@launch
+                binding.scanningContainer.visibility = View.GONE
+                binding.rescanButton.isEnabled = true
 
                 if (servers.isEmpty()) {
                     binding.noServersText.visibility = View.VISIBLE
                 } else {
+                    binding.noServersText.visibility = View.GONE
                     serverAdapter.submitList(servers)
                 }
             } catch (e: Exception) {
-                binding.scanningProgress.visibility = View.GONE
-                binding.scanningText.visibility = View.GONE
+                if (_binding == null) return@launch
+                binding.scanningContainer.visibility = View.GONE
+                binding.rescanButton.isEnabled = true
                 binding.noServersText.visibility = View.VISIBLE
                 Toast.makeText(requireContext(), "Scan failed: ${e.message}", Toast.LENGTH_SHORT).show()
             }
@@ -89,29 +105,27 @@ class ServerDiscoveryFragment : Fragment() {
     }
 
     private fun onServerSelected(server: GameServer) {
-        // Disable interaction during connection attempt
         binding.connectButton.isEnabled = false
-        binding.scanningProgress.visibility = View.VISIBLE
+        binding.scanningContainer.visibility = View.VISIBLE
         binding.scanningText.text = "Connecting to server..."
-        binding.scanningText.visibility = View.VISIBLE
 
-        // Listen for rejoin before connecting — server may send it during handshake
         networkManager.onRejoining = { _ ->
             activity?.runOnUiThread {
-                findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
+                if (_binding != null) {
+                    findNavController().navigate(R.id.action_serverDiscovery_to_holdingScreen)
+                }
             }
         }
 
         lifecycleScope.launch {
             try {
                 val success = networkManager.connectToServer(server)
+                if (_binding == null) return@launch
 
-                binding.scanningProgress.visibility = View.GONE
-                binding.scanningText.visibility = View.GONE
+                binding.scanningContainer.visibility = View.GONE
                 binding.connectButton.isEnabled = true
 
                 if (success && !networkManager.isRejoining) {
-                    // Normal flow — navigate to name entry screen
                     val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
                     findNavController().navigate(action)
                 } else if (!success) {
@@ -122,10 +136,9 @@ class ServerDiscoveryFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-                // If isRejoining, the onRejoining callback already navigated
             } catch (e: Exception) {
-                binding.scanningProgress.visibility = View.GONE
-                binding.scanningText.visibility = View.GONE
+                if (_binding == null) return@launch
+                binding.scanningContainer.visibility = View.GONE
                 binding.connectButton.isEnabled = true
                 networkManager.onRejoining = null
                 Toast.makeText(

@@ -118,6 +118,7 @@ class NetworkManager private constructor() {
     }
 
     fun init(context: Context) {
+        appContext = context.applicationContext
         val prefs = context.getSharedPreferences("game_prefs", Context.MODE_PRIVATE)
         deviceUID = prefs.getString("device_uid", null) ?: run {
             val uid = UUID.randomUUID().toString().replace("-", "")
@@ -127,10 +128,16 @@ class NetworkManager private constructor() {
         Log.d(TAG, "Device UID: $deviceUID")
     }
 
-    suspend fun scanForServers(subnet: String = "192.168.1"): List<GameServer> = withContext(Dispatchers.IO) {
-        val servers = mutableListOf<GameServer>()
-        // TODO: scan using UPnP
-        servers
+    private lateinit var appContext: Context
+
+    var discoveredConsoles: List<com.game.remoteclient.models.PlayStationConsole> = emptyList()
+        private set
+
+    suspend fun scanForServers(): List<GameServer> = withContext(Dispatchers.IO) {
+        discoveredConsoles = DdpDiscovery.discover(appContext)
+        discoveredConsoles
+            .filter { it.isAwake }
+            .map { GameServer(ipAddress = it.ipAddress, name = it.hostName, consoleType = it.hostType) }
     }
 
     suspend fun connectToServer(server: GameServer): Boolean = withContext(Dispatchers.IO) {
