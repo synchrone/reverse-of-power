@@ -135,8 +135,6 @@ object PcapReplay {
                 "ConnectionInit"
             is DecodedPacket.DeviceUID ->
                 "DeviceUID: ${decoded.uid}"
-            is DecodedPacket.GameInProgress ->
-                "GameInProgress"
             is DecodedPacket.DataMessage -> {
                 val msgId = "0x%02x".format(decoded.messageId)
                 if (decoded.messages.isEmpty()) {
