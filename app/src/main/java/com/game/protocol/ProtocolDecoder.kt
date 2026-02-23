@@ -40,14 +40,6 @@ class ProtocolDecoder {
     fun decode(data: ByteArray): DecodedPacket {
         if (data.size < 8) return DecodedPacket.TooShort(data)
 
-        // Check for "game in progress" magic: e558fc895c8df001
-        if (data.sliceArray(0..7).contentEquals(
-                bytes(0xe5, 0x58, 0xfc, 0x89, 0x5c, 0x8d, 0xf0, 0x01)
-            )
-        ) {
-            return DecodedPacket.GameInProgress(data)
-        }
-
         // Check for device UID packet: 0c89e884
         if (data.size >= 12 &&
             data[0] == 0x0c.toByte() && data[1] == 0x89.toByte() &&
