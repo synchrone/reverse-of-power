@@ -6,7 +6,9 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp"
-    android:layout_marginHorizontal="12dp">
+    android:layout_marginHorizontal="12dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <!-- Player avatar photo in circle -->
     <ImageView

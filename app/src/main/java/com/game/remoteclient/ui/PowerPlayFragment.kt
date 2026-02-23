@@ -314,18 +314,22 @@ class PowerPlayFragment : Fragment() {
             5 -> "BOMBLES" to "Throw bombs over answers"
             6 -> "NIBBLERS" to "Nibble away at answers"
             7 -> "GLOOP" to "Cover answers in gloop"
+            10 -> "DOUBLE TROUBLE" to "Freeze and gloop" // (gloop over freeze)
             11 -> "DOUBLE TROUBLE" to "Freeze and bombles"
-            else -> "POWER PLAY #$powerType" to ""
+            12 -> "DOUBLE TROUBLE" to "Nibblers and gloop"
+            else -> "POWER PLAY #$powerType" to "please remember the effect and tell developers"
         }
     }
 
     private fun getPowerPlayColor(powerType: Int): Int {
         return when (powerType) {
-            4 -> Color.parseColor("#4FC3F7") // Freeze ice blue
-            5 -> Color.parseColor("#FF7043") // Bombles orange-red
-            6 -> Color.parseColor("#FF7043") // Nibblers orange-red
-            7 -> Color.parseColor("#66BB6A") // Gloop green
-            11 -> Color.parseColor("#AB47BC") // Double trouble purple
+            4 -> Color.parseColor("#4FC3F7")  // Freeze - ice blue
+            5 -> Color.parseColor("#FFD600")  // Bombles - black/yellow
+            6 -> Color.parseColor("#FF7043")  // Nibblers - orange-red
+            7 -> Color.parseColor("#66BB6A")  // Gloop - green
+            10 -> Color.parseColor("#59B89A") // Double trouble: freeze + gloop (blue-green)
+            11 -> Color.parseColor("#A8C44B") // Double trouble: freeze + bombles (blue-yellow)
+            12 -> Color.parseColor("#D48A30") // Double trouble: nibblers + gloop (orange-green)
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
