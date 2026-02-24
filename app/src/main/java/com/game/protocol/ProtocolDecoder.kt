@@ -52,7 +52,9 @@ class ProtocolDecoder {
         val secondaryHeader = data[1]
 
         return when {
-            header == 0xae.toByte() && secondaryHeader == 0x7f.toByte() -> {
+            header == 0xae.toByte() && secondaryHeader == 0x7f.toByte() ||
+            header == 0xc1.toByte() && secondaryHeader == 0x48.toByte() // decades
+            -> {
                 try {
                     decodeDataPacket(data)
                 } catch (e: Exception) {
@@ -179,8 +181,8 @@ class ProtocolDecoder {
     }
 
     private fun parseJsonPayload(data: ByteArray): List<GameMessage> {
+        val jsonStr = data.decodeToString()
         return try {
-            val jsonStr = data.decodeToString()
             val jsonElement = json.parseToJsonElement(jsonStr).jsonObject
             val typeString = jsonElement["TypeString"]?.jsonPrimitive?.content ?: return emptyList()
 
@@ -227,12 +229,20 @@ class ProtocolDecoder {
                     json.decodeFromString<ServerStopCategorySelectOverride>(jsonStr)
                 typeString.contains("ServerCategorySelectOverrideSuccess") ->
                     json.decodeFromString<ServerCategorySelectOverrideSuccess>(jsonStr)
+                typeString.contains("ServerRoomMessage") ->
+                    json.decodeFromString<ServerRoomMessage>(jsonStr)
+                typeString.contains("ServerAwaitTriviaAnsweringPhaseMessage") ->
+                    json.decodeFromString<ServerAwaitTriviaAnsweringPhaseMessage>(jsonStr)
                 typeString.contains("ServerBeginTriviaAnsweringPhase") ->
                     json.decodeFromString<ServerBeginTriviaAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginLinkingAnsweringPhase") ->
                     json.decodeFromString<ServerBeginLinkingAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginSortingAnsweringPhase") ->
                     json.decodeFromString<ServerBeginSortingAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginMissingLetterAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginMissingLetterAnsweringPhase>(jsonStr)
+                typeString.contains("PrototypeClientToServerMissingLetterAnswer") ->
+                    json.decodeFromString<PrototypeClientToServerMissingLetterAnswer>(jsonStr)
                 typeString.contains("ServerBeginPowerPlayPhase") ->
                     json.decodeFromString<ServerBeginPowerPlayPhase>(jsonStr)
                 typeString.contains("ServerRequestPowerPlayChoice") ->
@@ -275,15 +285,21 @@ class ProtocolDecoder {
                     json.decodeFromString<ClientEndOfGameFactCount>(jsonStr)
                 typeString == "ClientEndOfGameFactCommandMessage" ->
                     json.decodeFromString<ClientEndOfGameFactCommandMessage>(jsonStr)
+                typeString.contains("ClientToServerOngoingChallengeMessage") ->
+                    json.decodeFromString<ClientToServerOngoingChallengeMessage>(jsonStr)
+                typeString.contains("ClientToServerTimeSyncMessage") ->
+                    json.decodeFromString<ClientToServerTimeSyncMessage>(jsonStr)
+                typeString.contains("ServerToClientTimeSyncMessage") ->
+                    json.decodeFromString<ServerToClientTimeSyncMessage>(jsonStr)
                 else -> null
             }
 
             if (message != null) listOf(message) else {
-                Log.d(TAG, "Unknown TypeString: $typeString")
+                Log.d(TAG, "Unknown TypeString: $typeString in $jsonStr")
                 emptyList()
             }
         } catch (e: Exception) {
-            Log.d(TAG, "Error parsing JSON: ${e.message}")
+            Log.d(TAG, "Error parsing JSON: ${e.message} in $jsonStr")
             emptyList()
         }
     }

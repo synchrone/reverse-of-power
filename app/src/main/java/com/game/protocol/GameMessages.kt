@@ -74,7 +74,7 @@ data class AllResourcesReceivedMessage(
 data class ClientQuizCommandMessage(
     override val TypeString: String = "ClientQuizCommandMessage",
     val action: Int,
-    val time: Double
+    val time: Double = 0.0
 ) : GameMessage() {
     companion object {
         const val ACTION_CONTINUE = 4
@@ -164,11 +164,12 @@ data class ClientGameIDMessage(
 data class ClientHoldingScreenCommandMessage(
     override val TypeString: String = "ClientHoldingScreenCommandMessage",
     val action: Int, // 5 = look at the TV;
-    val time: Double,
+    val time: Double = 0.0,
     val HoldingScreenText: String,
     val HoldingScreenType: Int, // 4 = look at the tv;  9 = get ready
     val OtherPlayerIndex: Int,
-    val ShowPortraitPhotoControls: Boolean
+    val ShowPortraitPhotoControls: Boolean,
+    val serverTick: Long = 0
 ) : GameMessage()
 
 @Serializable
@@ -225,7 +226,7 @@ data class ContinuePressedResponseMessage(
 @Serializable
 data class CategoryChoice(
     val DisplayText: String,
-    val Colour: ColorTint,
+    val Colour: ColorTint? = null,
     val DoorIndex: Int,
     val ChoiceType: Int
 )
@@ -234,9 +235,10 @@ data class CategoryChoice(
 data class ServerCategorySelectChoices(
     override val TypeString: String = "KnowledgeIsPower.ServerCategorySelectChoices",
     val CategoryChoices: List<CategoryChoice>,
-    val BackgroundTint: ColorTint,
-    val PrimaryTint: ColorTint,
-    val SecondaryTint: ColorTint
+    val HeaderText: String = "",
+    val BackgroundTint: ColorTint? = null,
+    val PrimaryTint: ColorTint? = null,
+    val SecondaryTint: ColorTint? = null
 ) : GameMessage()
 
 @Serializable
@@ -303,7 +305,7 @@ data class PowerPlayPlayer(
 data class ActivePowerPlay(
     val PowerType: Int,
     val Count: Int,
-    val Culprits: List<Int>
+    val Culprits: List<Int> = emptyList()
 )
 
 @Serializable
@@ -315,10 +317,17 @@ data class ServerBeginTriviaAnsweringPhase(
     val Answers: List<TriviaAnswer>,
     val PowerPlays: List<ActivePowerPlay>,
     val PowerPlayPlayers: List<PowerPlayPlayer>,
-    val RoundType: Int, // 1 = normal, 5 = finals, meaning you cannot answer wrong, it will indicate failure, penalize with 2s or blocked screen and have you retry
-    val BackgroundTint: ColorTint,
-    val PrimaryTint: ColorTint,
-    val SecondaryTint: ColorTint
+    val RoundType: Int, // 1 = normal, 5 = finals, 6 = ?
+    val BackgroundTint: ColorTint? = null,
+    val PrimaryTint: ColorTint? = null,
+    val SecondaryTint: ColorTint? = null,
+    val serverTick: Long = 0
+) : GameMessage()
+
+@Serializable
+data class ServerAwaitTriviaAnsweringPhaseMessage(
+    override val TypeString: String = "KnowledgeIsPower.ServerAwaitTriviaAnsweringPhaseMessage",
+    val PowerPlays: List<ActivePowerPlay> = emptyList()
 ) : GameMessage()
 
 @Serializable
@@ -355,12 +364,15 @@ data class ClientLinkingAnswer(
 @Serializable
 data class PowerPlay(
     val DisplayIndex: Int,
-    val PowerType: Int,
+    val PowerType: Int = -1,
+    val PowerTypes: List<Int> = emptyList(),
     val PowerTarget: Int,
     val PowerPlayTargets: List<Int>,
     val New: Boolean,
     val TargetCount: Int
-)
+) {
+    val effectivePowerType: Int get() = if (PowerType >= 0) PowerType else PowerTypes.firstOrNull() ?: -1 // Decades uses PowerTypes list
+}
 
 @Serializable
 data class ServerBeginPowerPlayPhase(
@@ -400,6 +412,30 @@ data class ServerBeginSortingAnsweringPhase(
     val RightBucketID: String,
     val QuestionDuration: Double,
     val SortingAnswers: List<SortingAnswer>
+) : GameMessage()
+
+@Serializable
+data class MissingLetterAnswerData(
+    val answerInfo: String,
+    val correct: String,
+    val letters: String,
+    val finalDisplay: String
+)
+
+@Serializable
+data class ServerBeginMissingLetterAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginMissingLetterAnsweringPhase",
+    val ChallengeId: String,
+    val Question: String,
+    val QuestionDuration: Double,
+    val MissingLetterAnswerData: List<MissingLetterAnswerData>,
+    val serverTick: Long = 0
+) : GameMessage()
+
+@Serializable
+data class PrototypeClientToServerMissingLetterAnswer(
+    override val TypeString: String = "KnowledgeIsPower.PrototypeClientToServerMissingLetterAnswer",
+    val ClientMissingLetterCorrectAnswerCount: Int
 ) : GameMessage()
 
 @Serializable
@@ -454,4 +490,30 @@ data class ClientEndOfGameFactCommandMessage(
     val action: Int,
     val time: Double,
     val FactNumber: Int
+) : GameMessage()
+
+@Serializable
+data class ServerRoomMessage(
+    override val TypeString: String = "KnowledgeIsPower.ServerRoomMessage",
+    val Room: Int,
+    val RoundType: Int
+) : GameMessage()
+
+@Serializable
+data class ClientToServerOngoingChallengeMessage(
+    override val TypeString: String = "KnowledgeIsPower.ClientToServerOngoingChallengeMessage",
+    val CorrectAnswerCount: Int
+) : GameMessage()
+
+@Serializable
+data class ClientToServerTimeSyncMessage(
+    override val TypeString: String = "KnowledgeIsPower.ClientToServerTimeSyncMessage",
+    val sentTick: Long
+) : GameMessage()
+
+@Serializable
+data class ServerToClientTimeSyncMessage(
+    override val TypeString: String = "KnowledgeIsPower.ServerToClientTimeSyncMessage",
+    val clientSentTick: Long,
+    val serverSentTick: Long
 ) : GameMessage()
