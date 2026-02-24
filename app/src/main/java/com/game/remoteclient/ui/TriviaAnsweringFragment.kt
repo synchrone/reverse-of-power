@@ -70,11 +70,12 @@ class TriviaAnsweringFragment : Fragment() {
 
         binding.questionText.text = trivia.QuestionText
 
-        val backgroundColor = colorTintToInt(trivia.BackgroundTint)
-        val backgroundSecondary = colorTintToInt(trivia.SecondaryTint)
+        val backgroundColor = trivia.BackgroundTint?.let { colorTintToInt(it) } ?: Color.parseColor("#333333")
+        val backgroundSecondary = trivia.SecondaryTint?.let { colorTintToInt(it) } ?: Color.parseColor("#222222")
         binding.sunburstBackground.setColors(backgroundColor, backgroundSecondary)
 
         val buttons = listOf(binding.answer0, binding.answer1, binding.answer2, binding.answer3)
+        val isFinals = trivia.RoundType == 5
         buttons.forEachIndexed { index, button ->
             if (index < trivia.Answers.size) {
                 val answer = trivia.Answers[index]

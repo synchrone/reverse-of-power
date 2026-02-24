@@ -127,8 +127,8 @@ class CategorySelectionFragment : Fragment() {
 
     private fun updateCategoryChoices(message: ServerCategorySelectChoices) {
         categoryChoices = message.CategoryChoices
-        backgroundColor = colorTintToInt(message.BackgroundTint)
-        backgroundSecondary = colorTintToInt(message.SecondaryTint)
+        message.BackgroundTint?.let { backgroundColor = colorTintToInt(it) }
+        message.SecondaryTint?.let { backgroundSecondary = colorTintToInt(it) }
 
         applyBackgroundColors()
 
@@ -141,7 +141,7 @@ class CategorySelectionFragment : Fragment() {
                 val choice = categoryChoices[index]
                 column.visibility = View.VISIBLE
                 doors[index].doorIndex = index
-                doors[index].setDoorColor(colorTintToInt(choice.Colour))
+                choice.Colour?.let { doors[index].setDoorColor(colorTintToInt(it)) }
                 labels[index].text = choice.DisplayText
             } else {
                 column.visibility = View.INVISIBLE

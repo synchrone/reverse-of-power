@@ -102,7 +102,7 @@ class PowerPlayFragment : Fragment() {
         binding.powerPlayContainer.removeAllViews()
 
         for (powerPlay in powerPlays) {
-            val (name, description) = getPowerPlayInfo(powerPlay.PowerType)
+            val (name, description) = getPowerPlayInfo(powerPlay.effectivePowerType)
             val itemView = layoutInflater.inflate(R.layout.item_power_play, binding.powerPlayContainer, false)
 
             val nameView = itemView.findViewById<TextView>(R.id.powerPlayName)
@@ -118,11 +118,11 @@ class PowerPlayFragment : Fragment() {
             binding.powerPlayContainer.addView(itemView)
 
             if (powerPlay.New) {
-                startRandomizeAnimation(nameView, descView, icon, powerPlay.PowerType)
+                startRandomizeAnimation(nameView, descView, icon, powerPlay.effectivePowerType)
             } else {
                 nameView.text = name
                 descView.text = description
-                icon.background.setTint(getPowerPlayColor(powerPlay.PowerType))
+                icon.background.setTint(getPowerPlayColor(powerPlay.effectivePowerType))
             }
         }
     }
@@ -198,7 +198,7 @@ class PowerPlayFragment : Fragment() {
 
     private fun onPowerPlaySelected(powerPlay: PowerPlay) {
         selectedPowerPlay = powerPlay
-        val (name, description) = getPowerPlayInfo(powerPlay.PowerType)
+        val (name, description) = getPowerPlayInfo(powerPlay.effectivePowerType)
 
         // Animate transition to phase 2
         binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
