@@ -47,29 +47,51 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/answer0"
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="8dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="#CC444444"
-                    tools:text="EGGOs" />
+                    android:layout_margin="8dp">
 
-                <Button
-                    android:id="@+id/answer1"
+                    <Button
+                        android:id="@+id/answer0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#CC444444"
+                        tools:text="EGGOs" />
+
+                    <com.game.remoteclient.ui.IceOverlayView
+                        android:id="@+id/iceOverlay0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="8dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="#CC444444"
-                    tools:text="UGGs" />
+                    android:layout_margin="8dp">
+
+                    <Button
+                        android:id="@+id/answer1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#CC444444"
+                        tools:text="UGGs" />
+
+                    <com.game.remoteclient.ui.IceOverlayView
+                        android:id="@+id/iceOverlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+                </FrameLayout>
             </LinearLayout>
 
             <!-- Bottom row -->
@@ -80,33 +102,62 @@
                 android:orientation="horizontal"
                 android:gravity="center">
 
-                <Button
-                    android:id="@+id/answer2"
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="8dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="#CC444444"
-                    tools:text="OWLs" />
+                    android:layout_margin="8dp">
 
-                <Button
-                    android:id="@+id/answer3"
+                    <Button
+                        android:id="@+id/answer2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#CC444444"
+                        tools:text="OWLs" />
+
+                    <com.game.remoteclient.ui.IceOverlayView
+                        android:id="@+id/iceOverlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <FrameLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="8dp"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:backgroundTint="#CC444444"
-                    tools:text="ARGHs" />
+                    android:layout_margin="8dp">
+
+                    <Button
+                        android:id="@+id/answer3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#CC444444"
+                        tools:text="ARGHs" />
+
+                    <com.game.remoteclient.ui.IceOverlayView
+                        android:id="@+id/iceOverlay3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+                </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/wrongAnswerOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#CCCC0000"
+        android:visibility="gone" />
 
 </FrameLayout>
