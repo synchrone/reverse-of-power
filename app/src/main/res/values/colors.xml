@@ -24,6 +24,8 @@
     <color name="answer_c_pressed">#FFFFA000</color>
     <color name="answer_d_pressed">#FF1976D2</color>
 
+    <color name="ic_launcher_background">#FF1B2B4A</color>
+
     <color name="background">#FFF5F5F5</color>
     <color name="surface">#FFFFFFFF</color>
     <color name="text_primary">#DE000000</color>

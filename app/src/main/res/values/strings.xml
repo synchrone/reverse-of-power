@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Game Remote</string>
+    <string name="app_name">Knowledge is Power</string>
 
     <!-- Server Discovery -->
     <string name="server_discovery_title">Find Game Server</string>
