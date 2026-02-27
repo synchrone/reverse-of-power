@@ -9,7 +9,10 @@ import kotlinx.serialization.serializer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-class ProtocolEncoder {
+class ProtocolEncoder(
+    val decades: Boolean = false
+) {
+    val packetMagic = if (decades) bytes(0xC1, 0x48) else bytes(0xAE, 0x7F)
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -33,9 +36,14 @@ class ProtocolEncoder {
     fun encodeDeviceUID(uid: String, theByte: Byte = 0x63): ByteArray {
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
         val data = ByteBuffer.allocate(12 + uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
-        data.put(bytes(0xc, 0x89, 0xe8, 0x84))
-        data.put(bytes(0x61, 0x3, 0xf4))
-        data.put(theByte)
+        if (decades) {
+            data.put(bytes(0xAF, 0xE4, 0x87, 0x3D))
+            data.put(bytes(0x82, 0xED, 0x6C, 0x47))
+        } else {
+            data.put(bytes(0x0C, 0x89, 0xE8, 0x84))
+            data.put(bytes(0x61, 0x03, 0xF4))
+            data.put(theByte)
+        }
         data.putInt(uidBytes.size)
         data.put(uidBytes)
         return data.array()
@@ -68,7 +76,7 @@ class ProtocolEncoder {
     /**
      * Encode multiple GameMessages as one multi-JSON UDP packet.
      */
-    fun encodeMessageMulti(msgs: List<GameMessage>, transferId: Int): ByteArray {
+    fun encodeMessageMulti(msgs: List<GameMessage>, transferId: Int): List<ByteArray> {
         val jsonBytesList = msgs.map { encodeJson(it) }
         val entriesSize = jsonBytesList.sumOf { 8 + it.size }
         val bodyLength = entriesSize + 6
@@ -84,7 +92,7 @@ class ProtocolEncoder {
             buffer.put(jsonBytes)
         }
         buffer.put(bytes(0x32, 0x90)) // footer
-        return wrapPayload(buffer.array())
+        return wrapAndChunk(buffer.array())
     }
 
     /**
@@ -149,7 +157,7 @@ class ProtocolEncoder {
      */
     private fun buildPacket(payload: ByteArray, packetNum: Int, packetIdx: Int, messageId: Int, byteOffset: Int): ByteArray {
         val buffer = ByteBuffer.allocate(payload.size + 22).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.put(bytes(0xAE, 0x7F))
+        buffer.put(packetMagic)
         buffer.putInt(messageId)
         buffer.putInt(packetNum)
         buffer.putInt(packetIdx)
