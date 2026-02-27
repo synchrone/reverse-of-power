@@ -14,7 +14,8 @@ class GameProtocolClient(
     private val serverHostStr: String,
     private val serverPort: Int = 9066,
     private val listenHostStr: String = "0.0.0.0",
-    private val listenPort: Int = 9060
+    private val listenPort: Int = 9060,
+    val decades: Boolean = false
     ) {
     private val TAG = "GameProtocolClient"
     private var isConnected: Boolean = false
@@ -22,7 +23,7 @@ class GameProtocolClient(
     private var serverSocket: DatagramSocket? = null
     private var clientSocket: DatagramSocket? = null
 
-    private val encoder = ProtocolEncoder()
+    private val encoder = ProtocolEncoder(decades = decades)
     private val decoder = ProtocolDecoder()
     private var lastRcvMessageId: Int? = null
     private var connectionDeferred: CompletableDeferred<Unit>? = null
@@ -80,7 +81,6 @@ class GameProtocolClient(
         val completed = withTimeoutOrNull(timeoutMs) {
             connectionDeferred?.await()
         } != null
-        // Check if we completed due to an error
         return completed && connectionError == null
     }
 
@@ -276,6 +276,10 @@ class GameProtocolClient(
                     DeviceOperatingSystem = "Android OS ${android.os.Build.VERSION.RELEASE} / API-${android.os.Build.VERSION.SDK_INT} (${android.os.Build.ID})"
                 ))
                 sendMessage(ClientRequestAvatarStatusMessage())
+            }
+
+            is ServerToClientTimeSyncMessage -> {
+                Log.d(TAG, "Time sync: clientTick=${message.clientSentTick}, serverTick=${message.serverSentTick}")
             }
 
             is ServerRequestEndOfGameFactCount -> {

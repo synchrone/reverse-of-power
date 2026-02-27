@@ -37,35 +37,44 @@ class ProtocolDecoder {
 
     private val fragmentBuffer = mutableMapOf<Int, MutableMap<Int, ByteArray>>()
 
+    private fun ByteArray.magic16(): Int = (this[0].toInt() and 0xFF shl 8) or (this[1].toInt() and 0xFF)
+    private fun ByteArray.magic32(): Int =
+        (this[0].toInt() and 0xFF shl 24) or (this[1].toInt() and 0xFF shl 16) or
+        (this[2].toInt() and 0xFF shl 8) or (this[3].toInt() and 0xFF)
+
+    companion object {
+        // 2-byte packet magics
+        const val MAGIC_DATA_KIP = 0xAE7F
+        const val MAGIC_DATA_DECADES = 0xC148
+        const val MAGIC_ACK = 0x8A33
+
+        // 4-byte DeviceUID magics
+        const val MAGIC_UID_KIP = 0x0C89E884
+        const val MAGIC_UID_DECADES = 0xAFE4873D.toInt()
+    }
+
     fun decode(data: ByteArray): DecodedPacket {
         if (data.size < 8) return DecodedPacket.TooShort(data)
 
-        // Check for device UID packet: 0c89e884
-        if (data.size >= 12 &&
-            data[0] == 0x0c.toByte() && data[1] == 0x89.toByte() &&
-            data[2] == 0xe8.toByte() && data[3] == 0x84.toByte()
-        ) {
-            return decodeDeviceUID(data)
+        if (data.size >= 12) {
+            when (data.magic32()) {
+                MAGIC_UID_KIP, MAGIC_UID_DECADES -> return decodeDeviceUID(data)
+            }
         }
 
-        val header = data[0]
-        val secondaryHeader = data[1]
-
-        return when {
-            header == 0xae.toByte() && secondaryHeader == 0x7f.toByte() ||
-            header == 0xc1.toByte() && secondaryHeader == 0x48.toByte() // decades
-            -> {
+        return when (data.magic16()) {
+            MAGIC_DATA_KIP, MAGIC_DATA_DECADES -> {
                 try {
                     decodeDataPacket(data)
                 } catch (e: Exception) {
                     DecodedPacket.Error("Error decoding data packet: ${e.message}", data)
                 }
             }
-            header == 0x8a.toByte() && secondaryHeader == 0x33.toByte() -> {
-                if (data.sliceArray(2..5).contentEquals(bytes(0xff, 0xff, 0xff, 0xff))) {
+            MAGIC_ACK -> {
+                val messageId = ByteBuffer.wrap(data, 2, 4).order(ByteOrder.LITTLE_ENDIAN).int
+                if (messageId == -1) {
                     DecodedPacket.ConnectionInit(data)
                 } else {
-                    val messageId = ByteBuffer.wrap(data, 2, 4).order(ByteOrder.LITTLE_ENDIAN).int
                     val payload = data.sliceArray(6 until data.size)
                     if (payload.any { it != 0.toByte() }) {
                         DecodedPacket.Nack(messageId, payload)
