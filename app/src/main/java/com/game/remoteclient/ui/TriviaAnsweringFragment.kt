@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.game.protocol.ActivePowerPlay
 import com.game.protocol.ColorTint
+import com.game.protocol.PowerType
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -88,8 +88,8 @@ class TriviaAnsweringFragment : Fragment() {
         val iceOverlays = listOf(binding.iceOverlay0, binding.iceOverlay1, binding.iceOverlay2, binding.iceOverlay3)
         val isFinals = trivia.RoundType == 5
 
-        // Check for freeze power play (PowerType 4)
-        val freezePowerPlay = trivia.PowerPlays.firstOrNull { it.PowerType == 4 }
+        // Check for freeze power plays (PowerType 4) — multiple players can stack
+        val freezeCount = trivia.PowerPlays.filter { it.PowerType == PowerType.FREEZE }.sumOf { it.Count }
 
         // Reset all ice overlays
         iceOverlays.forEach { it.reset() }
@@ -117,14 +117,27 @@ class TriviaAnsweringFragment : Fragment() {
                 }
 
                 // Apply freeze overlay if active
-                if (freezePowerPlay != null) {
+                if (freezeCount > 0) {
                     val overlay = iceOverlays[index]
-                    overlay.activate(freezePowerPlay.Count, index)
+                    overlay.activate(freezeCount, index)
                     overlay.onIceShattered = null // no special callback needed, button is already wired
                 }
             } else {
                 button.visibility = View.INVISIBLE
             }
+        }
+
+        // Check for bombles power plays (PowerType 5) — multiple players can stack
+        val bomblesCount = trivia.PowerPlays.filter { it.PowerType == PowerType.BOMBLES }.sumOf { it.Count }
+        if (bomblesCount > 0) {
+            binding.bomblesOverlay.activate(bomblesCount)
+            binding.bomblesOverlay.onBombleTouched = {
+                if (!answered && !penaltyActive) {
+                    onBombleTouched(buttons)
+                }
+            }
+        } else {
+            binding.bomblesOverlay.deactivate()
         }
 
         // Send a "no answer" response when time runs out
@@ -165,6 +178,25 @@ class TriviaAnsweringFragment : Fragment() {
         }, 2000)
     }
 
+    private fun onBombleTouched(buttons: List<Button>) {
+        penaltyActive = true
+        Log.d("TriviaAnswering", "Bomble touched! 2.5s penalty")
+
+        binding.bomblesExplosionOverlay.visibility = View.VISIBLE
+        buttons.forEach { it.isEnabled = false }
+
+        handler.postDelayed({
+            if (_binding == null) return@postDelayed
+            binding.bomblesExplosionOverlay.visibility = View.GONE
+            penaltyActive = false
+            buttons.forEach { button ->
+                if (button.visibility == View.VISIBLE) {
+                    button.isEnabled = true
+                }
+            }
+        }, 2500)
+    }
+
     private fun highlightSelected(buttons: List<Button>, selectedIndex: Int) {
         buttons.forEachIndexed { index, button ->
             button.alpha = if (index == selectedIndex) 1.0f else 0.3f
@@ -188,6 +220,7 @@ class TriviaAnsweringFragment : Fragment() {
         super.onDestroyView()
         timer?.cancel()
         handler.removeCallbacksAndMessages(null)
+        binding.bomblesOverlay.deactivate()
         if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
         _binding = null

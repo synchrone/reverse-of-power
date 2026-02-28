@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.PowerPlay
+import com.game.protocol.PowerType
 import com.game.protocol.PowerPlayPlayer
 import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.remoteclient.GameRemoteClientApplication
@@ -133,7 +134,7 @@ class PowerPlayFragment : Fragment() {
         icon: View,
         realPowerType: Int
     ) {
-        val allTypes = listOf(4, 5, 6, 7, 11)
+        val allTypes = listOf(PowerType.FREEZE, PowerType.BOMBLES, PowerType.NIBBLERS, PowerType.GLOOP, PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES)
         val otherTypes = allTypes.filter { it != realPowerType }.shuffled()
         // Slot reel sequence: fast spins then decelerate, land on real type
         val delays = listOf(80L, 80L, 80L, 80L, 80L, 80L, 120L, 160L, 220L, 300L, 400L)
@@ -310,26 +311,26 @@ class PowerPlayFragment : Fragment() {
 
     private fun getPowerPlayInfo(powerType: Int): Pair<String, String> {
         return when (powerType) {
-            4 -> "FREEZE" to "Encase answers in ice" // it takes 5 taps to unfreeze
-            5 -> "BOMBLES" to "Throw bombs over answers"
-            6 -> "NIBBLERS" to "Nibble away at answers"
-            7 -> "GLOOP" to "Cover answers in gloop"
-            10 -> "DOUBLE TROUBLE" to "Freeze and gloop" // (gloop over freeze)
-            11 -> "DOUBLE TROUBLE" to "Freeze and bombles"
-            12 -> "DOUBLE TROUBLE" to "Nibblers and gloop"
+            PowerType.FREEZE -> "FREEZE" to "Encase answers in ice" // it takes 5 taps to unfreeze
+            PowerType.BOMBLES -> "BOMBLES" to "Throw bombs over answers"
+            PowerType.NIBBLERS -> "NIBBLERS" to "Nibble away at answers"
+            PowerType.GLOOP -> "GLOOP" to "Cover answers in gloop"
+            PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> "DOUBLE TROUBLE" to "Freeze and gloop"
+            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> "DOUBLE TROUBLE" to "Freeze and bombles"
+            PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> "DOUBLE TROUBLE" to "Nibblers and gloop"
             else -> "POWER PLAY #$powerType" to "please remember the effect and tell developers"
         }
     }
 
     private fun getPowerPlayColor(powerType: Int): Int {
         return when (powerType) {
-            4 -> Color.parseColor("#4FC3F7")  // Freeze - ice blue
-            5 -> Color.parseColor("#FFD600")  // Bombles - black/yellow
-            6 -> Color.parseColor("#FF7043")  // Nibblers - orange-red
-            7 -> Color.parseColor("#66BB6A")  // Gloop - green
-            10 -> Color.parseColor("#59B89A") // Double trouble: freeze + gloop (blue-green)
-            11 -> Color.parseColor("#A8C44B") // Double trouble: freeze + bombles (blue-yellow)
-            12 -> Color.parseColor("#D48A30") // Double trouble: nibblers + gloop (orange-green)
+            PowerType.FREEZE -> Color.parseColor("#4FC3F7")  // ice blue
+            PowerType.BOMBLES -> Color.parseColor("#FFD600")  // black/yellow
+            PowerType.NIBBLERS -> Color.parseColor("#FF7043")  // orange-red
+            PowerType.GLOOP -> Color.parseColor("#66BB6A")  // green
+            PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> Color.parseColor("#59B89A") // blue-green
+            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> Color.parseColor("#A8C44B") // blue-yellow
+            PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> Color.parseColor("#D48A30") // orange-green
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
