@@ -374,10 +374,19 @@ class NetworkManager private constructor() {
     }
 
     fun requestAvatar(avatarId: String) {
+        val previousAvatarId = selectedAvatarId
         selectedAvatarId = avatarId
         pendingAvatarRequest = avatarId
         isAvatarConfirmed = false
         scope.launch {
+            // Release previously selected avatar
+            if (previousAvatarId != null && previousAvatarId != avatarId) {
+                protocolClient?.sendMessage(ClientRequestAvatarMessage(
+                    RequestID = UUID.randomUUID().toString(),
+                    AvatarID = previousAvatarId,
+                    Request = false
+                ))
+            }
             protocolClient?.sendMessage(ClientRequestAvatarMessage(
                 RequestID = UUID.randomUUID().toString(),
                 AvatarID = avatarId,
