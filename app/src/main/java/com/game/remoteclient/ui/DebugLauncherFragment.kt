@@ -9,9 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ActivePowerPlay
 import com.game.protocol.ColorTint
+import com.game.protocol.PowerPlay
+import com.game.protocol.PowerPlayPlayer
 import com.game.protocol.PowerType
 import com.game.protocol.LinkingAnswer
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
+import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.SortingAnswer
@@ -34,6 +37,22 @@ class DebugLauncherFragment : Fragment() {
         PowerType.GLOOP to 0
     )
 
+    // Power play slot config: index into powerTypeOptions (-1 = none)
+    private val powerTypeOptions = listOf(
+        -1 to "(none)",
+        PowerType.FREEZE to "Freeze",
+        PowerType.BOMBLES to "Bombles",
+        PowerType.NIBBLERS to "Nibblers",
+        PowerType.GLOOP to "Gloop",
+        PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP to "DT: Freeze+Gloop",
+        PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES to "DT: Freeze+Bombles",
+        PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP to "DT: Nibblers+Gloop"
+    )
+    private val ppSlotSelections = intArrayOf(0, 0, 0) // index into powerTypeOptions
+    private var targetPlayerCount = 3
+
+    private val fakePlayerNames = listOf("Alice", "Bob", "Charlie", "Diana", "Eve")
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,7 +70,25 @@ class DebugLauncherFragment : Fragment() {
         setupStepper(PowerType.NIBBLERS, binding.btnNibblersMinus, binding.btnNibblersPlus, binding.txtNibblersCount)
         setupStepper(PowerType.GLOOP, binding.btnGloopMinus, binding.btnGloopPlus, binding.txtGloopCount)
 
+        setupPPSlotCycler(0, binding.btnPPSlot1Prev, binding.btnPPSlot1Next, binding.txtPPSlot1)
+        setupPPSlotCycler(1, binding.btnPPSlot2Prev, binding.btnPPSlot2Next, binding.txtPPSlot2)
+        setupPPSlotCycler(2, binding.btnPPSlot3Prev, binding.btnPPSlot3Next, binding.txtPPSlot3)
+
+        binding.btnTargetsMinus.setOnClickListener {
+            if (targetPlayerCount > 1) {
+                targetPlayerCount--
+                binding.txtTargetsCount.text = targetPlayerCount.toString()
+            }
+        }
+        binding.btnTargetsPlus.setOnClickListener {
+            if (targetPlayerCount < 5) {
+                targetPlayerCount++
+                binding.txtTargetsCount.text = targetPlayerCount.toString()
+            }
+        }
+
         binding.btnLaunchTrivia.setOnClickListener { launchTrivia() }
+        binding.btnLaunchPowerPlay.setOnClickListener { launchPowerPlay() }
         binding.btnLinking.setOnClickListener { launchLinking() }
         binding.btnSorting.setOnClickListener { launchSorting() }
     }
@@ -70,6 +107,19 @@ class DebugLauncherFragment : Fragment() {
                 counts[powerType] = current + 1
                 display.text = (current + 1).toString()
             }
+        }
+    }
+
+    private fun setupPPSlotCycler(slotIndex: Int, prev: View, next: View, display: TextView) {
+        prev.setOnClickListener {
+            val current = ppSlotSelections[slotIndex]
+            ppSlotSelections[slotIndex] = if (current <= 0) powerTypeOptions.size - 1 else current - 1
+            display.text = powerTypeOptions[ppSlotSelections[slotIndex]].second
+        }
+        next.setOnClickListener {
+            val current = ppSlotSelections[slotIndex]
+            ppSlotSelections[slotIndex] = if (current >= powerTypeOptions.size - 1) 0 else current + 1
+            display.text = powerTypeOptions[ppSlotSelections[slotIndex]].second
         }
     }
 
@@ -99,6 +149,49 @@ class DebugLauncherFragment : Fragment() {
             SecondaryTint = secondaryTint
         )
         findNavController().navigate(R.id.action_debugLauncher_to_triviaAnswering)
+    }
+
+    private fun launchPowerPlay() {
+        val newChecks = listOf(binding.chkPPSlot1New.isChecked, binding.chkPPSlot2New.isChecked, binding.chkPPSlot3New.isChecked)
+        val selectedTypes = ppSlotSelections.toList().mapIndexedNotNull { slotIdx, optionIdx ->
+            val powerType = powerTypeOptions[optionIdx].first
+            if (powerType < 0) null
+            else Triple(slotIdx, powerType, newChecks[slotIdx])
+        }
+
+        if (selectedTypes.isEmpty()) return
+
+        val targetSlots = (0 until targetPlayerCount).toList()
+        val defaultColor = ColorTint(r = 0.5f, g = 0.5f, b = 0.5f, a = 1f)
+
+        val powerPlays = selectedTypes.map { (slotIdx, powerType, isNew) ->
+            PowerPlay(
+                DisplayIndex = slotIdx,
+                PowerType = powerType,
+                PowerTarget = -1,
+                PowerPlayTargets = targetSlots,
+                New = isNew,
+                TargetCount = 1
+            )
+        }
+
+        val players = (0 until targetPlayerCount).map { i ->
+            PowerPlayPlayer(
+                SlotIndex = i,
+                Name = fakePlayerNames[i],
+                ImageGUID = "",
+                Colour = defaultColor,
+                Self = false,
+                Away = false
+            )
+        }
+
+        networkManager.pendingPowerPlay = ServerBeginPowerPlayPhase(
+            PowerPlays = powerPlays,
+            PowerPlayPlayers = players,
+            RoundType = 1
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_powerPlay)
     }
 
     private fun launchLinking() {

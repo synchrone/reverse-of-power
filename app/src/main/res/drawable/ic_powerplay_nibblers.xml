@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Fluffy body - outer tufts -->
+    <path
+        android:pathData="M60,20 Q72,16 78,24 Q86,18 90,28 Q98,30 96,40 Q104,46 98,54 Q102,62 96,68 Q100,78 92,82 Q90,92 82,90 Q78,98 68,96 Q62,102 54,96 Q44,100 40,92 Q30,94 28,84 Q18,80 22,70 Q14,64 20,56 Q14,48 22,42 Q18,34 26,30 Q24,20 34,22 Q42,14 52,18 Q56,16 60,20 Z"
+        android:fillColor="#FF7043" />
+
+    <!-- Fluffy body - inner round shape -->
+    <path
+        android:pathData="M60,58 m-30,0 a30,28 0,1 1,60 0 a30,28 0,1 1,-60 0"
+        android:fillColor="#FF8A65" />
+
+    <!-- Fur tufts - top -->
+    <path
+        android:pathData="M50,22 Q48,16 52,14 Q56,12 58,18"
+        android:fillColor="#FF7043" />
+    <path
+        android:pathData="M62,20 Q64,14 68,16 Q70,20 66,22"
+        android:fillColor="#FF7043" />
+
+    <!-- Fur tufts - sides -->
+    <path
+        android:pathData="M24,48 Q16,46 18,42 Q20,38 26,40"
+        android:fillColor="#FF7043" />
+    <path
+        android:pathData="M96,50 Q102,48 102,52 Q100,56 94,54"
+        android:fillColor="#FF7043" />
+
+    <!-- Left eye white -->
+    <path
+        android:pathData="M46,52 m-12,0 a12,12 0,1 1,24 0 a12,12 0,1 1,-24 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye white -->
+    <path
+        android:pathData="M74,52 m-12,0 a12,12 0,1 1,24 0 a12,12 0,1 1,-24 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Left pupil -->
+    <path
+        android:pathData="M48,54 m-6,0 a6,6 0,1 1,12 0 a6,6 0,1 1,-12 0"
+        android:fillColor="#1A1A1A" />
+
+    <!-- Right pupil -->
+    <path
+        android:pathData="M72,54 m-6,0 a6,6 0,1 1,12 0 a6,6 0,1 1,-12 0"
+        android:fillColor="#1A1A1A" />
+
+    <!-- Left eye shine -->
+    <path
+        android:pathData="M44,48 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye shine -->
+    <path
+        android:pathData="M70,48 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Mouth - wide grin -->
+    <path
+        android:pathData="M44,72 Q52,82 60,82 Q68,82 76,72"
+        android:strokeColor="#BF360C"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent" />
+
+    <!-- Teeth -->
+    <path
+        android:pathData="M52,74 L54,80 L56,74"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M62,74 L64,80 L66,74"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Small feet left -->
+    <path
+        android:pathData="M40,90 Q38,98 42,100 Q46,100 44,92"
+        android:fillColor="#E64A19" />
+
+    <!-- Small feet right -->
+    <path
+        android:pathData="M74,90 Q72,98 76,100 Q80,100 78,92"
+        android:fillColor="#E64A19" />
+
+</vector>

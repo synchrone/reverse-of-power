@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- === Left side: Mini Nibbler creature === -->
+
+    <!-- Fluffy body - outer tufts -->
+    <path
+        android:pathData="M35,22 Q42,18 46,24 Q50,20 52,26 Q56,24 56,32 Q60,36 56,42 Q60,48 56,52 Q58,58 52,60 Q50,66 44,64 Q38,68 34,62 Q28,64 26,58 Q20,56 22,50 Q18,44 22,40 Q18,36 22,32 Q20,26 26,24 Q28,18 35,22 Z"
+        android:fillColor="#FF7043" />
+
+    <!-- Inner body -->
+    <path
+        android:pathData="M36,42 m-16,0 a16,15 0,1 1,32 0 a16,15 0,1 1,-32 0"
+        android:fillColor="#FF8A65" />
+
+    <!-- Left eye white -->
+    <path
+        android:pathData="M30,38 m-7,0 a7,7 0,1 1,14 0 a7,7 0,1 1,-14 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye white -->
+    <path
+        android:pathData="M44,38 m-7,0 a7,7 0,1 1,14 0 a7,7 0,1 1,-14 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Left pupil -->
+    <path
+        android:pathData="M31,39 m-3.5,0 a3.5,3.5 0,1 1,7 0 a3.5,3.5 0,1 1,-7 0"
+        android:fillColor="#1A1A1A" />
+
+    <!-- Right pupil -->
+    <path
+        android:pathData="M43,39 m-3.5,0 a3.5,3.5 0,1 1,7 0 a3.5,3.5 0,1 1,-7 0"
+        android:fillColor="#1A1A1A" />
+
+    <!-- Left eye shine -->
+    <path
+        android:pathData="M28,36 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Right eye shine -->
+    <path
+        android:pathData="M42,36 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Mouth -->
+    <path
+        android:pathData="M28,50 Q34,58 36,58 Q38,58 44,50"
+        android:strokeColor="#BF360C"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:fillColor="@android:color/transparent" />
+
+    <!-- Teeth -->
+    <path
+        android:pathData="M33,51 L34,55 L35,51"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M38,51 L39,55 L40,51"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Feet -->
+    <path
+        android:pathData="M28,62 Q26,68 28,70 Q30,70 30,64"
+        android:fillColor="#E64A19" />
+    <path
+        android:pathData="M42,62 Q40,68 42,70 Q44,70 44,64"
+        android:fillColor="#E64A19" />
+
+    <!-- === Right side: Mini Gloop blob === -->
+
+    <!-- Main gloop blob -->
+    <path
+        android:pathData="M75,42 Q72,32 82,28 Q88,26 94,30 Q102,28 106,36 Q110,44 106,52 Q110,62 104,68 Q98,76 88,76 Q78,78 74,68 Q66,62 68,54 Q64,48 75,42 Z"
+        android:fillColor="#4CAF50" />
+
+    <!-- Darker depth -->
+    <path
+        android:pathData="M80,46 Q77,40 84,38 Q88,36 92,40 Q98,38 102,44 Q104,48 102,54 Q104,60 100,64 Q96,68 90,67 Q84,70 80,64 Q76,58 78,54 Q76,50 80,46 Z"
+        android:fillColor="#388E3C" />
+
+    <!-- Light highlight -->
+    <path
+        android:pathData="M84,46 Q82,42 88,40 Q92,38 94,42 Q96,46 94,50 Q96,54 92,56 Q88,58 84,54 Q82,50 84,46 Z"
+        android:fillColor="#81C784" />
+
+    <!-- Sheen spot -->
+    <path
+        android:pathData="M86,44 m-3,0 a3,2.5 0,1 1,6 0 a3,2.5 0,1 1,-6 0"
+        android:fillColor="#A5D6A7"
+        android:fillAlpha="0.7" />
+
+    <!-- Drip left -->
+    <path
+        android:pathData="M78,68 Q76,76 78,84 Q80,86 82,84 Q83,76 81,68"
+        android:fillColor="#4CAF50" />
+
+    <!-- Drip right -->
+    <path
+        android:pathData="M96,72 Q94,80 96,86 Q98,88 100,86 Q101,80 99,72"
+        android:fillColor="#4CAF50" />
+
+    <!-- === Diagonal divider lightning bolt === -->
+    <path
+        android:pathData="M62,8 L54,50 L66,46 L56,112"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent" />
+
+</vector>

@@ -329,7 +329,11 @@ class PowerPlayFragment : Fragment() {
         return when (powerType) {
             PowerType.FREEZE -> R.drawable.ic_powerplay_freeze
             PowerType.BOMBLES -> R.drawable.ic_powerplay_bombles
+            PowerType.NIBBLERS -> R.drawable.ic_powerplay_nibblers
             PowerType.GLOOP -> R.drawable.ic_powerplay_gloop
+            PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> R.drawable.ic_powerplay_dt_freeze_gloop
+            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> R.drawable.ic_powerplay_dt_freeze_bombles
+            PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> R.drawable.ic_powerplay_dt_nibblers_gloop
             else -> null
         }
     }

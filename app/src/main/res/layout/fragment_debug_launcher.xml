@@ -280,7 +280,247 @@
             android:textSize="16sp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Linking Section -->
+        <!-- Power Play Configuration -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Power Play Configuration"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Power Play Slot 1 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slot 1: "
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot1Prev"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&lt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtPPSlot1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="(none)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot1Next"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&gt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/chkPPSlot1New"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+        <!-- Power Play Slot 2 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slot 2: "
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot2Prev"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&lt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtPPSlot2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="(none)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot2Next"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&gt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/chkPPSlot2New"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+        <!-- Power Play Slot 3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Slot 3: "
+                android:textSize="14sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot3Prev"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&lt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtPPSlot3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="(none)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPPSlot3Next"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:text="&gt;"
+                android:textSize="16sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/chkPPSlot3New"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="New"
+                android:textSize="12sp"
+                android:textColor="@color/text_primary" />
+        </LinearLayout>
+
+        <!-- Target Players -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Target players"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTargetsMinus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtTargetsCount"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnTargetsPlus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+        <!-- Launch Power Play -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLaunchPowerPlay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Launch Power Play"
+            android:textSize="16sp"
+            android:backgroundTint="#E8A040"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Other Minigames -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

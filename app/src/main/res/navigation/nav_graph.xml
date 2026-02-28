@@ -148,6 +148,9 @@
         <action
             android:id="@+id/action_debugLauncher_to_sortingAnswers"
             app:destination="@id/sortingAnswersFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_powerPlay"
+            app:destination="@id/powerPlayFragment" />
     </fragment>
 
 </navigation>
