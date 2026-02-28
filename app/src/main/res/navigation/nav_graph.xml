@@ -17,6 +17,9 @@
         <action
             android:id="@+id/action_serverDiscovery_to_waitingRoom"
             app:destination="@id/waitingRoomFragment" />
+        <action
+            android:id="@+id/action_serverDiscovery_to_debugLauncher"
+            app:destination="@id/debugLauncherFragment" />
     </fragment>
 
     <fragment
@@ -128,5 +131,20 @@
         android:id="@+id/sortingAnswersFragment"
         android:name="com.game.remoteclient.ui.SortingAnswersFragment"
         android:label="Sorting Answers" />
+
+    <fragment
+        android:id="@+id/debugLauncherFragment"
+        android:name="com.game.remoteclient.ui.DebugLauncherFragment"
+        android:label="Debug Launcher">
+        <action
+            android:id="@+id/action_debugLauncher_to_triviaAnswering"
+            app:destination="@id/triviaAnsweringFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_linkingAnswers"
+            app:destination="@id/linkingAnswersFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_sortingAnswers"
+            app:destination="@id/sortingAnswersFragment" />
+    </fragment>
 
 </navigation>

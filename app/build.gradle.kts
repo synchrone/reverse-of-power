@@ -37,6 +37,7 @@ configure<ApplicationExtension> {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     testOptions {

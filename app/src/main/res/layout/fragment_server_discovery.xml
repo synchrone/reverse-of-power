@@ -25,6 +25,17 @@
             android:gravity="center"
             android:layout_marginTop="32dp" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/debugButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Debug"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone" />
+
         <!-- Discovery header row -->
         <LinearLayout
             android:layout_width="match_parent"
