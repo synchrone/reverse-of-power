@@ -22,94 +22,269 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Trivia Section -->
+        <!-- Trivia Configuration -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trivia Answering"
+            android:text="Trivia Configuration"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Power Plays -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Power Plays"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="8dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaNoEffect"
+        <!-- Freeze -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trivia - No Power Play"
-            android:layout_marginBottom="4dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaFreeze"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Freeze (Ice)"
-            android:backgroundTint="#4FC3F7"
-            android:layout_marginBottom="4dp" />
+            <View
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="#4FC3F7" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaFreezeDouble"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Freeze x2 (Thick Ice)"
-            android:backgroundTint="#29B6F6"
-            android:layout_marginBottom="4dp" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Freeze"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaBombles"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Bombles"
-            android:backgroundTint="#FFD600"
-            android:textColor="#000000"
-            android:layout_marginBottom="4dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFreezeMinus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaBombles2x"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Bombles x2 (stacked)"
-            android:backgroundTint="#F9A825"
-            android:textColor="#000000"
-            android:layout_marginBottom="4dp" />
+            <TextView
+                android:id="@+id/txtFreezeCount"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaNibblers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Nibblers"
-            android:backgroundTint="#FF7043"
-            android:layout_marginBottom="4dp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFreezePlus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaGloop"
+        <!-- Bombles -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trivia - Gloop"
-            android:backgroundTint="#66BB6A"
-            android:layout_marginBottom="4dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaDoubleTrouble"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Trivia - Double Trouble (Freeze+Bombles)"
-            android:backgroundTint="#9C27B0"
-            android:layout_marginBottom="4dp" />
+            <View
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="#FFD600" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnTriviaFinals"
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bombles"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBomblesMinus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtBomblesCount"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBomblesPlus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+        <!-- Nibblers -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Trivia - Finals (wrong answers rejected)"
-            android:backgroundTint="#F44336"
-            android:layout_marginBottom="16dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="#FF7043" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nibblers"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNibblersMinus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtNibblersCount"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNibblersPlus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+        <!-- Gloop -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <View
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="#66BB6A" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gloop"
+                android:textSize="16sp"
+                android:textColor="@color/text_primary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGloopMinus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="-"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+
+            <TextView
+                android:id="@+id/txtGloopCount"
+                android:layout_width="32dp"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:gravity="center" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGloopPlus"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="+"
+                android:textSize="18sp"
+                android:padding="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp" />
+        </LinearLayout>
+
+        <!-- Finals Mode -->
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/chkFinals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Finals mode (wrong answers rejected)"
+            android:textSize="16sp"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Launch Trivia -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLaunchTrivia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Launch Trivia"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
 
         <!-- Linking Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Linking Answers"
+            android:text="Other Minigames"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
@@ -121,17 +296,7 @@
             android:layout_height="wrap_content"
             android:text="Linking - Match Pairs"
             android:backgroundTint="#E8679A"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Sorting Section -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Sorting Answers"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/text_primary"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="4dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSorting"
