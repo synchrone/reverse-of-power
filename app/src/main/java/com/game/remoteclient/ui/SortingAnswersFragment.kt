@@ -1,10 +1,12 @@
 package com.game.remoteclient.ui
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -43,6 +45,11 @@ class SortingAnswersFragment : Fragment() {
     private var timer: CountDownTimer? = null
     private var answerSent = false
 
+    // Drag state
+    private var dragStartX = 0f
+    private var dragStartY = 0f
+    private var isDragging = false
+
     // Callbacks
     private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
 
@@ -75,25 +82,57 @@ class SortingAnswersFragment : Fragment() {
         networkManager.onHoldingScreenMessage = holdingScreenCb
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupDragHandling() {
-        binding.dragLine.onDragStart = { x, y ->
-            if (currentItem != null && isPointInView(binding.itemSlot, x, y)) {
-                val centerX = binding.itemSlot.x + binding.itemSlot.width / 2f
-                val centerY = binding.itemSlot.y + binding.itemSlot.height / 2f
-                binding.dragLine.startLine(centerX, centerY)
-                true
-            } else {
-                false
-            }
-        }
+        binding.itemSlot.setOnTouchListener { view, event ->
+            if (currentItem == null) return@setOnTouchListener false
 
-        binding.dragLine.onDragEnd = { x, y ->
-            val item = currentItem
-            if (item != null) {
-                when {
-                    isPointInView(binding.leftBucket, x, y) -> processSort(item, leftBucketId)
-                    isPointInView(binding.rightBucket, x, y) -> processSort(item, rightBucketId)
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    dragStartX = event.rawX - view.translationX
+                    dragStartY = event.rawY - view.translationY
+                    isDragging = true
+                    view.animate().scaleX(1.1f).scaleY(1.1f).setDuration(100).start()
+                    true
                 }
+                MotionEvent.ACTION_MOVE -> {
+                    if (isDragging) {
+                        view.translationX = event.rawX - dragStartX
+                        view.translationY = event.rawY - dragStartY
+                        true
+                    } else false
+                }
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    if (isDragging) {
+                        isDragging = false
+                        view.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+
+                        if (event.action == MotionEvent.ACTION_UP) {
+                            val itemCenterX = view.x + view.width / 2f
+                            val item = currentItem
+                            if (item != null) {
+                                when {
+                                    itemCenterX < binding.leftBucket.right -> {
+                                        processSort(item, leftBucketId)
+                                        return@setOnTouchListener true
+                                    }
+                                    itemCenterX > binding.rightBucket.left -> {
+                                        processSort(item, rightBucketId)
+                                        return@setOnTouchListener true
+                                    }
+                                }
+                            }
+                        }
+                        // Snap back to center
+                        view.animate()
+                            .translationX(0f)
+                            .translationY(0f)
+                            .setDuration(200)
+                            .start()
+                        true
+                    } else false
+                }
+                else -> false
             }
         }
     }
@@ -129,6 +168,8 @@ class SortingAnswersFragment : Fragment() {
         if (itemQueue.isNotEmpty()) {
             currentItem = itemQueue.removeFirst()
             binding.itemText.text = currentItem!!.DisplayText
+            binding.itemSlot.translationX = 0f
+            binding.itemSlot.translationY = 0f
             binding.itemSlot.visibility = View.VISIBLE
             binding.itemSlot.alpha = 1f
         } else {
@@ -208,20 +249,6 @@ class SortingAnswersFragment : Fragment() {
 
     private fun navigateToHoldingScreen() {
         findNavController().popBackStack(R.id.holdingScreenFragment, false)
-    }
-
-    private fun isPointInView(view: View, x: Float, y: Float): Boolean {
-        val location = IntArray(2)
-        view.getLocationInWindow(location)
-
-        val overlayLocation = IntArray(2)
-        binding.dragLine.getLocationInWindow(overlayLocation)
-
-        val viewX = (location[0] - overlayLocation[0]).toFloat()
-        val viewY = (location[1] - overlayLocation[1]).toFloat()
-
-        return x >= viewX && x <= viewX + view.width &&
-               y >= viewY && y <= viewY + view.height
     }
 
     override fun onDestroyView() {
