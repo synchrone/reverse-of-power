@@ -35,6 +35,11 @@ class SunburstBackgroundView @JvmOverloads constructor(
 
     private val rayPath = Path()
 
+    private val darkenPaint = Paint().apply {
+        color = Color.parseColor("#55000000")
+        style = Paint.Style.FILL
+    }
+
     fun setColors(primary: Int, secondary: Int) {
         primaryColor = primary
         secondaryColor = secondary
@@ -71,5 +76,8 @@ class SunburstBackgroundView @JvmOverloads constructor(
             val paint = if (i % 2 == 0) primaryPaint else secondaryPaint
             canvas.drawPath(rayPath, paint)
         }
+
+        // Darken overlay to subdue colors and keep white text readable
+        canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), darkenPaint)
     }
 }
