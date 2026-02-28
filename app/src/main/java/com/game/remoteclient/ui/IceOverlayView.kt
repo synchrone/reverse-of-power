@@ -288,7 +288,7 @@ class IceOverlayView @JvmOverloads constructor(
 
         val w = width.toFloat()
         val h = height.toFloat()
-        val cornerRadius = 12f
+        val cornerRadius = resources.displayMetrics.density * 16f
 
         // Clip to rounded rect
         val clipPath = Path()

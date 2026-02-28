@@ -57,17 +57,32 @@
                         android:id="@+id/answer0"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="18sp"
+                        android:textSize="42sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
+                        android:paddingHorizontal="58dp"
                         tools:text="EGGOs" />
+
+                    <com.game.remoteclient.ui.NibblersOverlayView
+                        android:id="@+id/nibblersOverlay0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7dp"
+                        android:visibility="gone" />
 
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay0"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:translationZ="8dp"
+                        android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.GloopOverlayView
+                        android:id="@+id/gloopOverlay0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9dp"
                         android:visibility="gone" />
                 </FrameLayout>
 
@@ -81,17 +96,32 @@
                         android:id="@+id/answer1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="18sp"
+                        android:textSize="42sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
+                        android:paddingHorizontal="58dp"
                         tools:text="UGGs" />
+
+                    <com.game.remoteclient.ui.NibblersOverlayView
+                        android:id="@+id/nibblersOverlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7dp"
+                        android:visibility="gone" />
 
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:translationZ="8dp"
+                        android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.GloopOverlayView
+                        android:id="@+id/gloopOverlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9dp"
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
@@ -126,17 +156,32 @@
                         android:id="@+id/answer2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="18sp"
+                        android:textSize="42sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
+                        android:paddingHorizontal="58dp"
                         tools:text="OWLs" />
+
+                    <com.game.remoteclient.ui.NibblersOverlayView
+                        android:id="@+id/nibblersOverlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7dp"
+                        android:visibility="gone" />
 
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:translationZ="8dp"
+                        android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.GloopOverlayView
+                        android:id="@+id/gloopOverlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9dp"
                         android:visibility="gone" />
                 </FrameLayout>
 
@@ -150,17 +195,32 @@
                         android:id="@+id/answer3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="18sp"
+                        android:textSize="42sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
+                        android:paddingHorizontal="58dp"
                         tools:text="ARGHs" />
+
+                    <com.game.remoteclient.ui.NibblersOverlayView
+                        android:id="@+id/nibblersOverlay3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7dp"
+                        android:visibility="gone" />
 
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:translationZ="8dp"
+                        android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.GloopOverlayView
+                        android:id="@+id/gloopOverlay3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9dp"
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
@@ -182,6 +242,8 @@
         android:layout_height="match_parent"
         android:translationZ="12dp"
         android:background="#66CC0000"
+        android:clickable="true"
+        android:focusable="true"
         android:visibility="gone" />
 
     <FrameLayout
@@ -190,6 +252,8 @@
         android:layout_height="match_parent"
         android:translationZ="14dp"
         android:background="#BBFFFFFF"
+        android:clickable="true"
+        android:focusable="true"
         android:visibility="gone">
 
         <TextView
@@ -197,7 +261,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Don\u0027t touch the bombles!"
-            android:textSize="22sp"
+            android:textSize="42sp"
             android:textStyle="bold"
             android:textColor="#333333" />
     </FrameLayout>

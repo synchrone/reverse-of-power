@@ -85,14 +85,20 @@ class TriviaAnsweringFragment : Fragment() {
         binding.sunburstBackground.setColors(backgroundColor, backgroundSecondary)
 
         val buttons = listOf(binding.answer0, binding.answer1, binding.answer2, binding.answer3)
+        val nibblersOverlays = listOf(binding.nibblersOverlay0, binding.nibblersOverlay1, binding.nibblersOverlay2, binding.nibblersOverlay3)
         val iceOverlays = listOf(binding.iceOverlay0, binding.iceOverlay1, binding.iceOverlay2, binding.iceOverlay3)
+        val gloopOverlays = listOf(binding.gloopOverlay0, binding.gloopOverlay1, binding.gloopOverlay2, binding.gloopOverlay3)
         val isFinals = trivia.RoundType == 5
 
-        // Check for freeze power plays (PowerType 4) — multiple players can stack
+        // Check for power play stacks
+        val nibblersCount = trivia.PowerPlays.filter { it.PowerType == PowerType.NIBBLERS }.sumOf { it.Count }
         val freezeCount = trivia.PowerPlays.filter { it.PowerType == PowerType.FREEZE }.sumOf { it.Count }
+        val gloopCount = trivia.PowerPlays.filter { it.PowerType == PowerType.GLOOP }.sumOf { it.Count }
 
-        // Reset all ice overlays
+        // Reset all overlays
+        nibblersOverlays.forEach { it.reset() }
         iceOverlays.forEach { it.reset() }
+        gloopOverlays.forEach { it.reset() }
 
         buttons.forEachIndexed { index, button ->
             if (index < trivia.Answers.size) {
@@ -116,11 +122,24 @@ class TriviaAnsweringFragment : Fragment() {
                     }
                 }
 
+                // Apply nibblers overlay if active — render nibbled text, hide button's own text
+                if (nibblersCount > 0) {
+                    nibblersOverlays[index].activate(nibblersCount, index, answer.DisplayText)
+                    button.setTextColor(Color.TRANSPARENT)
+                }
+
                 // Apply freeze overlay if active
                 if (freezeCount > 0) {
                     val overlay = iceOverlays[index]
                     overlay.activate(freezeCount, index)
-                    overlay.onIceShattered = null // no special callback needed, button is already wired
+                    overlay.onIceShattered = null
+                }
+
+                // Apply gloop overlay if active (stacks on top of freeze)
+                if (gloopCount > 0) {
+                    val overlay = gloopOverlays[index]
+                    overlay.activate(gloopCount, index)
+                    overlay.onGloopCleared = null
                 }
             } else {
                 button.visibility = View.INVISIBLE
@@ -221,6 +240,8 @@ class TriviaAnsweringFragment : Fragment() {
         timer?.cancel()
         handler.removeCallbacksAndMessages(null)
         binding.bomblesOverlay.deactivate()
+        listOf(binding.nibblersOverlay0, binding.nibblersOverlay1, binding.nibblersOverlay2, binding.nibblersOverlay3).forEach { it.reset() }
+        listOf(binding.gloopOverlay0, binding.gloopOverlay1, binding.gloopOverlay2, binding.gloopOverlay3).forEach { it.reset() }
         if (networkManager.onTriviaMessage === triviaCb) networkManager.onTriviaMessage = null
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
         _binding = null
