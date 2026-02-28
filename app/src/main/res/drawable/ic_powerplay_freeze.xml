@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Main vertical spoke -->
+    <path
+        android:pathData="M60,10 L60,110"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round" />
+
+    <!-- Top-left to bottom-right spoke -->
+    <path
+        android:pathData="M16.7,35 L103.3,85"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round" />
+
+    <!-- Top-right to bottom-left spoke -->
+    <path
+        android:pathData="M103.3,35 L16.7,85"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round" />
+
+    <!-- Top barbs -->
+    <path
+        android:pathData="M60,28 L50,18 M60,28 L70,18"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Bottom barbs -->
+    <path
+        android:pathData="M60,92 L50,102 M60,92 L70,102"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Upper-left barbs -->
+    <path
+        android:pathData="M30.5,52 L20,47 M30.5,52 L28,40"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Upper-right barbs -->
+    <path
+        android:pathData="M89.5,52 L100,47 M89.5,52 L92,40"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Lower-left barbs -->
+    <path
+        android:pathData="M30.5,68 L20,73 M30.5,68 L28,80"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Lower-right barbs -->
+    <path
+        android:pathData="M89.5,68 L100,73 M89.5,68 L92,80"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- Center diamond -->
+    <path
+        android:pathData="M60,50 L68,60 L60,70 L52,60 Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5" />
+
+</vector>

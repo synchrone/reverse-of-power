@@ -108,7 +108,7 @@ class PowerPlayFragment : Fragment() {
 
             val nameView = itemView.findViewById<TextView>(R.id.powerPlayName)
             val descView = itemView.findViewById<TextView>(R.id.powerPlayDescription)
-            val icon = itemView.findViewById<View>(R.id.powerPlayIcon)
+            val icon = itemView.findViewById<ImageView>(R.id.powerPlayIcon)
 
             itemView.setOnClickListener {
                 if (selectionEnabled) {
@@ -124,6 +124,7 @@ class PowerPlayFragment : Fragment() {
                 nameView.text = name
                 descView.text = description
                 icon.background.setTint(getPowerPlayColor(powerPlay.effectivePowerType))
+                getPowerPlayDrawable(powerPlay.effectivePowerType)?.let { icon.setImageResource(it) }
             }
         }
     }
@@ -131,7 +132,7 @@ class PowerPlayFragment : Fragment() {
     private fun startRandomizeAnimation(
         nameView: TextView,
         descView: TextView,
-        icon: View,
+        icon: ImageView,
         realPowerType: Int
     ) {
         val allTypes = listOf(PowerType.FREEZE, PowerType.BOMBLES, PowerType.NIBBLERS, PowerType.GLOOP, PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES)
@@ -147,6 +148,7 @@ class PowerPlayFragment : Fragment() {
         nameView.text = firstName
         descView.text = ""
         icon.background.setTint(getPowerPlayColor(types[0]))
+        getPowerPlayDrawable(types[0])?.let { icon.setImageResource(it) } ?: icon.setImageDrawable(null)
 
         var cumulativeDelay = 300L // brief pause before reel starts
         for (i in 1 until types.size) {
@@ -190,6 +192,7 @@ class PowerPlayFragment : Fragment() {
                     .start()
 
                 icon.background.setTint(getPowerPlayColor(powerType))
+                getPowerPlayDrawable(powerType)?.let { icon.setImageResource(it) } ?: icon.setImageDrawable(null)
             }
             handler.postDelayed(runnable, cumulativeDelay)
             randomizeRunnables.add(runnable)
@@ -319,6 +322,15 @@ class PowerPlayFragment : Fragment() {
             PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> "DOUBLE TROUBLE" to "Freeze and bombles"
             PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> "DOUBLE TROUBLE" to "Nibblers and gloop"
             else -> "POWER PLAY #$powerType" to "please remember the effect and tell developers"
+        }
+    }
+
+    private fun getPowerPlayDrawable(powerType: Int): Int? {
+        return when (powerType) {
+            PowerType.FREEZE -> R.drawable.ic_powerplay_freeze
+            PowerType.BOMBLES -> R.drawable.ic_powerplay_bombles
+            PowerType.GLOOP -> R.drawable.ic_powerplay_gloop
+            else -> null
         }
     }
 
