@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Main gloop blob -->
+    <path
+        android:pathData="M30,45 Q25,30 40,25 Q50,20 60,25 Q75,20 85,30 Q95,40 90,55 Q95,70 85,80 Q75,95 60,95 Q45,98 35,85 Q20,75 25,60 Q20,50 30,45 Z"
+        android:fillColor="#4CAF50" />
+
+    <!-- Darker depth -->
+    <path
+        android:pathData="M40,50 Q35,40 48,38 Q55,35 62,40 Q72,38 78,45 Q82,52 78,62 Q82,72 75,78 Q68,85 58,84 Q48,86 42,78 Q34,70 37,60 Q33,55 40,50 Z"
+        android:fillColor="#388E3C" />
+
+    <!-- Light highlight blob -->
+    <path
+        android:pathData="M45,48 Q42,42 52,40 Q58,38 62,42 Q66,46 63,52 Q66,58 60,60 Q54,64 48,58 Q42,54 45,48 Z"
+        android:fillColor="#81C784" />
+
+    <!-- Sheen spot -->
+    <path
+        android:pathData="M50,45 m-5,0 a5,4 0,1 1,10 0 a5,4 0,1 1,-10 0"
+        android:fillColor="#A5D6A7"
+        android:fillAlpha="0.7" />
+
+    <!-- Drip left -->
+    <path
+        android:pathData="M35,85 Q32,95 34,105 Q36,108 38,105 Q40,95 38,85"
+        android:fillColor="#4CAF50" />
+
+    <!-- Drip right -->
+    <path
+        android:pathData="M70,90 Q68,100 70,108 Q72,110 74,108 Q76,100 73,90"
+        android:fillColor="#4CAF50" />
+
+    <!-- Small drip center -->
+    <path
+        android:pathData="M55,95 Q54,102 55,106 Q56,107 57,106 Q58,102 57,95"
+        android:fillColor="#388E3C" />
+
+</vector>
