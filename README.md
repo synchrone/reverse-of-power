@@ -1,185 +1,48 @@
-# Game Remote Client - Android App
+# Knowledge Is Power — Community Controller App
 
-A Kotlin-based Android application that serves as a remote control client for a multiplayer quiz game. Players can connect to a game server, join lobbies, and answer quiz questions using their mobile devices.
+A community-built Android controller app for **Knowledge Is Power**, the beloved PlayStation party quiz game. This project provides a free, open-source replacement for the original companion app, keeping the game playable for years to come.
+
+Knowledge Is Power brought families and friends together around the TV for hilarious quiz nights — picking categories, sabotaging each other with power plays, and racing to answer first. With the official app no longer maintained, this project ensures the fun lives on.
 
 ## Features
 
-### 📱 Screens
+- **Full game support** — trivia, linking, sorting, category selection, and power plays
+- **All power play effects** — freeze, bombles, nibblers, gloop, and Double Trouble combinations
+- **Player profiles** — name entry, camera selfie, and avatar selection
+- **Auto-discovery** — finds your PlayStation on the local network automatically
+- **Mid-game reconnect** — rejoin a game in progress
+- **Works with both editions** — original and Decades (WIP)
+- **PS4 and PS5 compatible**
 
-1. **Server Discovery**
-   - Manual IP address entry
-   - Automatic network scanning for game servers
-   - List of discovered servers with connection details
+## Getting Started
 
-2. **Player Registration**
-   - Enter your player name
-   - Name validation (minimum 2 characters)
+- Android 8.0+
+- PS4 or PS5 with Knowledge Is Power installed
+- Both devices on the same WiFi network
 
-3. **Avatar Selection**
-   - Choose a default avatar
-   - Capture photo using front camera
-   - CameraX integration for smooth camera experience
-   - Photo preview and retake functionality
+Download the latest APK from the [Releases](../../releases) page, or build from source with `./gradlew assembleDebug`.
 
-4. **Waiting Room / Lobby**
-   - View all connected players
-   - Real-time player list updates
-   - Host can start the game
-   - Visual indicators for host/player roles
+## Known Limitations
 
-5. **Get Ready Screen**
-   - Transition screen between rounds
-   - Countdown and status updates
-   - Smooth state transitions
+The original app bundled proprietary assets that cannot be redistributed. The following are missing but don't prevent gameplay:
 
-6. **Quiz Screen**
-   - Full-screen 4-button layout (2x2 grid)
-   - Color-coded answers:
-     - Green (Top-Left) - Answer A
-     - Red (Top-Right) - Answer B
-     - Yellow (Bottom-Left) - Answer C
-     - Blue (Bottom-Right) - Answer D
-   - Countdown timer
-   - Visual feedback on answer submission
-   - Disabled buttons after answer selection
+- **Avatar miniatures** — placeholder icons are shown instead of the original character artwork
+- **Photo overlay masks** — the fun frames and costumes overlaid on player selfies are not available
+- **Sound effects** — the app is silent; all game audio still plays through the TV
+- **End-of-game reward facts** — the fun facts shown after each game are not included
 
-## 🏗️ Architecture
+Some less common power play types may not have full visual effects yet. The game handles this gracefully — unrecognized power plays are displayed with a generic icon and the round continues normally.
 
-### Technology Stack
+## Contributing
 
-- **Language**: Kotlin
-- **Minimum SDK**: 24 (Android 7.0)
-- **Target SDK**: 34 (Android 14)
-- **Architecture**: MVVM pattern with repository pattern
-- **Navigation**: Jetpack Navigation Component with Safe Args
-- **UI**: Material Design 3, View Binding
-- **Networking**: OkHttp, Retrofit
-- **Async**: Kotlin Coroutines & Flow
-- **Camera**: CameraX
-- **Image Loading**: Coil
+Contributions are welcome! Whether it's bug fixes, new features, or protocol documentation, feel free to open an issue or pull request.
 
-### Project Structure
+Protocol documentation and network captures are available in the `docs/` directory.
 
-```
-app/
-├── src/main/
-│   ├── java/com/game/remoteclient/
-│   │   ├── models/          # Data models
-│   │   │   ├── Player.kt
-│   │   │   ├── GameServer.kt
-│   │   │   ├── GameState.kt
-│   │   │   └── QuizQuestion.kt
-│   │   ├── network/         # Network layer
-│   │   │   └── NetworkManager.kt
-│   │   ├── ui/              # UI components
-│   │   │   ├── ServerDiscoveryFragment.kt
-│   │   │   ├── ServerAdapter.kt
-│   │   │   ├── NameEntryFragment.kt
-│   │   │   ├── AvatarSelectionFragment.kt
-│   │   │   ├── WaitingRoomFragment.kt
-│   │   │   ├── PlayerAdapter.kt
-│   │   │   ├── GetReadyFragment.kt
-│   │   │   └── QuizFragment.kt
-│   │   ├── utils/           # Utility classes
-│   │   │   └── PermissionHelper.kt
-│   │   └── MainActivity.kt
-│   ├── res/
-│   │   ├── layout/          # XML layouts
-│   │   ├── navigation/      # Navigation graph
-│   │   ├── values/          # Strings, colors, themes
-│   │   └── mipmap/          # App icons
-│   └── AndroidManifest.xml
-```
+## License
 
-## 🚀 Getting Started
+GPLv3 — see [LICENSE](LICENSE) for details.
 
-### Prerequisites
+## Acknowledgments
 
-- Android Studio Hedgehog (2023.1.1) or later
-- Android SDK 34
-- Gradle 8.2+
-- JDK 8 or higher
-
-### Building the Project
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd reverse-of-power
-```
-
-2. Open the project in Android Studio
-
-3. Sync Gradle files:
-   - File → Sync Project with Gradle Files
-
-4. Build the project:
-```bash
-./gradlew build
-```
-
-5. Run on device/emulator:
-   - Connect Android device or start emulator
-   - Click Run (▶️) in Android Studio
-   - Or: `./gradlew installDebug`
-
-## 📋 Permissions
-
-The app requires the following permissions:
-
-- `INTERNET` - Network communication
-- `ACCESS_NETWORK_STATE` - Check network status
-- `ACCESS_WIFI_STATE` - WiFi network discovery
-- `CHANGE_WIFI_MULTICAST_STATE` - Network scanning
-- `CAMERA` - Avatar photo capture (optional)
-
-## 🎨 UI Customization
-
-### Colors
-
-Edit `app/src/main/res/values/colors.xml`:
-- `answer_a` - Green button color
-- `answer_b` - Red button color
-- `answer_c` - Yellow button color
-- `answer_d` - Blue button color
-- `primary` - App primary color
-- `accent` - Accent color
-
-### Strings
-
-All user-facing text is in `app/src/main/res/values/strings.xml` for easy localization.
-
-## 🔧 Development Notes
-
-### Navigation
-
-Safe Args generates type-safe navigation classes:
-- Arguments passed between screens
-- Compile-time safety for navigation
-
-## 🧪 Testing
-
-Run unit tests:
-```bash
-./gradlew test
-```
-
-Run instrumented tests:
-```bash
-./gradlew connectedAndroidTest
-```
-
-## 📄 License
-
-This project is licensed under the GPLv3 License - see the LICENSE file for details.
-
-## 👥 Authors
-
-- Development Team
-
-## 🙏 Acknowledgments
-
-- Material Design Components
-- Jetpack Libraries
-- Kotlin Coroutines
-- CameraX Library
+This is a fan project with no affiliation to Sony Interactive Entertainment or Wish Studios. Knowledge Is Power is a trademark of Sony Interactive Entertainment. This project exists solely to preserve a wonderful party game for the community.
