@@ -301,6 +301,16 @@ data class PowerPlayPlayer(
     val Away: Boolean
 )
 
+object PowerType {
+    const val FREEZE = 4
+    const val BOMBLES = 5
+    const val NIBBLERS = 6
+    const val GLOOP = 7
+    const val DOUBLE_TROUBLE_FREEZE_GLOOP = 10
+    const val DOUBLE_TROUBLE_FREEZE_BOMBLES = 11
+    const val DOUBLE_TROUBLE_NIBBLERS_GLOOP = 12
+}
+
 @Serializable
 data class ActivePowerPlay(
     val PowerType: Int,

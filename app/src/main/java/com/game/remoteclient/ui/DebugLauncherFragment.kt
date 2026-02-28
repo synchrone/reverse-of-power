@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ActivePowerPlay
 import com.game.protocol.ColorTint
+import com.game.protocol.PowerType
 import com.game.protocol.LinkingAnswer
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
@@ -39,12 +40,13 @@ class DebugLauncherFragment : Fragment() {
 
         // Trivia buttons
         binding.btnTriviaNoEffect.setOnClickListener { launchTrivia(emptyList()) }
-        binding.btnTriviaFreeze.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 4, Count = 1))) }
-        binding.btnTriviaFreezeDouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 4, Count = 2))) }
-        binding.btnTriviaBombles.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 5, Count = 1))) }
-        binding.btnTriviaNibblers.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 6, Count = 1))) }
-        binding.btnTriviaGloop.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 7, Count = 1))) }
-        binding.btnTriviaDoubleTrouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = 4, Count = 1), ActivePowerPlay(PowerType = 5, Count = 1))) }
+        binding.btnTriviaFreeze.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 1))) }
+        binding.btnTriviaFreezeDouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 2))) }
+        binding.btnTriviaBombles.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 1))) }
+        binding.btnTriviaNibblers.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.NIBBLERS, Count = 1))) }
+        binding.btnTriviaGloop.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.GLOOP, Count = 1))) }
+        binding.btnTriviaBombles2x.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 2))) }
+        binding.btnTriviaDoubleTrouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 1), ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 1))) }
         binding.btnTriviaFinals.setOnClickListener { launchTrivia(emptyList(), roundType = 5) }
 
         // Linking button
