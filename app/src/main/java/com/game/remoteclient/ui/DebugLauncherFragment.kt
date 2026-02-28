@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ActivePowerPlay
@@ -26,6 +27,13 @@ class DebugLauncherFragment : Fragment() {
 
     private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
 
+    private val counts = mutableMapOf(
+        PowerType.FREEZE to 0,
+        PowerType.BOMBLES to 0,
+        PowerType.NIBBLERS to 0,
+        PowerType.GLOOP to 0
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,25 +46,39 @@ class DebugLauncherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Trivia buttons
-        binding.btnTriviaNoEffect.setOnClickListener { launchTrivia(emptyList()) }
-        binding.btnTriviaFreeze.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 1))) }
-        binding.btnTriviaFreezeDouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 2))) }
-        binding.btnTriviaBombles.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 1))) }
-        binding.btnTriviaNibblers.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.NIBBLERS, Count = 1))) }
-        binding.btnTriviaGloop.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.GLOOP, Count = 1))) }
-        binding.btnTriviaBombles2x.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 2))) }
-        binding.btnTriviaDoubleTrouble.setOnClickListener { launchTrivia(listOf(ActivePowerPlay(PowerType = PowerType.FREEZE, Count = 1), ActivePowerPlay(PowerType = PowerType.BOMBLES, Count = 1))) }
-        binding.btnTriviaFinals.setOnClickListener { launchTrivia(emptyList(), roundType = 5) }
+        setupStepper(PowerType.FREEZE, binding.btnFreezeMinus, binding.btnFreezePlus, binding.txtFreezeCount)
+        setupStepper(PowerType.BOMBLES, binding.btnBomblesMinus, binding.btnBomblesPlus, binding.txtBomblesCount)
+        setupStepper(PowerType.NIBBLERS, binding.btnNibblersMinus, binding.btnNibblersPlus, binding.txtNibblersCount)
+        setupStepper(PowerType.GLOOP, binding.btnGloopMinus, binding.btnGloopPlus, binding.txtGloopCount)
 
-        // Linking button
+        binding.btnLaunchTrivia.setOnClickListener { launchTrivia() }
         binding.btnLinking.setOnClickListener { launchLinking() }
-
-        // Sorting button
         binding.btnSorting.setOnClickListener { launchSorting() }
     }
 
-    private fun launchTrivia(powerPlays: List<ActivePowerPlay>, roundType: Int = 1) {
+    private fun setupStepper(powerType: Int, minus: View, plus: View, display: TextView) {
+        minus.setOnClickListener {
+            val current = counts[powerType] ?: 0
+            if (current > 0) {
+                counts[powerType] = current - 1
+                display.text = (current - 1).toString()
+            }
+        }
+        plus.setOnClickListener {
+            val current = counts[powerType] ?: 0
+            if (current < 3) {
+                counts[powerType] = current + 1
+                display.text = (current + 1).toString()
+            }
+        }
+    }
+
+    private fun launchTrivia() {
+        val powerPlays = counts.filter { it.value > 0 }.map { (type, count) ->
+            ActivePowerPlay(PowerType = type, Count = count)
+        }
+        val roundType = if (binding.chkFinals.isChecked) 5 else 1
+
         val tint = ColorTint(r = 0.4f, g = 0.2f, b = 0.6f, a = 1f)
         val secondaryTint = ColorTint(r = 0.3f, g = 0.15f, b = 0.5f, a = 1f)
 
@@ -65,10 +87,10 @@ class DebugLauncherFragment : Fragment() {
             QuestionText = "What is the capital of France?",
             QuestionDuration = 30.0,
             Answers = listOf(
-                TriviaAnswer(DisplayIndex = 0, DisplayText = "London", IsCorrect = false),
-                TriviaAnswer(DisplayIndex = 1, DisplayText = "Paris", IsCorrect = true),
-                TriviaAnswer(DisplayIndex = 2, DisplayText = "Berlin", IsCorrect = false),
-                TriviaAnswer(DisplayIndex = 3, DisplayText = "Madrid", IsCorrect = false)
+                TriviaAnswer(DisplayIndex = 0, DisplayText = "English bulldog", IsCorrect = false),
+                TriviaAnswer(DisplayIndex = 1, DisplayText = "African elephant", IsCorrect = true),
+                TriviaAnswer(DisplayIndex = 2, DisplayText = "Angus cow", IsCorrect = false),
+                TriviaAnswer(DisplayIndex = 3, DisplayText = "Ostrich egg", IsCorrect = false)
             ),
             PowerPlays = powerPlays,
             PowerPlayPlayers = emptyList(),
@@ -76,8 +98,6 @@ class DebugLauncherFragment : Fragment() {
             BackgroundTint = tint,
             SecondaryTint = secondaryTint
         )
-        // Stub sendTriviaAnswer so it doesn't crash without a protocol client
-        stubSendCallbacks()
         findNavController().navigate(R.id.action_debugLauncher_to_triviaAnswering)
     }
 
@@ -99,7 +119,6 @@ class DebugLauncherFragment : Fragment() {
                 LinkingAnswer(DisplayText = "Tokyo", AnswerID = "LNK001_AnswerB05", MatchIndex = 5, Direction = 2)
             )
         )
-        stubSendCallbacks()
         findNavController().navigate(R.id.action_debugLauncher_to_linkingAnswers)
     }
 
@@ -123,18 +142,7 @@ class DebugLauncherFragment : Fragment() {
                 SortingAnswer(DisplayText = "Turtle", AnswerID = "SRT001_08", AnswerDirection = 2)
             )
         )
-        stubSendCallbacks()
         findNavController().navigate(R.id.action_debugLauncher_to_sortingAnswers)
-    }
-
-    /**
-     * Disable network send methods that would crash without an active protocol client.
-     * The game fragments call these on answer/timeout, but in debug mode there's no server.
-     */
-    private fun stubSendCallbacks() {
-        // The fragments pop back to holdingScreenFragment after sending,
-        // but since we navigate from debug, they'll pop back to us instead.
-        // No action needed — the fragments already guard against null protocolClient.
     }
 
     override fun onDestroyView() {
