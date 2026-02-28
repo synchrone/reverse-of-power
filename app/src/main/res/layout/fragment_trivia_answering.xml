@@ -169,11 +169,37 @@
 
     </LinearLayout>
 
+    <com.game.remoteclient.ui.BomblesOverlayView
+        android:id="@+id/bomblesOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="10dp"
+        android:visibility="gone" />
+
     <View
         android:id="@+id/wrongAnswerOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:translationZ="12dp"
         android:background="#66CC0000"
         android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/bomblesExplosionOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="14dp"
+        android:background="#BBFFFFFF"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Don\u0027t touch the bombles!"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#333333" />
+    </FrameLayout>
 
 </FrameLayout>
