@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- === Left side: Mini Freeze snowflake === -->
+
+    <!-- Main vertical spoke -->
+    <path
+        android:pathData="M35,12 L35,68"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Top-left to bottom-right spoke -->
+    <path
+        android:pathData="M11,27 L59,55"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Top-right to bottom-left spoke -->
+    <path
+        android:pathData="M59,27 L11,55"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Top barbs -->
+    <path
+        android:pathData="M35,24 L29,17 M35,24 L41,17"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Bottom barbs -->
+    <path
+        android:pathData="M35,56 L29,63 M35,56 L41,63"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Center diamond -->
+    <path
+        android:pathData="M35,34 L41,40 L35,46 L29,40 Z"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.5" />
+
+    <!-- === Right side: Mini Bombles bomb === -->
+
+    <!-- Bomb body -->
+    <path
+        android:pathData="M88,56 m-22,0 a22,22 0,1 1,44 0 a22,22 0,1 1,-44 0"
+        android:fillColor="#2A2A2A" />
+
+    <!-- Body highlight -->
+    <path
+        android:pathData="M84,52 m-12,0 a12,12 0,1 1,24 0 a12,12 0,1 1,-24 0"
+        android:fillColor="#3D3D3D" />
+
+    <!-- Fuse stem -->
+    <path
+        android:pathData="M88,34 L88,24"
+        android:strokeColor="#8D6E63"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+
+    <!-- Fuse spark -->
+    <path
+        android:pathData="M88,18 Q85,22 88,24 Q91,22 88,18"
+        android:fillColor="#FFD600" />
+    <path
+        android:pathData="M88,20 Q87,22 88,23 Q89,22 88,20"
+        android:fillColor="#FF9100" />
+
+    <!-- Spikes -->
+    <path
+        android:pathData="M66,50 L58,46"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M88,78 L88,88"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M110,50 L118,46"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+
+    <!-- Spike tips -->
+    <path
+        android:pathData="M58,46 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"
+        android:fillColor="#FFC107" />
+    <path
+        android:pathData="M88,88 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"
+        android:fillColor="#FFC107" />
+
+    <!-- Left eye -->
+    <path
+        android:pathData="M82,52 m-5,0 a5,5 0,1 1,10 0 a5,5 0,1 1,-10 0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M83,53 m-3,0 a3,3 0,1 1,6 0 a3,3 0,1 1,-6 0"
+        android:fillColor="#000000" />
+
+    <!-- Right eye -->
+    <path
+        android:pathData="M94,51 m-4,0 a4,4 0,1 1,8 0 a4,4 0,1 1,-8 0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M95,52 m-2,0 a2,2 0,1 1,4 0 a2,2 0,1 1,-4 0"
+        android:fillColor="#000000" />
+
+    <!-- === Diagonal divider lightning bolt === -->
+    <path
+        android:pathData="M62,8 L54,50 L66,46 L56,112"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent" />
+
+</vector>

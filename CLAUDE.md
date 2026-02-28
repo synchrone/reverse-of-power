@@ -206,8 +206,6 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 - Category selection is one-shot: once a door is chosen, subsequent ServerCategorySelectChoices updates preserve the highlight without re-enabling selection
 
 ## Known TODOs not yet implemented
-- Avatar selection assets are not bundled, we need to reinvent them
-- End of game facts are not bundled in the game, we need to reinvent them
-- Trivia power play effects not rendered (ice/bombs/gloop overlays on answer buttons)
+- Avatar selection assets are not bundled, we need to reinvent them, as well as face masks
+- End of game facts are not bundled in the game, we need to reinvent them- Trivia power play effects not rendered (ice/bombs/gloop overlays on answer buttons)
 - Mid-game reconnect is sometimes buggy, getting the whole game stuck, especially around powerplay (is it resource management?)
-- In the finals, Trivia has no option to send the wrong answer, it refuses to accept it, and you stay on the 2x2 scren. A decorative lamp is added in the center / red tint + lamp color is shown to indicate correct/wrong answer
