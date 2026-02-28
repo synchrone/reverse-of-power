@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.game.remoteclient.BuildConfig
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentServerDiscoveryBinding
 import com.game.remoteclient.GameRemoteClientApplication
@@ -68,6 +69,15 @@ class ServerDiscoveryFragment : Fragment() {
 
         binding.rescanButton.setOnClickListener {
             startServerScan()
+        }
+
+        if (BuildConfig.DEBUG) {
+            binding.debugButton.visibility = View.VISIBLE
+            binding.debugButton.setOnClickListener {
+                findNavController().navigate(R.id.action_serverDiscovery_to_debugLauncher)
+            }
+        } else {
+            binding.debugButton.visibility = View.GONE
         }
 
         binding.manualEntryHeader.setOnClickListener {

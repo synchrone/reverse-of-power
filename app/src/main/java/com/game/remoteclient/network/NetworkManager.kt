@@ -311,12 +311,13 @@ class NetworkManager private constructor() {
         }
     }
 
-    fun sendTriviaAnswer(answerIndex: Int, answerTime: Double) {
-        Log.d(TAG, "Trivia answer: index=$answerIndex time=$answerTime")
+    fun sendTriviaAnswer(answerIndex: Int, answerTime: Double, numWrongAnswers: Int = 0) {
+        Log.d(TAG, "Trivia answer: index=$answerIndex time=$answerTime wrongAnswers=$numWrongAnswers")
         scope.launch {
             protocolClient?.sendMessage(ClientTriviaAnswer(
                 ChosenAnswerDisplayIndex = answerIndex,
-                AnswerTime = answerTime
+                AnswerTime = answerTime,
+                NumWrongAnswers = numWrongAnswers
             ))
         }
     }

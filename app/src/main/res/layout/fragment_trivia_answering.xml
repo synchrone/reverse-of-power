@@ -67,6 +67,7 @@
                         android:id="@+id/iceOverlay0"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:translationZ="8dp"
                         android:visibility="gone" />
                 </FrameLayout>
 
@@ -90,9 +91,22 @@
                         android:id="@+id/iceOverlay1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:translationZ="8dp"
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/finalsWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Finals! Wrong answers are rejected!"
+                android:textSize="14sp"
+                android:textStyle="bold|italic"
+                android:textColor="#FFDDDD"
+                android:gravity="center"
+                android:paddingVertical="4dp"
+                android:visibility="gone" />
 
             <!-- Bottom row -->
             <LinearLayout
@@ -122,6 +136,7 @@
                         android:id="@+id/iceOverlay2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:translationZ="8dp"
                         android:visibility="gone" />
                 </FrameLayout>
 
@@ -145,6 +160,7 @@
                         android:id="@+id/iceOverlay3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:translationZ="8dp"
                         android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
@@ -157,7 +173,7 @@
         android:id="@+id/wrongAnswerOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CCCC0000"
+        android:background="#66CC0000"
         android:visibility="gone" />
 
 </FrameLayout>
