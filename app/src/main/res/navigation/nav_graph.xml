@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_cameraCapture_to_avatarSelection"
             app:destination="@id/avatarSelectionFragment" />
+        <action
+            android:id="@+id/action_cameraCapture_to_waitingRoom"
+            app:destination="@id/waitingRoomFragment" />
     </fragment>
 
     <fragment

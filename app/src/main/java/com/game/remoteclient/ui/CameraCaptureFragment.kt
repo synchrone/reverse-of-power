@@ -17,11 +17,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.game.protocol.ServerAvatarStatusMessage
+import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
 import com.game.remoteclient.databinding.FragmentCameraCaptureBinding
 import com.game.remoteclient.utils.PermissionHelper
-import java.io.File
-import java.io.FileOutputStream
+import java.io.ByteArrayOutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -31,10 +33,15 @@ class CameraCaptureFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: CameraCaptureFragmentArgs by navArgs()
+    private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
 
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
     private var capturedBitmap: Bitmap? = null
+    private var photoConfirmed = false
+
+    private lateinit var avatarAdapter: AvatarAdapter
+    private var selectedAvatar: ServerAvatarStatusMessage? = null
 
     private val cameraPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -64,7 +71,10 @@ class CameraCaptureFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cameraExecutor = Executors.newSingleThreadExecutor()
-        setupListeners()
+        setupCameraListeners()
+        setupAvatarList()
+        setupContinueButton()
+        observeAvatars()
 
         if (PermissionHelper.hasCameraPermission(requireContext())) {
             startCamera()
@@ -73,7 +83,9 @@ class CameraCaptureFragment : Fragment() {
         }
     }
 
-    private fun setupListeners() {
+    // --- Camera ---
+
+    private fun setupCameraListeners() {
         binding.captureButton.setOnClickListener { capturePhoto() }
         binding.retakeButton.setOnClickListener { retakePhoto() }
         binding.confirmButton.setOnClickListener { confirmPhoto() }
@@ -150,30 +162,129 @@ class CameraCaptureFragment : Fragment() {
 
     private fun retakePhoto() {
         capturedBitmap = null
+        photoConfirmed = false
         binding.cameraPreview.visibility = View.VISIBLE
         binding.capturedImage.visibility = View.GONE
         binding.captureButton.visibility = View.VISIBLE
         binding.retakeButton.visibility = View.GONE
         binding.confirmButton.visibility = View.GONE
+        updateContinueButton()
     }
 
     private fun confirmPhoto() {
-        val bitmap = capturedBitmap ?: return
+        photoConfirmed = true
+        binding.retakeButton.visibility = View.VISIBLE
+        binding.confirmButton.visibility = View.GONE
+        updateContinueButton()
+    }
 
-        val file = File(requireContext().cacheDir, PHOTO_FILENAME)
-        FileOutputStream(file).use { out ->
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+    // --- Avatar Selection ---
+
+    private fun setupAvatarList() {
+        avatarAdapter = AvatarAdapter { avatar ->
+            onAvatarSelected(avatar)
         }
 
-        val action = CameraCaptureFragmentDirections.actionCameraCaptureToAvatarSelection(
-            playerName = args.playerName
-        )
+        binding.avatarRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = avatarAdapter
+        }
+    }
+
+    private fun observeAvatars() {
+        binding.loadingProgress.visibility = View.VISIBLE
+        binding.emptyText.visibility = View.GONE
+
+        networkManager.onAvatarsChanged = {
+            activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
+                updateAvatarList()
+            }
+        }
+
+        networkManager.onAvatarRequestResponse = { response ->
+            activity?.runOnUiThread {
+                if (_binding == null) return@runOnUiThread
+                if (response.AvatarID == selectedAvatar?.AvatarID) {
+                    updateContinueButton()
+                    if (!response.Available) {
+                        Toast.makeText(requireContext(), "Avatar unavailable", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        updateAvatarList()
+    }
+
+    private fun updateAvatarList() {
+        val avatars = networkManager.availableAvatars
+
+        binding.loadingProgress.visibility = View.GONE
+
+        if (avatars.isEmpty()) {
+            binding.emptyText.visibility = View.VISIBLE
+            binding.avatarRecyclerView.visibility = View.GONE
+        } else {
+            binding.emptyText.visibility = View.GONE
+            binding.avatarRecyclerView.visibility = View.VISIBLE
+            avatarAdapter.submitList(avatars.toList())
+        }
+
+        updateContinueButton()
+    }
+
+    private fun onAvatarSelected(avatar: ServerAvatarStatusMessage) {
+        selectedAvatar = avatar
+        avatarAdapter.setSelectedAvatar(avatar.AvatarID)
+        networkManager.requestAvatar(avatar.AvatarID)
+        updateContinueButton()
+    }
+
+    private fun updateContinueButton() {
+        val avatarReady = selectedAvatar != null && networkManager.isAvatarConfirmed
+        binding.continueButton.visibility = if (selectedAvatar != null) View.VISIBLE else View.GONE
+        binding.continueButton.isEnabled = avatarReady
+        binding.continueButton.alpha = if (avatarReady) 1.0f else 0.5f
+    }
+
+    private fun setupContinueButton() {
+        binding.continueButton.setOnClickListener {
+            proceedToWaitingRoom()
+        }
+    }
+
+    // --- Proceed ---
+
+    private fun encodeAvatarJpeg(source: Bitmap): ByteArray {
+        val scaled = Bitmap.createScaledBitmap(source, 512, 512, true)
+        val clean = Bitmap.createBitmap(512, 512, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(clean)
+        canvas.drawBitmap(scaled, 0f, 0f, null)
+        val outputStream = ByteArrayOutputStream()
+        clean.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+        if (scaled != source) scaled.recycle()
+        clean.recycle()
+        return outputStream.toByteArray()
+    }
+
+    private fun proceedToWaitingRoom() {
+        val imageData = capturedBitmap?.let { encodeAvatarJpeg(it) }
+            ?: resources.openRawResource(R.raw.avatar_stub).use { it.readBytes() }
+
+        val transferId = 2
+        val imageGuid = java.util.UUID.randomUUID().toString()
+        networkManager.sendImageProfileImage(imageData, imageGuid, transferId, args.playerName)
+
+        val action = CameraCaptureFragmentDirections.actionCameraCaptureToWaitingRoom()
         findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         cameraExecutor.shutdown()
+        networkManager.onAvatarsChanged = null
+        networkManager.onAvatarRequestResponse = null
         _binding = null
     }
 
