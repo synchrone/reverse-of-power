@@ -89,6 +89,9 @@
         <action
             android:id="@+id/action_holdingScreen_to_sortingAnswers"
             app:destination="@id/sortingAnswersFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_endOfGameFact"
+            app:destination="@id/endOfGameFactFragment" />
     </fragment>
 
     <fragment
@@ -136,6 +139,11 @@
         android:label="Sorting Answers" />
 
     <fragment
+        android:id="@+id/endOfGameFactFragment"
+        android:name="com.game.remoteclient.ui.EndOfGameFactFragment"
+        android:label="End of Game Fact" />
+
+    <fragment
         android:id="@+id/debugLauncherFragment"
         android:name="com.game.remoteclient.ui.DebugLauncherFragment"
         android:label="Debug Launcher">
@@ -154,6 +162,9 @@
         <action
             android:id="@+id/action_debugLauncher_to_cameraCapture"
             app:destination="@id/cameraCaptureFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_endOfGameFact"
+            app:destination="@id/endOfGameFactFragment" />
     </fragment>
 
 </navigation>

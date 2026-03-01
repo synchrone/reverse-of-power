@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="end_of_game_factoids">
+        <item>Someone born when the Wright Brothers made the first recorded flight in 1903 would have been just 65 years old when man landed on the moon.</item>
+        <item>Honey never spoils. Archaeologists have found 3,000-year-old honey in Egyptian tombs that was still perfectly edible.</item>
+        <item>Octopuses have three hearts, nine brains, and blue blood.</item>
+        <item>A group of flamingos is called a flamboyance.</item>
+        <item>The shortest war in history lasted 38 minutes, between Britain and Zanzibar in 1896.</item>
+        <item>Bananas are berries, but strawberries are not.</item>
+        <item>The Eiffel Tower can be 15 cm taller during the summer due to thermal expansion of the iron.</item>
+        <item>Venus is the only planet that spins clockwise.</item>
+        <item>Scotland\'s national animal is the unicorn.</item>
+        <item>A single cloud can weigh more than a million pounds.</item>
+        <item>There are more possible iterations of a game of chess than there are atoms in the known universe.</item>
+        <item>The total weight of all ants on Earth is roughly equal to the total weight of all humans.</item>
+        <item>Cleopatra lived closer in time to the Moon landing than to the construction of the Great Pyramid of Giza.</item>
+        <item>An octopus has no bones, allowing it to squeeze through any gap larger than its beak.</item>
+        <item>Light takes 8 minutes and 20 seconds to travel from the Sun to Earth.</item>
+        <item>The inventor of the Pringles can is buried in one.</item>
+        <item>A jiffy is an actual unit of time: one hundredth of a second.</item>
+        <item>The average person walks the equivalent of three times around the world in a lifetime.</item>
+        <item>Oxford University is older than the Aztec Empire.</item>
+        <item>The heart of a blue whale is so big that a small child could swim through its arteries.</item>
+        <item>Sharks are older than trees. Sharks have existed for around 400 million years, while trees have only been around for 350 million.</item>
+        <item>A teaspoonful of neutron star would weigh about 6 billion tons.</item>
+        <item>The Great Wall of China is not visible from space with the naked eye, but highways are.</item>
+        <item>Cows have best friends and get stressed when they are separated.</item>
+        <item>The national anthem of Spain has no words.</item>
+        <item>Wombat poop is cube-shaped to stop it from rolling away.</item>
+        <item>The average cumulus cloud weighs about 1.1 million pounds.</item>
+        <item>More people are killed each year by vending machines than by sharks.</item>
+        <item>A day on Venus is longer than a year on Venus.</item>
+        <item>The inventor of the fire hydrant is unknown because the patent was destroyed in a fire.</item>
+        <item>Humans share about 60% of their DNA with bananas.</item>
+        <item>The longest hiccuping spree lasted 68 years.</item>
+        <item>There are more stars in the universe than grains of sand on all the beaches on Earth.</item>
+        <item>Nintendo was founded in 1889, originally as a playing card company.</item>
+        <item>Hot water freezes faster than cold water. This is known as the Mpemba effect.</item>
+        <item>The tongue is the strongest muscle in the human body relative to its size.</item>
+        <item>A bolt of lightning is five times hotter than the surface of the Sun.</item>
+        <item>The shortest complete sentence in English is "Go."</item>
+        <item>Butterflies taste with their feet.</item>
+        <item>The dot over the letters i and j is called a tittle.</item>
+        <item>A group of porcupines is called a prickle.</item>
+        <item>The longest word you can type with only your left hand on a standard keyboard is "stewardesses."</item>
+        <item>Sloths can hold their breath longer than dolphins — up to 40 minutes.</item>
+        <item>The longest place name in the world is 85 letters long and is located in New Zealand.</item>
+        <item>A snail can sleep for three years.</item>
+        <item>The moon has moonquakes, similar to earthquakes on Earth.</item>
+        <item>Astronauts grow up to 2 inches taller in space because of the lack of gravity.</item>
+        <item>The fingerprints of a koala are so similar to humans that they have confused crime scene investigators.</item>
+        <item>Apples float in water because they are 25% air.</item>
+        <item>The longest recorded flight of a chicken is 13 seconds.</item>
+        <item>There are more fake flamingos in the world than real ones.</item>
+        <item>A crocodile cannot stick its tongue out.</item>
+        <item>An average person produces enough saliva in their lifetime to fill two swimming pools.</item>
+        <item>The inventor of the microwave oven only received $2 for his discovery.</item>
+        <item>A photon takes about 40,000 years to travel from the core of the Sun to its surface, but only 8 minutes to reach Earth.</item>
+        <item>Polar bears have black skin under their white fur.</item>
+        <item>The Hawaiian pizza was invented in Canada.</item>
+        <item>A blue whale\'s heartbeat can be detected from two miles away.</item>
+        <item>The smallest bone in the human body is in the ear and is called the stapes.</item>
+        <item>There are more trees on Earth than stars in the Milky Way.</item>
+        <item>Goldfish have a memory span of at least three months, not three seconds.</item>
+        <item>The electric chair was invented by a dentist.</item>
+        <item>Peanuts are not nuts. They are legumes.</item>
+        <item>A flea can jump up to 150 times its own body length.</item>
+        <item>The oldest known living tree is over 5,000 years old.</item>
+        <item>The total length of all the blood vessels in the human body is about 60,000 miles.</item>
+        <item>A group of owls is called a parliament.</item>
+        <item>The average person spends two weeks of their lifetime waiting for traffic lights to change.</item>
+        <item>Dolphins sleep with one eye open.</item>
+        <item>The first computer bug was an actual bug — a moth found in a Harvard computer in 1947.</item>
+        <item>Honey bees can recognize human faces.</item>
+        <item>The driest place on Earth is in Antarctica, not the Sahara.</item>
+        <item>A rhinoceros\'s horn is made of hair.</item>
+        <item>The chance of being born on February 29th is about 1 in 1,461.</item>
+        <item>Roman gladiators rarely fought to the death — they were too expensive to train.</item>
+        <item>The speed of a computer mouse is measured in Mickeys.</item>
+        <item>An ostrich\'s eye is bigger than its brain.</item>
+        <item>If you shuffle a deck of cards properly, the resulting order has probably never existed before.</item>
+        <item>The Sahara Desert is roughly the same size as the United States.</item>
+        <item>Crows can remember human faces and hold grudges.</item>
+        <item>The average lightning bolt could power a toaster for two months.</item>
+        <item>Seahorses are the only animals where the male gives birth.</item>
+        <item>The human nose can detect over 1 trillion different scents.</item>
+        <item>Rubber bands last longer when refrigerated.</item>
+        <item>A group of jellyfish is called a smack.</item>
+        <item>The longest English word without a vowel is "rhythms."</item>
+        <item>Elephants are the only animals that cannot jump.</item>
+        <item>The average pencil can draw a line 35 miles long.</item>
+        <item>A cockroach can live for a week without its head before dying of starvation.</item>
+        <item>The Mona Lisa has no eyebrows — it was fashionable to shave them in Renaissance Florence.</item>
+        <item>Sound travels about 4 times faster in water than in air.</item>
+        <item>The longest tennis match lasted 11 hours and 5 minutes over three days at Wimbledon in 2010.</item>
+        <item>Alaska is simultaneously the most northern, western, and eastern state in the United States.</item>
+        <item>The first oranges weren\'t orange — they were green.</item>
+        <item>Your body produces enough heat in 30 minutes to boil half a gallon of water.</item>
+        <item>A cat has 32 muscles in each ear.</item>
+        <item>The total surface area of human lungs is roughly equal to a tennis court.</item>
+        <item>Babies are born with about 300 bones, but adults only have 206.</item>
+        <item>A hummingbird weighs less than a penny.</item>
+        <item>The longest word in the English language with all its letters in alphabetical order is "almost."</item>
+        <item>More than 80% of the ocean is unexplored.</item>
+        <item>A single strand of spider silk is thinner than a human hair but stronger than steel of the same weight.</item>
+        <item>The King of Hearts is the only king in a deck of cards without a moustache.</item>
+        <item>Earth\'s rotation is gradually slowing — days were only about 6 hours long 4.5 billion years ago.</item>
+        <item>Pigeons can do math. They can learn abstract numerical rules.</item>
+        <item>The first alarm clock could only ring at 4 AM.</item>
+        <item>A rainbow seen from an airplane is a full circle.</item>
+        <item>The word "nerd" was first coined by Dr. Seuss in the book "If I Ran the Zoo" in 1950.</item>
+        <item>Every two minutes, we take more photos than all of humanity did in the 1800s.</item>
+        <item>Cats have fewer toes on their back paws than their front paws.</item>
+        <item>The shortest commercial flight in the world lasts about 57 seconds between two Scottish islands.</item>
+        <item>Cinnamon comes from the bark of a tree.</item>
+        <item>A bolt of lightning contains enough energy to toast 100,000 slices of bread.</item>
+        <item>The average cloud moves at about 30 miles per hour.</item>
+        <item>Greenland sharks can live for over 400 years.</item>
+        <item>The sum of all numbers on a roulette wheel is 666.</item>
+        <item>Armadillos nearly always give birth to identical quadruplets.</item>
+        <item>A single Google search uses about 0.3 watt-hours of electricity.</item>
+        <item>Bees can fly higher than Mount Everest.</item>
+        <item>The plastic tips on shoelaces are called aglets.</item>
+        <item>A mantis shrimp can punch with the force of a bullet.</item>
+        <item>There are more possible games of chess than atoms in the observable universe.</item>
+        <item>The longest hiccuping spree was experienced by Charles Osborne, who hiccupped for 68 years straight.</item>
+        <item>Avocados are toxic to birds.</item>
+        <item>The average person will spend six months of their life waiting for red lights to turn green.</item>
+        <item>In Switzerland, it is illegal to own just one guinea pig because they get lonely.</item>
+        <item>A group of crows is called a murder.</item>
+        <item>The human eye can distinguish about 10 million different colors.</item>
+        <item>The shortest war in recorded history was 38 to 45 minutes long between Britain and Zanzibar.</item>
+        <item>Coca-Cola would be green if food coloring was not added.</item>
+        <item>The world\'s oldest piece of chewing gum is over 9,000 years old.</item>
+        <item>A bolt of lightning can reach temperatures of roughly 30,000 Kelvin.</item>
+        <item>Venus rotates so slowly that a single day on Venus lasts 243 Earth days.</item>
+        <item>Humans glow in the dark, but the light is too faint for the human eye to detect.</item>
+        <item>The Pacific Ocean is larger than all the land on Earth combined.</item>
+        <item>Honey is the only food that includes all the substances necessary to sustain life.</item>
+        <item>There are about 10 quintillion insects alive on Earth at any given time.</item>
+        <item>The average human body contains enough iron to make a 3-inch nail.</item>
+        <item>Tardigrades can survive in the vacuum of space.</item>
+        <item>A jiffy is an actual unit of time — it is one-hundredth of a second.</item>
+        <item>Cats spend about 70% of their lives sleeping.</item>
+        <item>The unicorn is Scotland\'s national animal.</item>
+        <item>A flock of ravens is called an unkindness.</item>
+        <item>The average person produces about 25,000 quarts of saliva in a lifetime.</item>
+        <item>You are about 1 cm taller in the morning than in the evening.</item>
+        <item>The last letter added to the English alphabet was J.</item>
+        <item>Approximately 10% of all photographs ever taken were taken in the last 12 months.</item>
+        <item>A group of cats is called a clowder.</item>
+        <item>The space between your eyebrows is called the glabella.</item>
+        <item>Dragonflies have existed for over 300 million years.</item>
+        <item>There is a species of jellyfish that is biologically immortal.</item>
+        <item>The average person walks about 100,000 miles in their lifetime.</item>
+        <item>The longest bridge in the world is over 100 miles long and is in China.</item>
+        <item>Pigs cannot look up at the sky while standing.</item>
+        <item>A woodpecker\'s tongue wraps around the back of its skull.</item>
+        <item>The world\'s deepest postbox is in Susami Bay, Japan, at 10 meters underwater.</item>
+        <item>A chameleon\'s tongue can be twice as long as its body.</item>
+        <item>The longest nonstop flight by a bird lasted 11 days — achieved by the bar-tailed godwit.</item>
+        <item>Saturn would float if you could find a bathtub big enough because it is less dense than water.</item>
+        <item>The word "set" has the most definitions of any English word.</item>
+        <item>Lobsters taste with their feet.</item>
+        <item>A group of hippos is called a bloat.</item>
+        <item>Your stomach gets a new lining every three to four days.</item>
+        <item>The average person blinks about 15 to 20 times per minute.</item>
+        <item>The Amazon River once flowed in the opposite direction, from east to west.</item>
+        <item>Platypuses are venomous mammals.</item>
+        <item>The longest time between two twins being born is 87 days.</item>
+        <item>A housefly hums in the key of F.</item>
+        <item>The inventor of the Segway died by riding a Segway off a cliff.</item>
+        <item>Earth has had five mass extinction events.</item>
+        <item>A giraffe\'s tongue is about 18 to 20 inches long.</item>
+        <item>There are about 8.7 million species on Earth, and over 80% have not yet been discovered.</item>
+        <item>An ant can lift 50 times its own body weight.</item>
+        <item>The oldest known joke dates back to 1900 BC from ancient Sumer.</item>
+        <item>Mercury and Venus are the only planets in our solar system that have no moons.</item>
+        <item>A piece of paper can be folded no more than 7 times by hand.</item>
+        <item>The yo-yo is one of the oldest toys in the world, dating back to 500 BC in Greece.</item>
+        <item>Bananas are naturally slightly radioactive due to their potassium content.</item>
+        <item>A single lightning strike can power a 100-watt light bulb for about 3 months.</item>
+        <item>There are more atoms in a glass of water than glasses of water in all the oceans.</item>
+        <item>Starfish do not have brains.</item>
+        <item>The first computer programmer was Ada Lovelace, who wrote the first algorithm in the 1840s.</item>
+        <item>Ants do not have lungs — they breathe through tiny holes in their body called spiracles.</item>
+        <item>A newborn kangaroo is about the size of a lima bean.</item>
+        <item>Humans and giraffes have the same number of neck vertebrae — seven.</item>
+        <item>The lighter was invented before the match.</item>
+        <item>A ball of glass will bounce higher than a ball of rubber.</item>
+        <item>The lifespan of a taste bud is about 10 days.</item>
+        <item>Canada has more lakes than the rest of the world\'s countries combined.</item>
+        <item>The word "alphabet" comes from the first two letters of the Greek alphabet: alpha and beta.</item>
+        <item>There is a town in Norway called Hell, and it freezes over every winter.</item>
+        <item>Otters hold hands while sleeping so they don\'t drift apart.</item>
+        <item>The first recorded use of OMG was in a 1917 letter to Winston Churchill.</item>
+        <item>A day on Mercury lasts 59 Earth days.</item>
+        <item>Koalas sleep up to 22 hours a day.</item>
+        <item>The deepest point in the ocean is about 36,000 feet below the surface.</item>
+        <item>The original name for the search engine Google was Backrub.</item>
+        <item>A cubic inch of human bone can bear a load of about 19,000 pounds.</item>
+        <item>The Voyager 1 spacecraft is the farthest human-made object from Earth.</item>
+        <item>Dolphins have names for each other and respond when called.</item>
+        <item>A bolt of lightning can strike the same place twice — the Empire State Building is hit about 23 times per year.</item>
+        <item>The total weight of all the bacteria in your body is about 2 to 5 pounds.</item>
+        <item>The oldest known recipe is for beer, from ancient Sumeria around 4,000 years ago.</item>
+        <item>Spiders can survive underwater for hours by trapping air bubbles around their bodies.</item>
+        <item>Horses can sleep standing up thanks to a special locking mechanism in their legs.</item>
+        <item>It rains diamonds on Jupiter and Saturn.</item>
+        <item>The world\'s smallest mammal is the bumblebee bat, weighing less than a penny.</item>
+        <item>Your brain uses about 20% of your body\'s total energy despite being only 2% of your body weight.</item>
+        <item>The Statue of Liberty\'s index finger is 8 feet long.</item>
+        <item>Octopuses have been observed using coconut shells as portable shelters.</item>
+        <item>A cubic mile of seawater contains about 25 pounds of gold.</item>
+        <item>There are about 200 corpses on Mount Everest, and they are used as trail markers.</item>
+        <item>The strongest muscle in the human body is the masseter, or jaw muscle.</item>
+        <item>Cows produce more milk when listening to slow music.</item>
+        <item>A frog can\'t swallow without blinking because it uses its eyes to push food down its throat.</item>
+        <item>The inventor of the Pringles container was buried in one per his wishes.</item>
+        <item>A caterpillar has more muscles than a human — about 4,000 compared to roughly 650.</item>
+        <item>Lake Baikal in Russia contains about 20% of the world\'s unfrozen fresh water.</item>
+        <item>There are more ways to arrange a deck of cards than there are atoms on Earth.</item>
+        <item>The first toy to be advertised on television was Mr. Potato Head.</item>
+        <item>Giraffes only need about 30 minutes of sleep per day.</item>
+        <item>The planet Uranus was originally going to be called Georgium Sidus, after King George III.</item>
+        <item>A mosquito has 47 teeth.</item>
+        <item>The smell of freshly cut grass is actually a plant distress signal.</item>
+        <item>Sunflowers follow the sun across the sky, a behavior called heliotropism.</item>
+        <item>You can hear a blue whale\'s heartbeat from over 2 miles away.</item>
+        <item>The first email was sent in 1971, but nobody remembers what it said.</item>
+        <item>Only female mosquitoes bite — they need the protein from blood for their eggs.</item>
+        <item>The largest living organism is a honey fungus in Oregon spanning 2,385 acres.</item>
+        <item>A person\'s DNA could stretch from the Sun to Pluto and back 17 times if uncoiled.</item>
+        <item>The word "lollipop" was added to the Oxford English Dictionary in 1784.</item>
+        <item>Ancient Romans used crushed mouse brains as toothpaste.</item>
+        <item>Flamingos can only eat with their heads upside down.</item>
+        <item>There are about 7,000 languages spoken in the world today.</item>
+        <item>The Earth weighs approximately 13.17 septillion pounds.</item>
+        <item>A sneeze travels at about 100 miles per hour.</item>
+        <item>Cleopatra spoke at least nine languages.</item>
+        <item>The color orange was named after the fruit, not the other way around.</item>
+        <item>There is a basketball court on the top floor of the U.S. Supreme Court Building.</item>
+        <item>A group of parrots is called a pandemonium.</item>
+        <item>The average person has about 67 different species of bacteria in their belly button.</item>
+        <item>Glaciers and ice sheets hold about 69% of the world\'s freshwater.</item>
+        <item>A cockroach can hold its breath for 40 minutes.</item>
+        <item>The Moon is slowly drifting away from Earth at about 1.5 inches per year.</item>
+        <item>Turtles can breathe through their rear ends.</item>
+        <item>The shortest verse in the Bible is "Jesus wept."</item>
+        <item>Your corneas are the only part of your body that has no blood supply — they get oxygen directly from the air.</item>
+        <item>A single teaspoon of soil contains more organisms than there are people on Earth.</item>
+        <item>The world record for the most T-shirts worn at once is 260.</item>
+        <item>Pineapples take about two years to grow.</item>
+        <item>Astronaut footprints on the Moon will remain there for at least 100 million years.</item>
+    </string-array>
+</resources>

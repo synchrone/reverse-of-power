@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ActivePowerPlay
+import com.game.protocol.ClientEndOfGameFactCommandMessage
 import com.game.protocol.ColorTint
 import com.game.protocol.PowerPlay
 import com.game.protocol.PowerPlayPlayer
@@ -93,6 +94,7 @@ class DebugLauncherFragment : Fragment() {
         binding.btnLinking.setOnClickListener { launchLinking() }
         binding.btnSorting.setOnClickListener { launchSorting() }
         binding.btnAvatarSelection.setOnClickListener { launchAvatarSelection() }
+        binding.btnEndOfGameFact.setOnClickListener { launchEndOfGameFact() }
     }
 
     private fun setupStepper(powerType: Int, minus: View, plus: View, display: TextView) {
@@ -238,6 +240,15 @@ class DebugLauncherFragment : Fragment() {
             )
         )
         findNavController().navigate(R.id.action_debugLauncher_to_sortingAnswers)
+    }
+
+    private fun launchEndOfGameFact() {
+        networkManager.pendingEndOfGameFact = ClientEndOfGameFactCommandMessage(
+            action = 32,
+            time = 0.0,
+            FactNumber = (0..255).random()
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_endOfGameFact)
     }
 
     private fun launchAvatarSelection() {
