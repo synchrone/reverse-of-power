@@ -284,15 +284,33 @@ class PowerPlayFragment : Fragment() {
             targetSlotIndices = listOf(player.SlotIndex)
         )
 
-        // Highlight selected target, dim others
+        // Highlight selected target with glow, dim others
         for (i in 0 until binding.targetContainer.childCount) {
             val child = binding.targetContainer.getChildAt(i)
             val nameView = child.findViewById<TextView>(R.id.targetName)
             if (nameView.text == player.Name) {
+                // Show glow ring
+                val glowRing = child.findViewById<View>(R.id.targetGlowRing)
+                glowRing.visibility = View.VISIBLE
+                glowRing.alpha = 0f
+                glowRing.animate().alpha(1f).setDuration(300).start()
+
+                // Show spotlight
+                val spotlight = child.findViewById<View>(R.id.targetSpotlight)
+                spotlight.visibility = View.VISIBLE
+                spotlight.alpha = 0f
+                spotlight.scaleX = 0.5f
+                spotlight.scaleY = 0.5f
+                spotlight.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(400).start()
+
+                // Pulse the glow ring
                 val photo = child.findViewById<ImageView>(R.id.targetPhoto)
-                photo.animate().scaleX(1.15f).scaleY(1.15f).setDuration(200).start()
+                photo.animate().scaleX(1.05f).scaleY(1.05f).setDuration(300).start()
+                glowRing.animate().alpha(1f).setDuration(300).withEndAction {
+                    pulseGlow(glowRing)
+                }.start()
             } else {
-                child.alpha = 0.3f
+                child.animate().alpha(0.3f).setDuration(300).start()
             }
         }
     }
@@ -310,6 +328,22 @@ class PowerPlayFragment : Fragment() {
 
     private fun navigateToHoldingScreen() {
         findNavController().popBackStack(R.id.holdingScreenFragment, false)
+    }
+
+    private fun pulseGlow(view: View) {
+        if (_binding == null) return
+        view.animate()
+            .scaleX(1.1f).scaleY(1.1f).alpha(0.7f)
+            .setDuration(800)
+            .withEndAction {
+                if (_binding == null) return@withEndAction
+                view.animate()
+                    .scaleX(1f).scaleY(1f).alpha(1f)
+                    .setDuration(800)
+                    .withEndAction { pulseGlow(view) }
+                    .start()
+            }
+            .start()
     }
 
     private fun getPowerPlayInfo(powerType: Int): Pair<String, String> {
