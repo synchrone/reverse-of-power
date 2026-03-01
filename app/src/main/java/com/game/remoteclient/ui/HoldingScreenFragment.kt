@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.game.protocol.ClientEndOfGameFactCommandMessage
 import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.ColorTint
@@ -40,6 +41,7 @@ class HoldingScreenFragment : Fragment() {
     private var powerPlayCb: ((ServerBeginPowerPlayPhase) -> Unit)? = null
     private var linkingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
     private var sortingCb: ((ServerBeginSortingAnsweringPhase) -> Unit)? = null
+    private var endOfGameFactCb: ((ClientEndOfGameFactCommandMessage) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,6 +89,9 @@ class HoldingScreenFragment : Fragment() {
         sortingCb = { _ ->
             activity?.runOnUiThread { navigateToSortingAnswers() }
         }
+        endOfGameFactCb = { _ ->
+            activity?.runOnUiThread { navigateToEndOfGameFact() }
+        }
 
         networkManager.onHoldingScreenMessage = holdingScreenCb
         networkManager.onColourMessage = colourCb
@@ -96,6 +101,7 @@ class HoldingScreenFragment : Fragment() {
         networkManager.onPowerPlayMessage = powerPlayCb
         networkManager.onLinkingMessage = linkingCb
         networkManager.onSortingMessage = sortingCb
+        networkManager.onEndOfGameFact = endOfGameFactCb
     }
 
     private fun navigateToCategorySelection() {
@@ -120,6 +126,10 @@ class HoldingScreenFragment : Fragment() {
 
     private fun navigateToSortingAnswers() {
         findNavController().navigate(R.id.action_holdingScreen_to_sortingAnswers)
+    }
+
+    private fun navigateToEndOfGameFact() {
+        findNavController().navigate(R.id.action_holdingScreen_to_endOfGameFact)
     }
 
     private fun navigateToNameEntry() {
@@ -175,6 +185,7 @@ class HoldingScreenFragment : Fragment() {
         if (networkManager.onPowerPlayMessage === powerPlayCb) networkManager.onPowerPlayMessage = null
         if (networkManager.onLinkingMessage === linkingCb) networkManager.onLinkingMessage = null
         if (networkManager.onSortingMessage === sortingCb) networkManager.onSortingMessage = null
+        if (networkManager.onEndOfGameFact === endOfGameFactCb) networkManager.onEndOfGameFact = null
         _binding = null
     }
 }
