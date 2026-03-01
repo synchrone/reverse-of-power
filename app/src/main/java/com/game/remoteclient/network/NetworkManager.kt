@@ -6,6 +6,10 @@ import android.os.Build
 import android.os.PowerManager
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
+import com.game.protocol.ClientEliminatingAnswer
+import com.game.protocol.ClientToServerMatchingAnswer
+import com.game.protocol.ClientToServerOngoingChallengeMessage
+import com.game.protocol.PrototypeClientToServerMissingLetterAnswer
 import com.game.protocol.ClientEndOfGameFactCommandMessage
 import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ClientPlayerProfileMessage
@@ -14,8 +18,11 @@ import com.game.protocol.ContinuePressedResponseMessage
 import com.game.protocol.ClientQuizCommandMessage
 import com.game.protocol.ClientRequestAvatarMessage
 import com.game.protocol.ClientCategorySelectOverride
+import com.game.protocol.ClientToServerOrderingAnswer
 import com.game.protocol.ClientLinkingAnswer
 import com.game.protocol.ClientLinkingAnswerEntry
+import com.game.protocol.LinkingAnswer
+import com.game.protocol.ServerBeginOrderingAnsweringPhase
 import com.game.protocol.ClientSortingAnswer
 import com.game.protocol.ClientSortingAnswerEntry
 import com.game.protocol.ClientPowerPlayChoice
@@ -28,6 +35,9 @@ import com.game.protocol.ServerAvatarRequestResponseMessage
 import com.game.protocol.ServerAvatarStatusMessage
 import com.game.protocol.ServerBeginCategorySelectOverride
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
+import com.game.protocol.ServerBeginEliminatingAnsweringPhase
+import com.game.protocol.ServerBeginMatchingAnsweringPhase
+import com.game.protocol.ServerBeginMissingLetterAnsweringPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
@@ -77,7 +87,11 @@ class NetworkManager private constructor() {
     var onPowerPlayMessage: ((ServerBeginPowerPlayPhase) -> Unit)? = null
     var onPowerPlayRequest: (() -> Unit)? = null
     var onLinkingMessage: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
+    var onOrderingMessage: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
     var onSortingMessage: ((ServerBeginSortingAnsweringPhase) -> Unit)? = null
+    var onEliminationMessage: ((ServerBeginEliminatingAnsweringPhase) -> Unit)? = null
+    var onMissingLetterMessage: ((ServerBeginMissingLetterAnsweringPhase) -> Unit)? = null
+    var onMatchingMessage: ((ServerBeginMatchingAnsweringPhase) -> Unit)? = null
     var onCategoryOverrideMessage: ((ServerBeginCategorySelectOverride) -> Unit)? = null
     var onStopCategoryOverride: ((ServerStopCategorySelectOverride) -> Unit)? = null
     var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
@@ -103,11 +117,16 @@ class NetworkManager private constructor() {
     // Pending linking for when message arrives before fragment is ready
     var pendingLinking: ServerBeginLinkingAnsweringPhase? = null
     var pendingSorting: ServerBeginSortingAnsweringPhase? = null
+    var pendingElimination: ServerBeginEliminatingAnsweringPhase? = null
+    var pendingMissingLetter: ServerBeginMissingLetterAnsweringPhase? = null
+    var pendingMatching: ServerBeginMatchingAnsweringPhase? = null
     // Pending category override for when message arrives before fragment is ready
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
     // Pending category select request for when message arrives before fragment is ready
     var pendingCategorySelectRequest: Boolean = false
     var pendingEndOfGameFact: ClientEndOfGameFactCommandMessage? = null
+
+    // Whether we're connected to Decades (vs KIP)
 
     // Received images indexed by GUID
     val receivedImages = mutableMapOf<String, ByteArray>()
@@ -154,6 +173,7 @@ class NetworkManager private constructor() {
         try {
             _gameState.value = GameState.CONNECTING
             currentServer = server
+            availableAvatars.clear()
 
             // Create protocol client
             protocolClient = GameProtocolClient(deviceUID, server.ipAddress, server.port)
@@ -212,9 +232,15 @@ class NetworkManager private constructor() {
             is ServerAvatarStatusMessage -> {
                 val existingIndex = availableAvatars.indexOfFirst { it.AvatarID == message.AvatarID }
                 if (existingIndex >= 0) {
+                    // Already known — update status
                     availableAvatars[existingIndex] = message
-                } else {
+                } else if (message.Available) {
+                    // New avatar that's available — add it
                     availableAvatars.add(message)
+                } else {
+                    // New avatar arriving as unavailable — skip (cross-game avatar)
+                    Log.d(TAG, "Skipping unavailable avatar: ${message.AvatarID}")
+                    return true
                 }
                 onAvatarsChanged?.invoke()
             }
@@ -272,9 +298,46 @@ class NetworkManager private constructor() {
                 onLinkingMessage?.invoke(message)
             }
 
+            is ServerBeginOrderingAnsweringPhase -> {
+                // Convert ordering data to linking format for the fragment
+                val linkingAnswers = message.OrderingAnswerData.flatMapIndexed { matchIndex, data ->
+                    data.WordsInCorrectOrder.mapIndexed { direction, word ->
+                        LinkingAnswer(
+                            DisplayText = word,
+                            AnswerID = "ORD_${matchIndex}_$direction",
+                            MatchIndex = matchIndex,
+                            Direction = direction
+                        )
+                    }
+                }
+                val converted = ServerBeginLinkingAnsweringPhase(
+                    QuestionID = message.ChallengeId,
+                    QuestionText = message.QuestionText,
+                    QuestionDuration = message.QuestionDuration,
+                    LinkingAnswers = linkingAnswers
+                )
+                pendingLinking = converted
+                onOrderingMessage?.invoke(converted)
+            }
+
             is ServerBeginSortingAnsweringPhase -> {
                 pendingSorting = message
                 onSortingMessage?.invoke(message)
+            }
+
+            is ServerBeginEliminatingAnsweringPhase -> {
+                pendingElimination = message
+                onEliminationMessage?.invoke(message)
+            }
+
+            is ServerBeginMissingLetterAnsweringPhase -> {
+                pendingMissingLetter = message
+                onMissingLetterMessage?.invoke(message)
+            }
+
+            is ServerBeginMatchingAnsweringPhase -> {
+                pendingMatching = message
+                onMatchingMessage?.invoke(message)
             }
 
             is ServerBeginCategorySelectOverride -> {
@@ -348,12 +411,56 @@ class NetworkManager private constructor() {
         }
     }
 
+    fun sendOrderingAnswer(correctCount: Int) {
+        Log.d(TAG, "Ordering answer: $correctCount correct")
+        scope.launch {
+            protocolClient?.sendMessage(ClientToServerOrderingAnswer(
+                ClientOrderingCorrectAnswerCount = correctCount
+            ))
+        }
+    }
+
     fun sendSortingAnswer(correctCount: Int, answers: List<ClientSortingAnswerEntry>) {
         Log.d(TAG, "Sorting answer: $correctCount correct, ${answers.size} attempts")
         scope.launch {
             protocolClient?.sendMessage(ClientSortingAnswer(
                 ClientSortingCorrectAnswerCount = correctCount,
                 SortingAnswers = answers
+            ))
+        }
+    }
+
+    fun sendEliminationAnswer(correctCount: Int) {
+        Log.d(TAG, "Elimination answer: $correctCount correct")
+        scope.launch {
+            protocolClient?.sendMessage(ClientEliminatingAnswer(
+                ClientEliminatingCorrectAnswerCount = correctCount
+            ))
+        }
+    }
+
+    fun sendOngoingChallengeUpdate(correctCount: Int) {
+        scope.launch {
+            protocolClient?.sendMessage(ClientToServerOngoingChallengeMessage(
+                CorrectAnswerCount = correctCount
+            ))
+        }
+    }
+
+    fun sendMatchingAnswer(correctCount: Int) {
+        Log.d(TAG, "Matching answer: $correctCount correct")
+        scope.launch {
+            protocolClient?.sendMessage(ClientToServerMatchingAnswer(
+                ClientMatchingCorrectAnswerCount = correctCount
+            ))
+        }
+    }
+
+    fun sendMissingLetterAnswer(correctCount: Int) {
+        Log.d(TAG, "Missing letter answer: $correctCount correct")
+        scope.launch {
+            protocolClient?.sendMessage(PrototypeClientToServerMissingLetterAnswer(
+                ClientMissingLetterCorrectAnswerCount = correctCount
             ))
         }
     }

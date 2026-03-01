@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Timer -->
+    <!-- Counter -->
     <TextView
         android:id="@+id/timerText"
         android:layout_width="wrap_content"
@@ -30,79 +30,83 @@
         android:paddingHorizontal="16dp"
         android:paddingVertical="4dp"
         android:layout_marginTop="8dp"
-        tools:text="15 to go" />
+        tools:text="11 to go" />
 
-    <!-- Top-left half-circle (Direction=1) -->
-    <FrameLayout
-        android:id="@+id/topSlot0"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+    <!-- Circle 0: upper-left -->
+    <TextView
+        android:id="@+id/slot0"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
         android:layout_gravity="start|top"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp"
-        android:rotation="-12">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#F0EAD6"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="Walk" />
 
-        <TextView
-            android:id="@+id/topText0"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_top"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="James Bond" />
-    </FrameLayout>
-
-    <!-- Top-right half-circle (Direction=1) -->
-    <FrameLayout
-        android:id="@+id/topSlot1"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
+    <!-- Circle 1: upper-right -->
+    <TextView
+        android:id="@+id/slot1"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
         android:layout_gravity="end|top"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="16dp"
-        android:rotation="12">
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#F0EAD6"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="Way" />
 
-        <TextView
-            android:id="@+id/topText1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_top"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="Sarah Connor" />
-    </FrameLayout>
+    <!-- Circle 2: lower-center -->
+    <TextView
+        android:id="@+id/slot2"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#F0EAD6"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        tools:text="This" />
 
-    <!-- Top-center half-circle (Direction=1) -->
-    <FrameLayout
-        android:id="@+id/topSlot2"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal|top"
-        android:layout_marginTop="20dp"
-        android:rotation="3"
-        android:visibility="invisible">
-
-        <TextView
-            android:id="@+id/topText2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_top"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="Batman" />
-    </FrameLayout>
+    <!-- Circle 3: lower-left (only for 4-item rounds) -->
+    <TextView
+        android:id="@+id/slot3"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_gravity="start|bottom"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#F0EAD6"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:text="One" />
 
     <!-- Instruction text -->
     <TextView
@@ -116,78 +120,6 @@
         android:background="#30000000"
         android:paddingHorizontal="20dp"
         android:paddingVertical="6dp" />
-
-    <!-- Bottom-left half-circle (Direction=2) -->
-    <FrameLayout
-        android:id="@+id/bottomSlot0"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_gravity="start|bottom"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="24dp"
-        android:rotation="8">
-
-        <TextView
-            android:id="@+id/bottomText0"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_bottom"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="The Joker" />
-    </FrameLayout>
-
-    <!-- Bottom-right half-circle (Direction=2) -->
-    <FrameLayout
-        android:id="@+id/bottomSlot1"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_gravity="end|bottom"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="16dp"
-        android:rotation="-8">
-
-        <TextView
-            android:id="@+id/bottomText1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_bottom"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="Dr. No" />
-    </FrameLayout>
-
-    <!-- Bottom-center half-circle (Direction=2) -->
-    <FrameLayout
-        android:id="@+id/bottomSlot2"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="20dp"
-        android:rotation="-3"
-        android:visibility="invisible">
-
-        <TextView
-            android:id="@+id/bottomText2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/half_circle_bottom"
-            android:backgroundTint="#F0EAD6"
-            android:padding="8dp"
-            tools:text="Lex Luthor" />
-    </FrameLayout>
 
     <!-- Feedback overlay -->
     <FrameLayout
@@ -214,7 +146,7 @@
                 android:textStyle="bold"
                 android:textColor="#333333"
                 android:gravity="center"
-                tools:text="Superman" />
+                tools:text="Walk This Way" />
 
             <TextView
                 android:id="@+id/feedbackBottomText"
@@ -225,7 +157,8 @@
                 android:textColor="#333333"
                 android:gravity="center"
                 android:layout_marginTop="8dp"
-                tools:text="Lex Luthor" />
+                android:visibility="gone"
+                tools:text="" />
 
         </LinearLayout>
 

@@ -14,8 +14,7 @@ class GameProtocolClient(
     private val serverHostStr: String,
     private val serverPort: Int = 9066,
     private val listenHostStr: String = "0.0.0.0",
-    private val listenPort: Int = 9060,
-    val decades: Boolean = false
+    private val listenPort: Int = 9060
     ) {
     private val TAG = "GameProtocolClient"
     private var isConnected: Boolean = false
@@ -23,7 +22,7 @@ class GameProtocolClient(
     private var serverSocket: DatagramSocket? = null
     private var clientSocket: DatagramSocket? = null
 
-    private val encoder = ProtocolEncoder(decades = decades)
+    private val encoder = ProtocolEncoder()
     private val decoder = ProtocolDecoder()
     private var lastRcvMessageId: Int? = null
     private var connectionDeferred: CompletableDeferred<Unit>? = null
@@ -64,7 +63,9 @@ class GameProtocolClient(
             while (testMode || serverSocket?.isClosed == false) {
                 if (lastRcvMessageId == null && connectionError == null) {
                     sendConnectionRequest()
-                    sendDeviceUID(deviceUID)
+                    // send both protocol magic versions, since we don't know if we're connecting to decades at this point
+                    sendDeviceUID(deviceUID, false)
+                    sendDeviceUID(deviceUID, true)
                 } else if (lastRcvMessageId != null) {
                     sendAck(lastRcvMessageId!!)
                 }
@@ -88,8 +89,8 @@ class GameProtocolClient(
         sendRawUDP(encoder.encodeConnectionRequest())
     }
 
-    fun sendDeviceUID(uid: String, theByte: Byte = 0x63) = synchronized(sendLock){
-        sendRawUDP(encoder.encodeDeviceUID(uid, theByte))
+    fun sendDeviceUID(uid: String, decades: Boolean) = synchronized(sendLock){
+        sendRawUDP(encoder.encodeDeviceUID(uid, decades))
     }
 
     // ==================== Image Transfer ====================
@@ -108,12 +109,14 @@ class GameProtocolClient(
     }
 
     private fun sendAck(messageId: Int) = synchronized(sendLock) {
-//        Log.d(TAG, "> ACK $messageId")
+        Log.d(TAG, "> ACK $messageId")
         sendRawUDP(encoder.encodeAck(messageId))
     }
 
     private fun sendRawUDP(data: ByteArray) {
+//        Log.d(TAG, "> UDP ${data.size}b [${data.toHex()}]")
         onPacketSend?.invoke(data)
+
         if (testMode) return
         val packet = DatagramPacket(
             data,
@@ -166,7 +169,7 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.Nack -> {
-                Log.e(TAG, "< NACK ${decoded.messageId}: ${decoded.payload.toHex()}")
+//                Log.e(TAG, "< NACK ${decoded.messageId}: ${decoded.payload.toHex()}")
             }
 
             is DecodedPacket.Fragment -> {
@@ -183,7 +186,7 @@ class GameProtocolClient(
                         val handledByProtocol = handleProtocolMessage(message)
                         val handledByUI = onMessageReceived?.invoke(message) ?: false
                         if (!handledByProtocol && !handledByUI) {
-                            Log.w(TAG, "< Unhandled message: ${message.TypeString}")
+                            Log.w(TAG, "< Unhandled message: $message")
                         }
                     }
                 }
@@ -253,6 +256,7 @@ class GameProtocolClient(
         when (message) {
             is InterfaceVersionMessage -> {
                 Log.d(TAG, "Server version: ${message.InterfaceVersion}")
+                encoder.decades = message.InterfaceVersion.startsWith("KIP2_")
             }
 
             is SessionStateMessage -> {

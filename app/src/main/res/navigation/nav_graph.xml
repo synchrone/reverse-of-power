@@ -87,11 +87,23 @@
             android:id="@+id/action_holdingScreen_to_linkingAnswers"
             app:destination="@id/linkingAnswersFragment" />
         <action
+            android:id="@+id/action_holdingScreen_to_linkingPairs"
+            app:destination="@id/linkingPairsFragment" />
+        <action
             android:id="@+id/action_holdingScreen_to_sortingAnswers"
             app:destination="@id/sortingAnswersFragment" />
         <action
             android:id="@+id/action_holdingScreen_to_endOfGameFact"
             app:destination="@id/endOfGameFactFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_eliminationAnswering"
+            app:destination="@id/eliminationAnsweringFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_missingLetterAnswering"
+            app:destination="@id/missingLetterAnsweringFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_matchingAnswering"
+            app:destination="@id/matchingAnsweringFragment" />
     </fragment>
 
     <fragment
@@ -134,9 +146,29 @@
         android:label="Linking Answers" />
 
     <fragment
+        android:id="@+id/linkingPairsFragment"
+        android:name="com.game.remoteclient.ui.LinkingPairsFragment"
+        android:label="Linking Pairs" />
+
+    <fragment
         android:id="@+id/sortingAnswersFragment"
         android:name="com.game.remoteclient.ui.SortingAnswersFragment"
         android:label="Sorting Answers" />
+
+    <fragment
+        android:id="@+id/eliminationAnsweringFragment"
+        android:name="com.game.remoteclient.ui.EliminationAnsweringFragment"
+        android:label="Elimination Answering" />
+
+    <fragment
+        android:id="@+id/missingLetterAnsweringFragment"
+        android:name="com.game.remoteclient.ui.MissingLetterAnsweringFragment"
+        android:label="Missing Letter" />
+
+    <fragment
+        android:id="@+id/matchingAnsweringFragment"
+        android:name="com.game.remoteclient.ui.MatchingAnsweringFragment"
+        android:label="Matching" />
 
     <fragment
         android:id="@+id/endOfGameFactFragment"
@@ -154,6 +186,9 @@
             android:id="@+id/action_debugLauncher_to_linkingAnswers"
             app:destination="@id/linkingAnswersFragment" />
         <action
+            android:id="@+id/action_debugLauncher_to_linkingPairs"
+            app:destination="@id/linkingPairsFragment" />
+        <action
             android:id="@+id/action_debugLauncher_to_sortingAnswers"
             app:destination="@id/sortingAnswersFragment" />
         <action
@@ -165,6 +200,15 @@
         <action
             android:id="@+id/action_debugLauncher_to_endOfGameFact"
             app:destination="@id/endOfGameFactFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_eliminationAnswering"
+            app:destination="@id/eliminationAnsweringFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_missingLetterAnswering"
+            app:destination="@id/missingLetterAnsweringFragment" />
+        <action
+            android:id="@+id/action_debugLauncher_to_matchingAnswering"
+            app:destination="@id/matchingAnsweringFragment" />
     </fragment>
 
 </navigation>

@@ -248,8 +248,14 @@ class ProtocolDecoder {
                     json.decodeFromString<ServerBeginLinkingAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginSortingAnsweringPhase") ->
                     json.decodeFromString<ServerBeginSortingAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginEliminatingAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginEliminatingAnsweringPhase>(jsonStr)
                 typeString.contains("ServerBeginMissingLetterAnsweringPhase") ->
                     json.decodeFromString<ServerBeginMissingLetterAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginMatchingAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginMatchingAnsweringPhase>(jsonStr)
+                typeString.contains("ServerBeginOrderingAnsweringPhase") ->
+                    json.decodeFromString<ServerBeginOrderingAnsweringPhase>(jsonStr)
                 typeString.contains("PrototypeClientToServerMissingLetterAnswer") ->
                     json.decodeFromString<PrototypeClientToServerMissingLetterAnswer>(jsonStr)
                 typeString.contains("ServerBeginPowerPlayPhase") ->

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Scattered letters -->
+    <!-- A -->
+    <path
+        android:pathData="M18,48 L28,20 L38,48 M22,40 L34,40"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- B -->
+    <path
+        android:pathData="M55,20 L55,48 M55,20 L68,20 A6,6 0 0,1 68,34 L55,34 L70,34 A6,6 0 0,1 70,48 L55,48"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round" />
+
+    <!-- C -->
+    <path
+        android:pathData="M105,25 A15,15 0 1,0 105,45"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round" />
+
+    <!-- Scatter arrows -->
+    <path
+        android:pathData="M35,60 L20,80 M60,55 L60,80 M85,60 L100,80"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Arrow tips -->
+    <path
+        android:pathData="M20,80 L25,72 M20,80 L28,82 M60,80 L55,72 M60,80 L65,72 M100,80 L95,72 M100,80 L92,82"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+</vector>

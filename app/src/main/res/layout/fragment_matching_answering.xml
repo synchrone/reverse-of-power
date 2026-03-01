@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.game.remoteclient.ui.SunburstBackgroundView
+        android:id="@+id/sunburstBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.game.remoteclient.ui.WhirlpoolView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 3D Hexagonal Column (OpenGL) -->
+    <com.game.remoteclient.ui.HexColumnView
+        android:id="@+id/hexColumn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Counter -->
+    <TextView
+        android:id="@+id/counterText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:shadowColor="#80000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="3"
+        android:background="#40000000"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        android:layout_marginTop="8dp"
+        tools:text="15 to go" />
+
+    <!-- Question text -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="40dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="4dp"
+        android:gravity="center"
+        tools:text="Western movie: &quot;The Magnificent __&quot;" />
+
+    <!-- Instruction text -->
+    <TextView
+        android:id="@+id/instructionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:background="#60000000"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="8dp"
+        android:text="Swipe to find, tap to match" />
+
+</FrameLayout>
