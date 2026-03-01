@@ -1,9 +1,13 @@
 package com.game.remoteclient.ui
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Shader
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -14,53 +18,95 @@ class LinkingLineView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private var startX = 0f
-    private var startY = 0f
-    private var endX = 0f
-    private var endY = 0f
+    private val dragPath = Path()
     private var isDrawing = false
 
-    private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#2196F3")
-        strokeWidth = 16f
+    // Persistent chain lines (connected pairs)
+    private val chainLines = mutableListOf<FloatArray>() // [x1, y1, x2, y2]
+
+    private val stripeShader: BitmapShader by lazy { createStripeShader() }
+
+    // Outline paint (drawn first, slightly thicker, gives border)
+    private val outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.parseColor("#2299AA")
+        strokeWidth = 24f
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
+    }
+
+    // Striped fill paint
+    private val stripePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        strokeWidth = 18f
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        strokeJoin = Paint.Join.ROUND
     }
 
     var onDragStart: ((Float, Float) -> Boolean)? = null
+    var onDragMove: ((Float, Float) -> Unit)? = null
     var onDragEnd: ((Float, Float) -> Unit)? = null
 
+    private fun createStripeShader(): BitmapShader {
+        val stripeWidth = 10
+        val size = stripeWidth * 2
+        val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+
+        val colorA = Color.WHITE
+        val colorB = Color.parseColor("#66CCDD")
+
+        for (x in 0 until size) {
+            for (y in 0 until size) {
+                val stripeIndex = (x + y) / stripeWidth
+                bitmap.setPixel(x, y, if (stripeIndex % 2 == 0) colorA else colorB)
+            }
+        }
+
+        return BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT)
+    }
+
     fun startLine(x: Float, y: Float) {
-        startX = x
-        startY = y
-        endX = x
-        endY = y
+        dragPath.reset()
+        dragPath.moveTo(x, y)
         isDrawing = true
         invalidate()
     }
 
     fun updateLine(x: Float, y: Float) {
-        endX = x
-        endY = y
+        if (!isDrawing) return
+        dragPath.lineTo(x, y)
         invalidate()
+    }
+
+    fun updateLineStart(x: Float, y: Float) {
+        dragPath.reset()
+        dragPath.moveTo(x, y)
     }
 
     fun clearLine() {
         isDrawing = false
+        dragPath.reset()
+        invalidate()
+    }
+
+    fun addChainLine(x1: Float, y1: Float, x2: Float, y2: Float) {
+        chainLines.add(floatArrayOf(x1, y1, x2, y2))
+        invalidate()
+    }
+
+    fun clearChainLines() {
+        chainLines.clear()
         invalidate()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                val started = onDragStart?.invoke(event.x, event.y) ?: false
-                if (started) {
-                    return true
-                }
-                return false
+                return onDragStart?.invoke(event.x, event.y) ?: false
             }
             MotionEvent.ACTION_MOVE -> {
                 if (isDrawing) {
+                    onDragMove?.invoke(event.x, event.y)
                     updateLine(event.x, event.y)
                     return true
                 }
@@ -81,8 +127,18 @@ class LinkingLineView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
+        stripePaint.shader = stripeShader
+
+        // Draw persistent chain lines
+        for (line in chainLines) {
+            canvas.drawLine(line[0], line[1], line[2], line[3], outlinePaint)
+            canvas.drawLine(line[0], line[1], line[2], line[3], stripePaint)
+        }
+
+        // Draw active drag path
         if (isDrawing) {
-            canvas.drawLine(startX, startY, endX, endY, linePaint)
+            canvas.drawPath(dragPath, outlinePaint)
+            canvas.drawPath(dragPath, stripePaint)
         }
     }
 }

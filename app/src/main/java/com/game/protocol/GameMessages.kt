@@ -302,6 +302,7 @@ data class PowerPlayPlayer(
 )
 
 object PowerType {
+    // KIP types:
     const val FREEZE = 4
     const val BOMBLES = 5
     const val NIBBLERS = 6
@@ -309,6 +310,17 @@ object PowerType {
     const val DOUBLE_TROUBLE_FREEZE_GLOOP = 10
     const val DOUBLE_TROUBLE_FREEZE_BOMBLES = 11
     const val DOUBLE_TROUBLE_NIBBLERS_GLOOP = 12
+
+    // Decades:
+    const val X  = 8 // ?
+    const val LOCKDOWN = 20
+    const val ZIPPERS = 22
+    const val BUG = 24
+    const val POINTS_DOUBLER = 25 // also target is yourself only
+    const val LETTER_SCATTER = 28
+    const val DISCO_INFERNO = 29
+    const val FIFTY_FIFTY = 0 // ? also target is yourself only
+
 }
 
 @Serializable
@@ -372,6 +384,12 @@ data class ClientLinkingAnswer(
 ) : GameMessage()
 
 @Serializable
+data class ClientToServerOrderingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientToServerOrderingAnswer",
+    val ClientOrderingCorrectAnswerCount: Int
+) : GameMessage()
+
+@Serializable
 data class PowerPlay(
     val DisplayIndex: Int,
     val PowerType: Int = -1,
@@ -382,6 +400,8 @@ data class PowerPlay(
     val TargetCount: Int
 ) {
     val effectivePowerType: Int get() = if (PowerType >= 0) PowerType else PowerTypes.firstOrNull() ?: -1 // Decades uses PowerTypes list
+    val effectivePowerTypes: List<Int> get() = if (PowerType >= 0) listOf(PowerType) else PowerTypes
+    // TODO: represent double trouble as a list of basic PowerTypes. Clearly this early protocol issue has been fixed in Decades
 }
 
 @Serializable
@@ -401,7 +421,7 @@ data class ServerRequestPowerPlayChoice(
 data class ClientPowerPlayChoice(
     override val TypeString: String = "KnowledgeIsPower.ClientPowerPlayChoice",
     val PowerPlaySlotIndex: Int,
-    val TargetSlotIndex: List<Int>
+    val TargetSlotIndex: List<Int> // list all slots for "everyone", which is known in advance per powerplay type ?
 ) : GameMessage()
 
 @Serializable
@@ -422,6 +442,32 @@ data class ServerBeginSortingAnsweringPhase(
     val RightBucketID: String,
     val QuestionDuration: Double,
     val SortingAnswers: List<SortingAnswer>
+) : GameMessage()
+
+@Serializable
+data class EliminatingAnswerData(
+    val CorrectInfo: String,
+    val IncorrectInfo: String,
+    val CorrectAnswer: String,
+    val IncorrectAnswers: List<String>
+)
+
+@Serializable
+data class ServerBeginEliminatingAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginEliminatingAnsweringPhase",
+    val ChallengeId: String,
+    val QuestionText: String,
+    val QuestionDuration: Double,
+    val EliminatingAnswerData: List<EliminatingAnswerData>,
+    val serverTick: Long = 0
+) : GameMessage()
+
+// TODO: PROVISIONAL — TypeString and fields are guessed based on other answer types.
+//  Capture the real ClientEliminatingAnswer from a Decades game session and update accordingly.
+@Serializable
+data class ClientEliminatingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientEliminatingAnswer", // TODO: verify TypeString from capture
+    val ClientEliminatingCorrectAnswerCount: Int // TODO: verify field names from capture
 ) : GameMessage()
 
 @Serializable
@@ -446,6 +492,44 @@ data class ServerBeginMissingLetterAnsweringPhase(
 data class PrototypeClientToServerMissingLetterAnswer(
     override val TypeString: String = "KnowledgeIsPower.PrototypeClientToServerMissingLetterAnswer",
     val ClientMissingLetterCorrectAnswerCount: Int
+) : GameMessage()
+
+@Serializable
+data class MatchingData(
+    val QuestionText: String,
+    val AnswerText: String
+)
+
+@Serializable
+data class ServerBeginMatchingAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginMatchingAnsweringPhase",
+    val ChallengeId: String,
+    val QuestionDuration: Double,
+    val MatchingData: List<MatchingData>,
+    val DummyAnswerData: List<String>,
+    val serverTick: Long = 0
+) : GameMessage()
+
+@Serializable
+data class ClientToServerMatchingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientToServerMatchingAnswer",
+    val ClientMatchingCorrectAnswerCount: Int
+) : GameMessage()
+
+@Serializable
+data class OrderingAnswerData(
+    val WordsInCorrectOrder: List<String>,
+    val LayoutId: Int
+)
+
+@Serializable
+data class ServerBeginOrderingAnsweringPhase(
+    override val TypeString: String = "KnowledgeIsPower.ServerBeginOrderingAnsweringPhase",
+    val ChallengeId: String,
+    val QuestionText: String,
+    val QuestionDuration: Double,
+    val OrderingAnswerData: List<OrderingAnswerData>,
+    val serverTick: Long = 0
 ) : GameMessage()
 
 @Serializable
@@ -498,7 +582,7 @@ data class ClientEndOfGameFactCount(
 data class ClientEndOfGameFactCommandMessage(
     override val TypeString: String = "ClientEndOfGameFactCommandMessage",
     val action: Int,
-    val time: Double,
+    val time: Double = 0.0,
     val FactNumber: Int
 ) : GameMessage()
 
