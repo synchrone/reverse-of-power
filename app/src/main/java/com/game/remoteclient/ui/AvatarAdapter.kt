@@ -1,7 +1,5 @@
 package com.game.remoteclient.ui
 
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -64,12 +62,8 @@ class AvatarAdapter(
                 binding.root.isEnabled = false
             }
 
-            // Set color indicator based on avatar ID hash
-            val color = getAvatarColor(avatar.AvatarID)
-            val drawable = binding.avatarColorIndicator.background as? GradientDrawable
-                ?: GradientDrawable().also { binding.avatarColorIndicator.background = it }
-            drawable.shape = GradientDrawable.OVAL
-            drawable.setColor(color)
+            // Set avatar icon
+            binding.avatarIcon.setImageResource(getAvatarDrawable(avatar.AvatarID))
 
             // Highlight selected card
             binding.avatarCard.strokeWidth = if (isSelected) 4 else 0
@@ -82,20 +76,18 @@ class AvatarAdapter(
             }
         }
 
-        private fun getAvatarColor(avatarId: String): Int {
-            val colors = listOf(
-                Color.parseColor("#F44336"), // Red
-                Color.parseColor("#E91E63"), // Pink
-                Color.parseColor("#9C27B0"), // Purple
-                Color.parseColor("#673AB7"), // Deep Purple
-                Color.parseColor("#3F51B5"), // Indigo
-                Color.parseColor("#2196F3"), // Blue
-                Color.parseColor("#00BCD4"), // Cyan
-                Color.parseColor("#009688"), // Teal
-                Color.parseColor("#4CAF50"), // Green
-                Color.parseColor("#FF9800"), // Orange
-            )
-            return colors[Math.abs(avatarId.hashCode()) % colors.size]
+        private fun getAvatarDrawable(avatarId: String): Int {
+            return when (avatarId.uppercase()) {
+                "COWGIRL" -> R.drawable.ic_avatar_cowgirl
+                "GOFF" -> R.drawable.ic_avatar_goff
+                "HOTDOGMAN" -> R.drawable.ic_avatar_hotdogman
+                "LOVER" -> R.drawable.ic_avatar_lover
+                "MOUNTAINEER" -> R.drawable.ic_avatar_mountaineer
+                "SCIENTIST" -> R.drawable.ic_avatar_scientist
+                "SPACEMAN" -> R.drawable.ic_avatar_spaceman
+                "MAGICIAN" -> R.drawable.ic_avatar_magician
+                else -> R.drawable.circle_background
+            }
         }
     }
 

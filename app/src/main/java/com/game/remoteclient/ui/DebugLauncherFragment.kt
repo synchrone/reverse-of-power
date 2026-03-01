@@ -242,14 +242,14 @@ class DebugLauncherFragment : Fragment() {
 
     private fun launchAvatarSelection() {
         val stubAvatars = listOf(
-            ServerAvatarStatusMessage(AvatarID = "avatar_knight", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_wizard", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_pirate", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_robot", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_alien", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_ninja", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_viking", Available = true),
-            ServerAvatarStatusMessage(AvatarID = "avatar_dragon", Available = true)
+            ServerAvatarStatusMessage(AvatarID = "COWGIRL", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "GOFF", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "HOTDOGMAN", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "LOVER", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "MOUNTAINEER", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "SCIENTIST", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "SPACEMAN", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "MAGICIAN", Available = true)
         )
         networkManager.availableAvatars.clear()
         networkManager.availableAvatars.addAll(stubAvatars)
