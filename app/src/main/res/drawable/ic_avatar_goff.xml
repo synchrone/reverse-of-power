@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#311B92"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Spiky hair -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M12,24 L10,12 L16,18 L18,8 L22,17 L24,6 L26,17 L30,8 L32,18 L38,12 L36,24 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M24,38 m-8,0 a8,9,0,1,1,16,0 a8,9,0,1,1,-16,0" />
+
+    <!-- Heavy eyeliner / dark eyes -->
+    <path
+        android:fillColor="#311B92"
+        android:pathData="M18,33 L22,31 L22,35 Z" />
+    <path
+        android:fillColor="#311B92"
+        android:pathData="M30,33 L26,31 L26,35 Z" />
+
+    <!-- Eye dots -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M20,33 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,33 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+
+    <!-- Mouth - slight smirk -->
+    <path
+        android:pathData="M21,38 Q24,40 27,37"
+        android:strokeColor="#311B92"
+        android:strokeWidth="1"
+        android:fillColor="#00000000" />
+
+</vector>

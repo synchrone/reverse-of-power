@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#00838F"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Wild hair -->
+    <path
+        android:fillColor="#BDBDBD"
+        android:pathData="M12,24 Q8,16 14,10 Q18,6 24,8 Q30,6 34,10 Q40,16 36,24 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,32 m-8,0 a8,9,0,1,1,16,0 a8,9,0,1,1,-16,0" />
+
+    <!-- Goggles strap -->
+    <path
+        android:pathData="M12,28 L36,28"
+        android:strokeColor="#616161"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000" />
+
+    <!-- Left goggle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M19,28 m-4,0 a4,3.5,0,1,1,8,0 a4,3.5,0,1,1,-8,0" />
+    <path
+        android:fillColor="#81D4FA"
+        android:pathData="M19,28 m-2.5,0 a2.5,2,0,1,1,5,0 a2.5,2,0,1,1,-5,0" />
+
+    <!-- Right goggle -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M29,28 m-4,0 a4,3.5,0,1,1,8,0 a4,3.5,0,1,1,-8,0" />
+    <path
+        android:fillColor="#81D4FA"
+        android:pathData="M29,28 m-2.5,0 a2.5,2,0,1,1,5,0 a2.5,2,0,1,1,-5,0" />
+
+    <!-- Goggle bridge -->
+    <path
+        android:pathData="M23,28 L25,28"
+        android:strokeColor="#616161"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000" />
+
+    <!-- Smile -->
+    <path
+        android:pathData="M21,35 Q24,38 27,35"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- Buck teeth -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M23,35 L25,35 L25,37 L23,37 Z" />
+
+</vector>

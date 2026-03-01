@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#7B1FA2"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Top hat crown -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M17,22 L17,8 Q24,5 31,8 L31,22 Z" />
+
+    <!-- Top hat brim -->
+    <path
+        android:fillColor="#212121"
+        android:pathData="M11,22 L37,22 L36,25 L12,25 Z" />
+
+    <!-- Hat band -->
+    <path
+        android:fillColor="#7B1FA2"
+        android:pathData="M17,18 L31,18 L31,20 L17,20 Z" />
+
+    <!-- Star on hat -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M24,14 L25.2,16.5 L28,16.8 L26,18.8 L26.5,21.5 L24,20 L21.5,21.5 L22,18.8 L20,16.8 L22.8,16.5 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,35 m-7,0 a7,8,0,1,1,14,0 a7,8,0,1,1,-14,0" />
+
+    <!-- Eyes -->
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M21,33 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M27,33 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+
+    <!-- Mysterious smile -->
+    <path
+        android:pathData="M21,38 Q24,40 27,38"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- Small sparkles -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M8,14 L9,12 L10,14 L9,16 Z" />
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M38,10 L39,8 L40,10 L39,12 Z" />
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M40,30 L41,28 L42,30 L41,32 Z" />
+
+</vector>
