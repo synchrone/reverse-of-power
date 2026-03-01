@@ -544,6 +544,24 @@
             android:layout_height="wrap_content"
             android:text="Sorting - Sort Into Buckets"
             android:backgroundTint="#E8679A"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Player Setup -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Player Setup"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAvatarSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Avatar Selection"
+            android:backgroundTint="#5C6BC0"
             android:layout_marginBottom="32dp" />
 
     </LinearLayout>
