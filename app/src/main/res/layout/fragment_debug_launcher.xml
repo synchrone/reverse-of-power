@@ -544,6 +544,14 @@
             android:layout_height="wrap_content"
             android:text="Sorting - Sort Into Buckets"
             android:backgroundTint="#E8679A"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEndOfGameFact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="End of Game Fact Scroll"
+            android:backgroundTint="#2196F3"
             android:layout_marginBottom="24dp" />
 
         <!-- Player Setup -->

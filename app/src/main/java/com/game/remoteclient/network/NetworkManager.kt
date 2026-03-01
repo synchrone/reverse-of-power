@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
+import com.game.protocol.ClientEndOfGameFactCommandMessage
 import com.game.protocol.ClientHoldingScreenCommandMessage
 import com.game.protocol.ClientPlayerProfileMessage
 import com.game.protocol.ClientTriviaAnswer
@@ -81,6 +82,7 @@ class NetworkManager private constructor() {
     var onStopCategoryOverride: ((ServerStopCategorySelectOverride) -> Unit)? = null
     var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
     var onRejoining: ((RejoiningClientOwnProfileMessage) -> Unit)? = null
+    var onEndOfGameFact: ((ClientEndOfGameFactCommandMessage) -> Unit)? = null
 
     // Reconnection state
     var isRejoining: Boolean = false
@@ -105,6 +107,7 @@ class NetworkManager private constructor() {
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
     // Pending category select request for when message arrives before fragment is ready
     var pendingCategorySelectRequest: Boolean = false
+    var pendingEndOfGameFact: ClientEndOfGameFactCommandMessage? = null
 
     // Received images indexed by GUID
     val receivedImages = mutableMapOf<String, ByteArray>()
@@ -285,6 +288,11 @@ class NetworkManager private constructor() {
 
             is ServerCategorySelectOverrideSuccess -> {
                 onCategoryOverrideSuccess?.invoke(message)
+            }
+
+            is ClientEndOfGameFactCommandMessage -> {
+                pendingEndOfGameFact = message
+                onEndOfGameFact?.invoke(message)
             }
 
             else -> return false

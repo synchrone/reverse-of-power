@@ -26,10 +26,8 @@ Download the latest APK from the [Releases](../../releases) page, or build from 
 
 The original app bundled proprietary assets that cannot be redistributed. The following are missing but don't prevent gameplay:
 
-- **Avatar miniatures** — placeholder icons are shown instead of the original character artwork
 - **Photo overlay masks** — the fun frames and costumes overlaid on player selfies are not available
 - **Sound effects** — the app is silent; all game audio still plays through the TV
-- **End-of-game reward facts** — the fun facts shown after each game are not included
 
 Some less common power play types may not have full visual effects yet. The game handles this gracefully — unrecognized power plays are displayed with a generic icon and the round continues normally.
 
