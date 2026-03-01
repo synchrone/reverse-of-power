@@ -17,6 +17,12 @@ import com.game.protocol.LinkingAnswer
 import com.game.protocol.ServerAvatarStatusMessage
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
+import com.game.protocol.EliminatingAnswerData
+import com.game.protocol.MissingLetterAnswerData
+import com.game.protocol.MatchingData
+import com.game.protocol.ServerBeginEliminatingAnsweringPhase
+import com.game.protocol.ServerBeginMatchingAnsweringPhase
+import com.game.protocol.ServerBeginMissingLetterAnsweringPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.SortingAnswer
@@ -48,7 +54,14 @@ class DebugLauncherFragment : Fragment() {
         PowerType.GLOOP to "Gloop",
         PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP to "DT: Freeze+Gloop",
         PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES to "DT: Freeze+Bombles",
-        PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP to "DT: Nibblers+Gloop"
+        PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP to "DT: Nibblers+Gloop",
+        PowerType.LOCKDOWN to "Lockdown",
+        PowerType.ZIPPERS to "Zippers",
+        PowerType.BUG to "Bug",
+        PowerType.LETTER_SCATTER to "Letter Scatter",
+        PowerType.DISCO_INFERNO to "Disco Inferno",
+        PowerType.FIFTY_FIFTY to "50/50",
+        PowerType.POINTS_DOUBLER to "Points Doubler"
     )
     private val ppSlotSelections = intArrayOf(0, 0, 0) // index into powerTypeOptions
     private var targetPlayerCount = 3
@@ -91,8 +104,12 @@ class DebugLauncherFragment : Fragment() {
 
         binding.btnLaunchTrivia.setOnClickListener { launchTrivia() }
         binding.btnLaunchPowerPlay.setOnClickListener { launchPowerPlay() }
-        binding.btnLinking.setOnClickListener { launchLinking() }
+        binding.btnLinkingPairs.setOnClickListener { launchLinkingPairs() }
+        binding.btnLinkingChain.setOnClickListener { launchLinkingChain() }
         binding.btnSorting.setOnClickListener { launchSorting() }
+        binding.btnElimination.setOnClickListener { launchElimination() }
+        binding.btnMissingLetter.setOnClickListener { launchMissingLetter() }
+        binding.btnMatching.setOnClickListener { launchMatching() }
         binding.btnAvatarSelection.setOnClickListener { launchAvatarSelection() }
         binding.btnEndOfGameFact.setOnClickListener { launchEndOfGameFact() }
     }
@@ -198,22 +215,52 @@ class DebugLauncherFragment : Fragment() {
         findNavController().navigate(R.id.action_debugLauncher_to_powerPlay)
     }
 
-    private fun launchLinking() {
+    private fun launchLinkingPairs() {
+        // KIP-style: top/bottom half-circles, Direction 1=top, 2=bottom, match by AnswerID suffix
         networkManager.pendingLinking = ServerBeginLinkingAnsweringPhase(
             QuestionID = "DEBUG_LNK001",
-            QuestionText = "Match the countries to their capitals",
+            QuestionText = "Link the heroes to their villains",
             QuestionDuration = 45.0,
             LinkingAnswers = listOf(
-                LinkingAnswer(DisplayText = "France", AnswerID = "LNK001_AnswerA01", MatchIndex = 1, Direction = 1),
-                LinkingAnswer(DisplayText = "Paris", AnswerID = "LNK001_AnswerB01", MatchIndex = 1, Direction = 2),
-                LinkingAnswer(DisplayText = "Germany", AnswerID = "LNK001_AnswerA02", MatchIndex = 2, Direction = 1),
-                LinkingAnswer(DisplayText = "Berlin", AnswerID = "LNK001_AnswerB02", MatchIndex = 2, Direction = 2),
-                LinkingAnswer(DisplayText = "Spain", AnswerID = "LNK001_AnswerA03", MatchIndex = 3, Direction = 1),
-                LinkingAnswer(DisplayText = "Madrid", AnswerID = "LNK001_AnswerB03", MatchIndex = 3, Direction = 2),
-                LinkingAnswer(DisplayText = "Italy", AnswerID = "LNK001_AnswerA04", MatchIndex = 4, Direction = 1),
-                LinkingAnswer(DisplayText = "Rome", AnswerID = "LNK001_AnswerB04", MatchIndex = 4, Direction = 2),
-                LinkingAnswer(DisplayText = "Japan", AnswerID = "LNK001_AnswerA05", MatchIndex = 5, Direction = 1),
-                LinkingAnswer(DisplayText = "Tokyo", AnswerID = "LNK001_AnswerB05", MatchIndex = 5, Direction = 2)
+                LinkingAnswer(DisplayText = "Superman", AnswerID = "LNK00086_AnswerA01", MatchIndex = 1, Direction = 1),
+                LinkingAnswer(DisplayText = "Lex Luthor", AnswerID = "LNK00086_AnswerB01", MatchIndex = 1, Direction = 2),
+                LinkingAnswer(DisplayText = "Batman", AnswerID = "LNK00086_AnswerA02", MatchIndex = 2, Direction = 1),
+                LinkingAnswer(DisplayText = "The Joker", AnswerID = "LNK00086_AnswerB02", MatchIndex = 2, Direction = 2),
+                LinkingAnswer(DisplayText = "Spider-Man", AnswerID = "LNK00086_AnswerA03", MatchIndex = 3, Direction = 1),
+                LinkingAnswer(DisplayText = "Green Goblin", AnswerID = "LNK00086_AnswerB03", MatchIndex = 3, Direction = 2),
+                LinkingAnswer(DisplayText = "James Bond", AnswerID = "LNK00086_AnswerA04", MatchIndex = 4, Direction = 1),
+                LinkingAnswer(DisplayText = "Dr. No", AnswerID = "LNK00086_AnswerB04", MatchIndex = 4, Direction = 2),
+                LinkingAnswer(DisplayText = "Harry Potter", AnswerID = "LNK00086_AnswerA05", MatchIndex = 5, Direction = 1),
+                LinkingAnswer(DisplayText = "Voldemort", AnswerID = "LNK00086_AnswerB05", MatchIndex = 5, Direction = 2)
+            )
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_linkingPairs)
+    }
+
+    private fun launchLinkingChain() {
+        // Decades-style: words grouped by MatchIndex, Direction = order within phrase
+        networkManager.pendingLinking = ServerBeginLinkingAnsweringPhase(
+            QuestionID = "DEBUG_LNK002",
+            QuestionText = "Link the words to form song titles",
+            QuestionDuration = 45.0,
+            LinkingAnswers = listOf(
+                // "Walk This Way" (3 words)
+                LinkingAnswer(DisplayText = "Walk", AnswerID = "LNK001_01", MatchIndex = 1, Direction = 1),
+                LinkingAnswer(DisplayText = "This", AnswerID = "LNK001_02", MatchIndex = 1, Direction = 2),
+                LinkingAnswer(DisplayText = "Way", AnswerID = "LNK001_03", MatchIndex = 1, Direction = 3),
+                // "Into The Groove" (3 words)
+                LinkingAnswer(DisplayText = "Into", AnswerID = "LNK001_04", MatchIndex = 2, Direction = 1),
+                LinkingAnswer(DisplayText = "The", AnswerID = "LNK001_05", MatchIndex = 2, Direction = 2),
+                LinkingAnswer(DisplayText = "Groove", AnswerID = "LNK001_06", MatchIndex = 2, Direction = 3),
+                // "Move Your Feet" (3 words)
+                LinkingAnswer(DisplayText = "Move", AnswerID = "LNK001_07", MatchIndex = 3, Direction = 1),
+                LinkingAnswer(DisplayText = "Your", AnswerID = "LNK001_08", MatchIndex = 3, Direction = 2),
+                LinkingAnswer(DisplayText = "Feet", AnswerID = "LNK001_09", MatchIndex = 3, Direction = 3),
+                // "You're Still The One" (4 words)
+                LinkingAnswer(DisplayText = "You're", AnswerID = "LNK001_10", MatchIndex = 4, Direction = 1),
+                LinkingAnswer(DisplayText = "Still", AnswerID = "LNK001_11", MatchIndex = 4, Direction = 2),
+                LinkingAnswer(DisplayText = "The", AnswerID = "LNK001_12", MatchIndex = 4, Direction = 3),
+                LinkingAnswer(DisplayText = "One", AnswerID = "LNK001_13", MatchIndex = 4, Direction = 4)
             )
         )
         findNavController().navigate(R.id.action_debugLauncher_to_linkingAnswers)
@@ -240,6 +287,79 @@ class DebugLauncherFragment : Fragment() {
             )
         )
         findNavController().navigate(R.id.action_debugLauncher_to_sortingAnswers)
+    }
+
+    private fun launchElimination() {
+        networkManager.pendingElimination = ServerBeginEliminatingAnsweringPhase(
+            ChallengeId = "DEBUG_ELM001",
+            QuestionText = "Smash the movie that ISN'T science fiction",
+            QuestionDuration = 45.0,
+            EliminatingAnswerData = listOf(
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Dumb & Dumber", IncorrectAnswers = listOf("Moon", "Jurassic Park")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Love Actually", IncorrectAnswers = listOf("District 9", "RoboCop")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Kill Bill: Volume 1", IncorrectAnswers = listOf("Avatar", "Planet Of The Apes")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Superbad", IncorrectAnswers = listOf("Interstellar", "Donnie Darko")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Bridesmaids", IncorrectAnswers = listOf("Blade Runner", "War Of The Worlds")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Step Brothers", IncorrectAnswers = listOf("Minority Report", "Predator")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "The Silence Of The Lambs", IncorrectAnswers = listOf("Looper", "Sunshine")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Knocked Up", IncorrectAnswers = listOf("The Martian", "Prometheus")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "When Harry Met Sally", IncorrectAnswers = listOf("Alien", "Star Trek")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "My Best Friend's Wedding", IncorrectAnswers = listOf("The Matrix", "Guardians Of The Galaxy")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Memento", IncorrectAnswers = listOf("Inception", "Edge Of Tomorrow")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Notting Hill", IncorrectAnswers = listOf("E.T. The Extra-Terrestrial", "Ready Player One")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "The Heat", IncorrectAnswers = listOf("Ex Machina", "Back To The Future")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Bridget Jones's Diary", IncorrectAnswers = listOf("Men In Black", "The Empire Strikes Back")),
+                EliminatingAnswerData(CorrectInfo = "", IncorrectInfo = "", CorrectAnswer = "Love, Simon", IncorrectAnswers = listOf("Metropolis", "Aliens"))
+            )
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_eliminationAnswering)
+    }
+
+    private fun launchMissingLetter() {
+        networkManager.pendingMissingLetter = ServerBeginMissingLetterAnsweringPhase(
+            ChallengeId = "DEBUG_CMP001",
+            Question = "Complete the names of the comedy films",
+            QuestionDuration = 30.0,
+            MissingLetterAnswerData = listOf(
+                MissingLetterAnswerData(answerInfo = "ANCHORMAN", correct = "A", letters = "AEIOU", finalDisplay = "ANCHORMAN"),
+                MissingLetterAnswerData(answerInfo = "SCHOOL OF ROCK", correct = "O", letters = "AEIOU", finalDisplay = "SCHOOL OF ROCK"),
+                MissingLetterAnswerData(answerInfo = "PAUL BLART: MALL COP", correct = "A", letters = "AEIOU", finalDisplay = "PAUL BLART: MALL COP"),
+                MissingLetterAnswerData(answerInfo = "LITTLE MISS SUNSHINE", correct = "I", letters = "AEIOU", finalDisplay = "LITTLE MISS SUNSHINE"),
+                MissingLetterAnswerData(answerInfo = "TRADING PLACES", correct = "A", letters = "AEIOU", finalDisplay = "TRADING PLACES"),
+                MissingLetterAnswerData(answerInfo = "TED", correct = "E", letters = "AEIOU", finalDisplay = "TED"),
+                MissingLetterAnswerData(answerInfo = "BRIDESMAIDS", correct = "I", letters = "AEIOU", finalDisplay = "BRIDESMAIDS"),
+                MissingLetterAnswerData(answerInfo = "ZOOLANDER", correct = "O", letters = "AEIOU", finalDisplay = "ZOOLANDER"),
+                MissingLetterAnswerData(answerInfo = "RUSH HOUR", correct = "U", letters = "AEIOU", finalDisplay = "RUSH HOUR"),
+                MissingLetterAnswerData(answerInfo = "BAD SANTA", correct = "A", letters = "AEIOU", finalDisplay = "BAD SANTA")
+            )
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_missingLetterAnswering)
+    }
+
+    private fun launchMatching() {
+        networkManager.pendingMatching = ServerBeginMatchingAnsweringPhase(
+            ChallengeId = "LSM00011en",
+            QuestionDuration = 55.0,
+            MatchingData = listOf(
+                MatchingData(QuestionText = "90s film starring Michael Jordan: Space ___", AnswerText = "Jam"),
+                MatchingData(QuestionText = "Actress who plays Storm in the X-Men movies: Halle ___", AnswerText = "Berry"),
+                MatchingData(QuestionText = "Tommys surname in Rugrats", AnswerText = "Pickles"),
+                MatchingData(QuestionText = "2007 Pixar film about a gastronomic rat: ___", AnswerText = "Ratatouille"),
+                MatchingData(QuestionText = "2000 animated movie: ___ Run", AnswerText = "Chicken"),
+                MatchingData(QuestionText = "Dr Seuss story: Green Eggs And ___", AnswerText = "Ham"),
+                MatchingData(QuestionText = "Comic in which youd find Snoopy: ___", AnswerText = "Peanuts"),
+                MatchingData(QuestionText = "2005 movie remake: Charlie And The ___ Factory", AnswerText = "Chocolate"),
+                MatchingData(QuestionText = "Simba eats these with Timon and Pumbaa in The Lion King", AnswerText = "Bugs"),
+                MatchingData(QuestionText = "Collectible stickers brand", AnswerText = "Panini"),
+                MatchingData(QuestionText = "00s Adam Sandler movie: 50 First ___", AnswerText = "Dates"),
+                MatchingData(QuestionText = "Jack Skellingtons title in The Nightmare Before Christmas: The ___ King", AnswerText = "Pumpkin"),
+                MatchingData(QuestionText = "Popeyes favourite food", AnswerText = "Spinach"),
+                MatchingData(QuestionText = "Lead character in 30 Rock played by Tina Fey: Liz ___", AnswerText = "Lemon"),
+                MatchingData(QuestionText = "2007 song from MIKA", AnswerText = "Lollipop")
+            ),
+            DummyAnswerData = listOf("Bread", "Sausage", "Carrot", "Eggs")
+        )
+        findNavController().navigate(R.id.action_debugLauncher_to_matchingAnswering)
     }
 
     private fun launchEndOfGameFact() {

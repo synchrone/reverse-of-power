@@ -10,9 +10,33 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class ProtocolEncoder(
-    val decades: Boolean = false
+    decades: Boolean = false
 ) {
-    val packetMagic = if (decades) bytes(0xC1, 0x48) else bytes(0xAE, 0x7F)
+    companion object {
+        val MAGIC_PACKET_KIP = bytes(0xAE, 0x7F)
+        val MAGIC_PACKET_DECADES = bytes(0xC1, 0x48)
+        val MAGIC_ACK = bytes(0x8A, 0x33)
+        val MAGIC_BODY_KIP = bytes(0x33, 0x29)
+        val MAGIC_BODY_DECADES = bytes(0xA3, 0xD3)
+        val MAGIC_UID_KIP = bytes(0x0C, 0x89, 0xE8, 0x84, 0x61, 0x03, 0xF4)
+        val MAGIC_UID_DECADES = bytes(0xAF, 0xE4, 0x87, 0x3D, 0x82, 0xED, 0x6C)
+        val TYPE_JSON = bytes(0xB1, 0xE2, 0xFF, 0xFF)
+        val TYPE_MULTIJSON = bytes(0x84, 0x12, 0x40, 0xEE)
+        val FOOTER_MULTIJSON = bytes(0x32, 0x90)
+    }
+
+    var packetMagic: ByteArray = MAGIC_PACKET_KIP
+        private set
+    var bodyMagic: ByteArray = MAGIC_BODY_KIP
+        private set
+    var decades: Boolean = decades
+        set(value) {
+            field = value
+            packetMagic = if (value) MAGIC_PACKET_DECADES else MAGIC_PACKET_KIP
+            bodyMagic = if (value) MAGIC_BODY_DECADES else MAGIC_BODY_KIP
+        }
+
+    init { this.decades = decades }
 
     private val json = Json {
         ignoreUnknownKeys = true
@@ -23,27 +47,18 @@ class ProtocolEncoder(
     // ==================== Raw Packets (no 0xAE7F header) ====================
 
     fun encodeConnectionRequest(): ByteArray {
-        val data = ByteArray(38)
-        data[0] = 0x8a.toByte()
-        data[1] = 0x33.toByte()
-        data[2] = 0xff.toByte()
-        data[3] = 0xff.toByte()
-        data[4] = 0xff.toByte()
-        data[5] = 0xff.toByte()
-        return data
+        val data = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
+        data.put(MAGIC_ACK)
+        data.putInt(-1)
+        data.put(ByteArray(32))
+        return data.array()
     }
 
-    fun encodeDeviceUID(uid: String, theByte: Byte = 0x63): ByteArray {
+    fun encodeDeviceUID(uid: String, decades: Boolean, theByte: Byte = 0x63): ByteArray {
         val uidBytes = uid.toByteArray(Charsets.UTF_8)
         val data = ByteBuffer.allocate(12 + uidBytes.size).order(ByteOrder.LITTLE_ENDIAN)
-        if (decades) {
-            data.put(bytes(0xAF, 0xE4, 0x87, 0x3D))
-            data.put(bytes(0x82, 0xED, 0x6C, 0x47))
-        } else {
-            data.put(bytes(0x0C, 0x89, 0xE8, 0x84))
-            data.put(bytes(0x61, 0x03, 0xF4))
-            data.put(theByte)
-        }
+        data.put(if (decades) MAGIC_UID_DECADES else MAGIC_UID_KIP)
+        data.put(theByte)
         data.putInt(uidBytes.size)
         data.put(uidBytes)
         return data.array()
@@ -51,9 +66,8 @@ class ProtocolEncoder(
 
     fun encodeAck(messageId: Int): ByteArray {
         val buffer = ByteBuffer.allocate(38).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.put(0x8a.toByte())
-        buffer.put(0x33.toByte())
-        buffer.putInt(messageId) // ACK uses low byte only
+        buffer.put(MAGIC_ACK)
+        buffer.putInt(messageId)
         buffer.put(ByteArray(32))
         return buffer.array()
     }
@@ -66,8 +80,8 @@ class ProtocolEncoder(
     fun encodeMessage(msg: GameMessage): List<ByteArray> {
         val jsonBytes = encodeJson(msg)
         val body = ByteBuffer.allocate(jsonBytes.size + 10).order(ByteOrder.LITTLE_ENDIAN)
-        body.put(bytes(0x33, 0x29)) // magic
-        body.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
+        body.put(bodyMagic)
+        body.put(TYPE_JSON)
         body.putInt(jsonBytes.size)
         body.put(jsonBytes)
         return wrapAndChunk(body.array())
@@ -82,16 +96,16 @@ class ProtocolEncoder(
         val bodyLength = entriesSize + 6
 
         val buffer = ByteBuffer.allocate(10 + bodyLength).order(ByteOrder.LITTLE_ENDIAN)
-        buffer.put(bytes(0x33, 0x29)) // magic
+        buffer.put(bodyMagic)
         buffer.putInt(transferId)
         buffer.putInt(bodyLength)
-        buffer.put(bytes(0x84, 0x12, 0x40, 0xEE)) // multijson type
+        buffer.put(TYPE_MULTIJSON)
         for (jsonBytes in jsonBytesList) {
             buffer.putInt(jsonBytes.size)
-            buffer.put(bytes(0xB1, 0xE2, 0xFF, 0xFF)) // json type
+            buffer.put(TYPE_JSON)
             buffer.put(jsonBytes)
         }
-        buffer.put(bytes(0x32, 0x90)) // footer
+        buffer.put(FOOTER_MULTIJSON)
         return wrapAndChunk(buffer.array())
     }
 
@@ -108,7 +122,7 @@ class ProtocolEncoder(
         val controlPackets = encodeMessage(controlMsg)
 
         val payloadBuffer = ByteBuffer.allocate(imageData.size + 10).order(ByteOrder.LITTLE_ENDIAN)
-        payloadBuffer.put(bytes(0x33, 0x29))  // magic
+        payloadBuffer.put(bodyMagic)
         payloadBuffer.putInt(transferId)
         payloadBuffer.putInt(imageData.size)
         payloadBuffer.put(imageData)

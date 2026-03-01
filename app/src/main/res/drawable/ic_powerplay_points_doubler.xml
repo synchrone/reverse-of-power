@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- x2 text -->
+    <!-- x -->
+    <path
+        android:pathData="M25,40 L55,80 M55,40 L25,80"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round" />
+
+    <!-- 2 -->
+    <path
+        android:pathData="M68,40 A14,14 0 0,1 96,40 L68,75 L96,75"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <!-- Star sparkles -->
+    <path
+        android:pathData="M20,20 L23,14 L26,20 L23,26 Z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M95,15 L97,10 L99,15 L97,20 Z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M100,90 L102,85 L104,90 L102,95 Z"
+        android:fillColor="#FFFFFF" />
+
+</vector>

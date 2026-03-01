@@ -1,5 +1,6 @@
 package com.game.remoteclient.ui
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -33,20 +34,24 @@ class LinkingAnswersFragment : Fragment() {
     private val incorrectPrimary = Color.parseColor("#C85080")
     private val incorrectSecondary = Color.parseColor("#B04070")
 
-    // Game state
-    private val topQueue = mutableListOf<LinkingAnswer>()
-    private val bottomQueue = mutableListOf<LinkingAnswer>()
-    private val activeTop = arrayOfNulls<LinkingAnswer>(3)
-    private val activeBottom = arrayOfNulls<LinkingAnswer>(3)
+    // Game state — rounds grouped by MatchIndex
+    private var rounds = listOf<List<LinkingAnswer>>()
+    private var currentRoundIndex = 0
+    private var totalRounds = 0
     private val attempts = mutableListOf<ClientLinkingAnswerEntry>()
     private var correctCount = 0
-    private var totalPairs = 0
     private var timer: CountDownTimer? = null
-    private var dragFromSlot: Int? = null
     private var answerSent = false
+
+    // Current round state
+    private var currentSlots = listOf<LinkingAnswer>() // shuffled slots for display
+    private var correctOrder = listOf<LinkingAnswer>() // sorted by Direction
+    private var connectedChain = mutableListOf<Int>() // slot indices in order connected
+    private var chainLocked = false // true during feedback animation
 
     // Callbacks
     private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
+    private var linkingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,171 +79,203 @@ class LinkingAnswersFragment : Fragment() {
         holdingScreenCb = { _ ->
             activity?.runOnUiThread { navigateToHoldingScreen() }
         }
+        linkingCb = { message ->
+            activity?.runOnUiThread { startGame(message) }
+        }
         networkManager.onHoldingScreenMessage = holdingScreenCb
+        networkManager.onLinkingMessage = linkingCb
     }
 
     private fun setupDragHandling() {
         binding.linkingLine.onDragStart = { x, y ->
-            val slot = findTopSlotAt(x, y)
-            if (slot != null && activeTop[slot] != null) {
-                dragFromSlot = slot
-                val slotView = getTopSlotView(slot)
-                val centerX = slotView.x + slotView.width / 2f
-                val centerY = slotView.y + slotView.height / 2f
-                binding.linkingLine.startLine(centerX, centerY)
-                true
-            } else {
+            if (chainLocked) {
                 false
+            } else {
+                val slot = findSlotAt(x, y)
+                if (slot != null && canStartFrom(slot)) {
+                    connectedChain.add(slot)
+                    updateSlotHighlights()
+                    val center = getSlotCenter(getSlotView(slot))
+                    binding.linkingLine.startLine(center[0], center[1])
+                    true
+                } else {
+                    false
+                }
             }
         }
 
-        binding.linkingLine.onDragEnd = { x, y ->
-            val fromSlot = dragFromSlot
-            if (fromSlot != null) {
-                val bottomSlot = findBottomSlotAt(x, y)
-                if (bottomSlot != null && activeTop[fromSlot] != null && activeBottom[bottomSlot] != null) {
-                    processMatch(fromSlot, bottomSlot)
+        binding.linkingLine.onDragMove = { x, y ->
+            if (connectedChain.isNotEmpty() && !chainLocked) {
+                val slot = findSlotAt(x, y)
+                if (slot != null && !connectedChain.contains(slot)) {
+                    if (isCorrectNext(slot)) {
+                        // Correct next item — snap chain line
+                        val fromCenter = getSlotCenter(getSlotView(connectedChain.last()))
+                        val toCenter = getSlotCenter(getSlotView(slot))
+                        binding.linkingLine.addChainLine(fromCenter[0], fromCenter[1], toCenter[0], toCenter[1])
+
+                        connectedChain.add(slot)
+                        updateSlotHighlights()
+                        binding.linkingLine.updateLineStart(toCenter[0], toCenter[1])
+
+                        if (connectedChain.size == currentSlots.size) {
+                            binding.linkingLine.clearLine()
+                            evaluateChain()
+                        }
+                    } else {
+                        // Wrong item — flash incorrect, reset chain, keep layout
+                        binding.linkingLine.clearLine()
+                        recordFailedAttempt()
+                        chainLocked = true
+                        binding.sunburstBackground.setColors(incorrectPrimary, incorrectSecondary)
+                        binding.root.postDelayed({
+                            if (_binding == null) return@postDelayed
+                            binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
+                            chainLocked = false
+                            resetChain()
+                        }, 400)
+                    }
                 }
-                dragFromSlot = null
             }
+        }
+
+        binding.linkingLine.onDragEnd = { _, _ ->
+            if (!chainLocked && connectedChain.size < currentSlots.size) {
+                resetChain()
+            }
+        }
+    }
+
+    private fun canStartFrom(slot: Int): Boolean {
+        return connectedChain.isEmpty() && slot < currentSlots.size
+    }
+
+    private fun isCorrectNext(slot: Int): Boolean {
+        val expectedIndex = connectedChain.size
+        return currentSlots[slot].AnswerID == correctOrder[expectedIndex].AnswerID
+    }
+
+    private fun recordFailedAttempt() {
+        val chainAnswers = connectedChain.map { currentSlots[it] }
+        for (i in 0 until chainAnswers.size - 1) {
+            attempts.add(ClientLinkingAnswerEntry(
+                FromID = chainAnswers[i].AnswerID,
+                ToID = chainAnswers[i + 1].AnswerID,
+                Correct = false
+            ))
         }
     }
 
     private fun startGame(phase: ServerBeginLinkingAnsweringPhase) {
-        val allAnswers = phase.LinkingAnswers.sortedBy { it.MatchIndex }
+        // Group answers by MatchIndex → each group is one round
+        rounds = phase.LinkingAnswers
+            .groupBy { it.MatchIndex }
+            .toSortedMap()
+            .values
+            .map { group -> group.sortedBy { it.Direction } }
 
-        topQueue.clear()
-        bottomQueue.clear()
-        topQueue.addAll(allAnswers.filter { it.Direction == 1 })
-        bottomQueue.addAll(allAnswers.filter { it.Direction == 2 })
-
-        totalPairs = minOf(topQueue.size, bottomQueue.size)
+        totalRounds = rounds.size
+        currentRoundIndex = 0
         correctCount = 0
         attempts.clear()
         answerSent = false
 
-        fillSlots()
-        updateUI()
+        binding.instructionText.text = "Drag to link in order"
+        updateCounter()
+        displayRound()
 
-        binding.instructionText.text = "Drag to link answers"
-
-        // Show remaining pairs count
-        updateRemainingCount()
-
-        // Start silent countdown — sends answer when time runs out
+        timer?.cancel()
         val durationMs = (phase.QuestionDuration * 1000).toLong()
         timer = object : CountDownTimer(durationMs, 1000) {
             override fun onTick(millisUntilFinished: Long) {}
-
             override fun onFinish() {
                 if (_binding == null) return
-                sendAnswerAndNavigate()
+                sendAnswer()
             }
         }.start()
     }
 
-    private fun fillSlots() {
-        // Fill up to 2 per row, picking random empty slots for variety
-        fillRow(activeTop, topQueue)
-        fillRow(activeBottom, bottomQueue)
-        ensureMatch()
+    private fun displayRound() {
+        if (currentRoundIndex >= rounds.size) return
+
+        val round = rounds[currentRoundIndex]
+        // Shuffle for display but keep track of correct order via Direction
+        currentSlots = round.shuffled()
+        correctOrder = round.sortedBy { it.Direction }
+        connectedChain.clear()
+        binding.linkingLine.clearChainLines()
+
+        val slotViews = getSlotViews()
+        slotViews.forEachIndexed { index, tv ->
+            if (index < currentSlots.size) {
+                tv.text = currentSlots[index].DisplayText
+                tv.visibility = View.VISIBLE
+                tv.alpha = 1f
+                tv.backgroundTintList = ColorStateList.valueOf(Color.parseColor("#F0EAD6"))
+            } else {
+                tv.visibility = View.GONE
+            }
+        }
+
+        binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
     }
 
-    private fun fillRow(slots: Array<LinkingAnswer?>, queue: MutableList<LinkingAnswer>) {
-        val occupied = slots.count { it != null }
-        val toFill = minOf(2 - occupied, queue.size)
-        if (toFill <= 0) return
+    private fun evaluateChain() {
+        val chainAnswers = connectedChain.map { currentSlots[it] }
+        for (i in 0 until chainAnswers.size - 1) {
+            attempts.add(ClientLinkingAnswerEntry(
+                FromID = chainAnswers[i].AnswerID,
+                ToID = chainAnswers[i + 1].AnswerID,
+                Correct = true
+            ))
+        }
 
-        val emptyIndices = slots.indices.filter { slots[it] == null }.shuffled()
-        for (i in 0 until toFill) {
-            slots[emptyIndices[i]] = queue.removeFirst()
+        correctCount++
+        val phraseText = correctOrder.joinToString(" ") { it.DisplayText }
+        Log.d("LinkingAnswers", "Chain complete: $phraseText")
+
+        chainLocked = true
+        showFeedback(phraseText, true)
+        binding.feedbackOverlay.postDelayed({
+            if (_binding == null) return@postDelayed
+            hideFeedback()
+            chainLocked = false
+            currentRoundIndex++
+            updateCounter()
+            if (currentRoundIndex >= totalRounds) {
+                sendAnswer()
+            } else {
+                displayRound()
+            }
+        }, 600)
+    }
+
+    private fun resetChain() {
+        connectedChain.clear()
+        binding.linkingLine.clearChainLines()
+        updateSlotHighlights()
+    }
+
+    private fun updateSlotHighlights() {
+        val slotViews = getSlotViews()
+        slotViews.forEachIndexed { index, tv ->
+            if (index >= currentSlots.size) return@forEachIndexed
+            val tint = if (connectedChain.contains(index)) "#B2DFDB" else "#F0EAD6"
+            tv.backgroundTintList = ColorStateList.valueOf(Color.parseColor(tint))
         }
     }
 
-    private fun ensureMatch() {
-        val topKeys = activeTop.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
-        val bottomKeys = activeBottom.filterNotNull().map { getMatchKey(it.AnswerID) }.toSet()
-
-        if (topKeys.intersect(bottomKeys).isNotEmpty()) return
-
-        // No match visible — find a matching bottom item for an active top item
-        val topItem = activeTop.filterNotNull().firstOrNull() ?: return
-        val topKey = getMatchKey(topItem.AnswerID)
-
-        val matchIdx = bottomQueue.indexOfFirst { getMatchKey(it.AnswerID) == topKey }
-        if (matchIdx >= 0) {
-            val match = bottomQueue.removeAt(matchIdx)
-            // Swap with first occupied bottom slot
-            val swapIdx = activeBottom.indices.first { activeBottom[it] != null }
-            activeBottom[swapIdx]?.let { bottomQueue.add(0, it) }
-            activeBottom[swapIdx] = match
-        }
-    }
-
-    private fun getMatchKey(answerId: String): String {
-        // "LNK00086_AnswerA01" → "01"
-        val afterAnswer = answerId.substringAfter("Answer", "")
-        return if (afterAnswer.length >= 2) afterAnswer.drop(1) else answerId
-    }
-
-    private fun processMatch(topSlot: Int, bottomSlot: Int) {
-        val topItem = activeTop[topSlot] ?: return
-        val bottomItem = activeBottom[bottomSlot] ?: return
-
-        val topKey = getMatchKey(topItem.AnswerID)
-        val bottomKey = getMatchKey(bottomItem.AnswerID)
-        val isCorrect = topKey == bottomKey
-
-        attempts.add(ClientLinkingAnswerEntry(
-            FromID = topItem.AnswerID,
-            ToID = bottomItem.AnswerID,
-            Correct = isCorrect
-        ))
-
-        Log.d("LinkingAnswers", "Match: ${topItem.DisplayText} → ${bottomItem.DisplayText} = $isCorrect")
-
-        if (isCorrect) {
-            correctCount++
-            showFeedback(topItem.DisplayText, bottomItem.DisplayText, true)
-
-            // Remove matched items
-            activeTop[topSlot] = null
-            activeBottom[bottomSlot] = null
-
-            // Refill after feedback
-            binding.feedbackOverlay.postDelayed({
-                if (_binding == null) return@postDelayed
-                hideFeedback()
-                fillSlots()
-                updateUI()
-
-                // Check if all pairs matched
-                if (correctCount >= totalPairs) {
-                    sendAnswerAndNavigate()
-                }
-            }, 500)
-        } else {
-            showFeedback(topItem.DisplayText, bottomItem.DisplayText, false)
-            binding.feedbackOverlay.postDelayed({
-                if (_binding == null) return@postDelayed
-                hideFeedback()
-            }, 500)
-        }
-    }
-
-    private fun showFeedback(topText: String, bottomText: String, correct: Boolean) {
+    private fun showFeedback(text: String, correct: Boolean) {
         binding.feedbackOverlay.visibility = View.VISIBLE
-        binding.feedbackTopText.text = topText
-        binding.feedbackBottomText.text = bottomText
+        binding.feedbackTopText.text = text
+        binding.feedbackBottomText.visibility = View.GONE
 
         if (correct) {
             binding.sunburstBackground.setColors(correctPrimary, correctSecondary)
             binding.feedbackTopText.setTextColor(correctPrimary)
-            binding.feedbackBottomText.setTextColor(correctPrimary)
         } else {
             binding.sunburstBackground.setColors(incorrectPrimary, incorrectSecondary)
             binding.feedbackTopText.setTextColor(incorrectPrimary)
-            binding.feedbackBottomText.setTextColor(incorrectPrimary)
         }
     }
 
@@ -247,81 +284,53 @@ class LinkingAnswersFragment : Fragment() {
         binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
     }
 
-    private fun updateUI() {
-        updateSlot(binding.topText0, binding.topSlot0, activeTop[0])
-        updateSlot(binding.topText1, binding.topSlot1, activeTop[1])
-        updateSlot(binding.topText2, binding.topSlot2, activeTop[2])
-        updateSlot(binding.bottomText0, binding.bottomSlot0, activeBottom[0])
-        updateSlot(binding.bottomText1, binding.bottomSlot1, activeBottom[1])
-        updateSlot(binding.bottomText2, binding.bottomSlot2, activeBottom[2])
-        updateRemainingCount()
+    private fun updateCounter() {
+        val remaining = totalRounds - currentRoundIndex
+        binding.timerText.text = "$remaining to go"
     }
 
-    private fun updateRemainingCount() {
-        val remaining = totalPairs - correctCount
-        if (remaining > 0) {
-            binding.timerText.text = "$remaining to go"
-            binding.timerText.visibility = View.VISIBLE
-            binding.instructionText.text = "Drag to link answers"
-        } else {
-            binding.timerText.visibility = View.GONE
-            binding.instructionText.text = "Done, waiting for other players"
+    private fun getSlotViews(): List<TextView> =
+        listOf(binding.slot0, binding.slot1, binding.slot2, binding.slot3)
+
+    private fun getSlotView(index: Int): TextView = getSlotViews()[index]
+
+    private fun getSlotCenter(view: View): FloatArray {
+        val loc = IntArray(2)
+        view.getLocationInWindow(loc)
+        val overlayLoc = IntArray(2)
+        binding.linkingLine.getLocationInWindow(overlayLoc)
+        val x = (loc[0] - overlayLoc[0]).toFloat() + view.width / 2f
+        val y = (loc[1] - overlayLoc[1]).toFloat() + view.height / 2f
+        return floatArrayOf(x, y)
+    }
+
+    private fun findSlotAt(x: Float, y: Float): Int? {
+        val slotViews = getSlotViews()
+        for (i in slotViews.indices) {
+            if (i >= currentSlots.size) continue
+            if (slotViews[i].visibility != View.VISIBLE) continue
+            if (isPointInView(slotViews[i], x, y)) return i
         }
-    }
-
-    private fun updateSlot(textView: TextView, slot: View, answer: LinkingAnswer?) {
-        if (answer != null) {
-            textView.text = answer.DisplayText
-            slot.visibility = View.VISIBLE
-            slot.alpha = 1f
-        } else {
-            slot.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun findTopSlotAt(x: Float, y: Float): Int? {
-        if (isPointInView(binding.topSlot0, x, y)) return 0
-        if (isPointInView(binding.topSlot1, x, y)) return 1
-        if (isPointInView(binding.topSlot2, x, y)) return 2
-        return null
-    }
-
-    private fun findBottomSlotAt(x: Float, y: Float): Int? {
-        if (isPointInView(binding.bottomSlot0, x, y)) return 0
-        if (isPointInView(binding.bottomSlot1, x, y)) return 1
-        if (isPointInView(binding.bottomSlot2, x, y)) return 2
         return null
     }
 
     private fun isPointInView(view: View, x: Float, y: Float): Boolean {
-        val location = IntArray(2)
-        view.getLocationInWindow(location)
-
-        val overlayLocation = IntArray(2)
-        binding.linkingLine.getLocationInWindow(overlayLocation)
-
-        val viewX = (location[0] - overlayLocation[0]).toFloat()
-        val viewY = (location[1] - overlayLocation[1]).toFloat()
-
+        val loc = IntArray(2)
+        view.getLocationInWindow(loc)
+        val overlayLoc = IntArray(2)
+        binding.linkingLine.getLocationInWindow(overlayLoc)
+        val viewX = (loc[0] - overlayLoc[0]).toFloat()
+        val viewY = (loc[1] - overlayLoc[1]).toFloat()
         return x >= viewX && x <= viewX + view.width &&
                y >= viewY && y <= viewY + view.height
     }
 
-    private fun getTopSlotView(index: Int): View {
-        return when (index) {
-            0 -> binding.topSlot0
-            1 -> binding.topSlot1
-            else -> binding.topSlot2
-        }
-    }
-
-    private fun sendAnswerAndNavigate() {
+    private fun sendAnswer() {
         if (answerSent) return
         answerSent = true
         timer?.cancel()
-
-        Log.d("LinkingAnswers", "Sending answer: $correctCount correct out of $totalPairs")
-        networkManager.sendLinkingAnswer(correctCount, attempts)
+        Log.d("LinkingAnswers", "Sending answer: $correctCount correct out of $totalRounds")
+        networkManager.sendOrderingAnswer(correctCount)
     }
 
     private fun navigateToHoldingScreen() {
@@ -332,6 +341,7 @@ class LinkingAnswersFragment : Fragment() {
         super.onDestroyView()
         timer?.cancel()
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
+        if (networkManager.onLinkingMessage === linkingCb) networkManager.onLinkingMessage = null
         _binding = null
     }
 }

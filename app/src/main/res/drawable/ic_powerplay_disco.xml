@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Disco ball -->
+    <path
+        android:pathData="M60,25 A30,30 0 1,1 60,85 A30,30 0 1,1 60,25"
+        android:fillColor="#FFFFFF"
+        android:fillAlpha="0.3" />
+
+    <!-- Ball outline -->
+    <path
+        android:pathData="M60,25 A30,30 0 1,1 60,85 A30,30 0 1,1 60,25"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3" />
+
+    <!-- Grid lines horizontal -->
+    <path
+        android:pathData="M32,45 L88,45 M30,55 L90,55 M32,65 L88,65"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5" />
+
+    <!-- Grid lines vertical -->
+    <path
+        android:pathData="M48,27 L48,83 M60,25 L60,85 M72,27 L72,83"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5" />
+
+    <!-- String -->
+    <path
+        android:pathData="M60,10 L60,25"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2" />
+
+    <!-- Light rays -->
+    <path
+        android:pathData="M25,30 L10,15 M95,30 L110,15 M25,75 L10,95 M95,75 L110,95"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round" />
+
+</vector>

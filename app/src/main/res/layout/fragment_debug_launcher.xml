@@ -531,10 +531,18 @@
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLinking"
+            android:id="@+id/btnLinkingPairs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Linking - Match Pairs"
+            android:text="Linking - Match Pairs (KIP)"
+            android:backgroundTint="#E8679A"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLinkingChain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Linking - Word Chain (Decades)"
             android:backgroundTint="#E8679A"
             android:layout_marginBottom="4dp" />
 
@@ -544,6 +552,30 @@
             android:layout_height="wrap_content"
             android:text="Sorting - Sort Into Buckets"
             android:backgroundTint="#E8679A"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnElimination"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Elimination - Odd One Out"
+            android:backgroundTint="#E8679A"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMissingLetter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Missing Letter - Pick the Vowel"
+            android:backgroundTint="#E8679A"
+            android:layout_marginBottom="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMatching"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Matching - Swipe to Match"
+            android:backgroundTint="#9C27B0"
             android:layout_marginBottom="4dp" />
 
         <com.google.android.material.button.MaterialButton

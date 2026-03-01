@@ -5,4 +5,4 @@ token="$(cat ~/.emulator_console_auth_token)"
 printf "auth $token\nredir add udp:${PORT}:${PORT}\nredir list\nexit\n" | nc localhost 5554
 
 # listen all intefaces and proxy localhost, since that's where the server responds to
-socat -d -v UDP4-LISTEN:${PORT},reuseaddr,fork UDP4:127.0.0.1:${PORT}
+socat -d -x UDP4-LISTEN:${PORT},reuseaddr,fork UDP4:127.0.0.1:${PORT}

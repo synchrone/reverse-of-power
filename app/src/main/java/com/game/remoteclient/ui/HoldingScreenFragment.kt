@@ -14,6 +14,9 @@ import com.game.protocol.ColorTint
 import com.game.protocol.ServerBeginTriviaAnsweringPhase
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
+import com.game.protocol.ServerBeginEliminatingAnsweringPhase
+import com.game.protocol.ServerBeginMatchingAnsweringPhase
+import com.game.protocol.ServerBeginMissingLetterAnsweringPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
 import com.game.protocol.ServerColourMessage
 import com.game.remoteclient.GameRemoteClientApplication
@@ -40,7 +43,11 @@ class HoldingScreenFragment : Fragment() {
     private var quizCb: ((ClientQuizCommandMessage) -> Unit)? = null
     private var powerPlayCb: ((ServerBeginPowerPlayPhase) -> Unit)? = null
     private var linkingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
+    private var orderingCb: ((ServerBeginLinkingAnsweringPhase) -> Unit)? = null
     private var sortingCb: ((ServerBeginSortingAnsweringPhase) -> Unit)? = null
+    private var eliminationCb: ((ServerBeginEliminatingAnsweringPhase) -> Unit)? = null
+    private var missingLetterCb: ((ServerBeginMissingLetterAnsweringPhase) -> Unit)? = null
+    private var matchingCb: ((ServerBeginMatchingAnsweringPhase) -> Unit)? = null
     private var endOfGameFactCb: ((ClientEndOfGameFactCommandMessage) -> Unit)? = null
 
     override fun onCreateView(
@@ -84,10 +91,22 @@ class HoldingScreenFragment : Fragment() {
             activity?.runOnUiThread { navigateToPowerPlay() }
         }
         linkingCb = { _ ->
-            activity?.runOnUiThread { navigateToLinkingAnswers() }
+            activity?.runOnUiThread { navigateToLinkingPairs() }
+        }
+        orderingCb = { _ ->
+            activity?.runOnUiThread { navigateToOrderingAnswers() }
         }
         sortingCb = { _ ->
             activity?.runOnUiThread { navigateToSortingAnswers() }
+        }
+        eliminationCb = { _ ->
+            activity?.runOnUiThread { navigateToEliminationAnswering() }
+        }
+        missingLetterCb = { _ ->
+            activity?.runOnUiThread { navigateToMissingLetterAnswering() }
+        }
+        matchingCb = { _ ->
+            activity?.runOnUiThread { navigateToMatchingAnswering() }
         }
         endOfGameFactCb = { _ ->
             activity?.runOnUiThread { navigateToEndOfGameFact() }
@@ -100,7 +119,11 @@ class HoldingScreenFragment : Fragment() {
         networkManager.onQuizCommand = quizCb
         networkManager.onPowerPlayMessage = powerPlayCb
         networkManager.onLinkingMessage = linkingCb
+        networkManager.onOrderingMessage = orderingCb
         networkManager.onSortingMessage = sortingCb
+        networkManager.onEliminationMessage = eliminationCb
+        networkManager.onMissingLetterMessage = missingLetterCb
+        networkManager.onMatchingMessage = matchingCb
         networkManager.onEndOfGameFact = endOfGameFactCb
     }
 
@@ -120,12 +143,28 @@ class HoldingScreenFragment : Fragment() {
         findNavController().navigate(R.id.action_holdingScreen_to_powerPlay)
     }
 
-    private fun navigateToLinkingAnswers() {
+    private fun navigateToLinkingPairs() {
+        findNavController().navigate(R.id.action_holdingScreen_to_linkingPairs)
+    }
+
+    private fun navigateToOrderingAnswers() {
         findNavController().navigate(R.id.action_holdingScreen_to_linkingAnswers)
     }
 
     private fun navigateToSortingAnswers() {
         findNavController().navigate(R.id.action_holdingScreen_to_sortingAnswers)
+    }
+
+    private fun navigateToEliminationAnswering() {
+        findNavController().navigate(R.id.action_holdingScreen_to_eliminationAnswering)
+    }
+
+    private fun navigateToMissingLetterAnswering() {
+        findNavController().navigate(R.id.action_holdingScreen_to_missingLetterAnswering)
+    }
+
+    private fun navigateToMatchingAnswering() {
+        findNavController().navigate(R.id.action_holdingScreen_to_matchingAnswering)
     }
 
     private fun navigateToEndOfGameFact() {
@@ -184,7 +223,11 @@ class HoldingScreenFragment : Fragment() {
         if (networkManager.onQuizCommand === quizCb) networkManager.onQuizCommand = null
         if (networkManager.onPowerPlayMessage === powerPlayCb) networkManager.onPowerPlayMessage = null
         if (networkManager.onLinkingMessage === linkingCb) networkManager.onLinkingMessage = null
+        if (networkManager.onOrderingMessage === orderingCb) networkManager.onOrderingMessage = null
         if (networkManager.onSortingMessage === sortingCb) networkManager.onSortingMessage = null
+        if (networkManager.onEliminationMessage === eliminationCb) networkManager.onEliminationMessage = null
+        if (networkManager.onMissingLetterMessage === missingLetterCb) networkManager.onMissingLetterMessage = null
+        if (networkManager.onMatchingMessage === matchingCb) networkManager.onMatchingMessage = null
         if (networkManager.onEndOfGameFact === endOfGameFactCb) networkManager.onEndOfGameFact = null
         _binding = null
     }

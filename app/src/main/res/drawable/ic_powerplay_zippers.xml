@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Zipper track left -->
+    <path
+        android:pathData="M50,15 L50,105"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4" />
+
+    <!-- Zipper track right -->
+    <path
+        android:pathData="M70,15 L70,105"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4" />
+
+    <!-- Zipper teeth -->
+    <path
+        android:pathData="M50,25 L60,30 L70,25 M50,40 L60,45 L70,40 M50,55 L60,60 L70,55 M50,70 L60,75 L70,70 M50,85 L60,90 L70,85"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+
+    <!-- Zipper pull -->
+    <path
+        android:pathData="M55,95 L65,95 L60,105 Z"
+        android:fillColor="#FFFFFF" />
+
+</vector>

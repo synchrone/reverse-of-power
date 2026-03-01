@@ -135,7 +135,11 @@ class PowerPlayFragment : Fragment() {
         icon: ImageView,
         realPowerType: Int
     ) {
-        val allTypes = listOf(PowerType.FREEZE, PowerType.BOMBLES, PowerType.NIBBLERS, PowerType.GLOOP, PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES)
+        val allTypes = listOf(
+            PowerType.FREEZE, PowerType.BOMBLES, PowerType.NIBBLERS, PowerType.GLOOP,
+            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES, PowerType.LOCKDOWN, PowerType.ZIPPERS,
+            PowerType.BUG, PowerType.LETTER_SCATTER, PowerType.DISCO_INFERNO
+        )
         val otherTypes = allTypes.filter { it != realPowerType }.shuffled()
         // Slot reel sequence: fast spins then decelerate, land on real type
         val delays = listOf(80L, 80L, 80L, 80L, 80L, 80L, 120L, 160L, 220L, 300L, 400L)
@@ -348,13 +352,20 @@ class PowerPlayFragment : Fragment() {
 
     private fun getPowerPlayInfo(powerType: Int): Pair<String, String> {
         return when (powerType) {
-            PowerType.FREEZE -> "FREEZE" to "Encase answers in ice" // it takes 5 taps to unfreeze
+            PowerType.FREEZE -> "FREEZE" to "Encase answers in ice"
             PowerType.BOMBLES -> "BOMBLES" to "Throw bombs over answers"
             PowerType.NIBBLERS -> "NIBBLERS" to "Nibble away at answers"
             PowerType.GLOOP -> "GLOOP" to "Cover answers in gloop"
             PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> "DOUBLE TROUBLE" to "Freeze and gloop"
             PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> "DOUBLE TROUBLE" to "Freeze and bombles"
             PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> "DOUBLE TROUBLE" to "Nibblers and gloop"
+            PowerType.LOCKDOWN -> "LOCKDOWN" to "Lock the answers in place"
+            PowerType.ZIPPERS -> "ZIPPERS" to "Zip up the answers"
+            PowerType.BUG -> "BUG" to "Bugs crawl over the answers"
+            PowerType.LETTER_SCATTER -> "LETTER SCATTER" to "Scatter the letters"
+            PowerType.DISCO_INFERNO -> "DISCO INFERNO" to "Disco lights dazzle the screen"
+            PowerType.FIFTY_FIFTY -> "50/50" to "Remove half the answers"
+            PowerType.POINTS_DOUBLER -> "POINTS DOUBLER" to "Double your points"
             else -> "POWER PLAY #$powerType" to "please remember the effect and tell developers"
         }
     }
@@ -368,6 +379,13 @@ class PowerPlayFragment : Fragment() {
             PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> R.drawable.ic_powerplay_dt_freeze_gloop
             PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> R.drawable.ic_powerplay_dt_freeze_bombles
             PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> R.drawable.ic_powerplay_dt_nibblers_gloop
+            PowerType.LOCKDOWN -> R.drawable.ic_powerplay_lockdown
+            PowerType.ZIPPERS -> R.drawable.ic_powerplay_zippers
+            PowerType.BUG -> R.drawable.ic_powerplay_bug
+            PowerType.LETTER_SCATTER -> R.drawable.ic_powerplay_letter_scatter
+            PowerType.DISCO_INFERNO -> R.drawable.ic_powerplay_disco
+            PowerType.FIFTY_FIFTY -> R.drawable.ic_powerplay_fifty_fifty
+            PowerType.POINTS_DOUBLER -> R.drawable.ic_powerplay_points_doubler
             else -> null
         }
     }
@@ -381,6 +399,13 @@ class PowerPlayFragment : Fragment() {
             PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> Color.parseColor("#59B89A") // blue-green
             PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> Color.parseColor("#A8C44B") // blue-yellow
             PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> Color.parseColor("#D48A30") // orange-green
+            PowerType.LOCKDOWN -> Color.parseColor("#78909C")  // steel grey
+            PowerType.ZIPPERS -> Color.parseColor("#CE93D8")  // light purple
+            PowerType.BUG -> Color.parseColor("#8D6E63")  // brown
+            PowerType.LETTER_SCATTER -> Color.parseColor("#FFA726")  // amber
+            PowerType.DISCO_INFERNO -> Color.parseColor("#EC407A")  // hot pink
+            PowerType.FIFTY_FIFTY -> Color.parseColor("#26C6DA")  // cyan
+            PowerType.POINTS_DOUBLER -> Color.parseColor("#FFD700")  // gold
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
