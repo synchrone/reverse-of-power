@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         // Apply display cutout and system bar insets as padding on the nav host
         ViewCompat.setOnApplyWindowInsetsListener(binding.navHostFragment) { view, windowInsets ->
             val insets = windowInsets.getInsets(
-                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+                WindowInsetsCompat.Type.systemBars()
             )
             view.updatePadding(
                 left = insets.left,
