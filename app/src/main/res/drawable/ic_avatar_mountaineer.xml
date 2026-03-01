@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#2E7D32"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Beanie hat -->
+    <path
+        android:fillColor="#795548"
+        android:pathData="M14,22 Q14,12 24,10 Q34,12 34,22 Z" />
+
+    <!-- Beanie pom-pom -->
+    <path
+        android:fillColor="#FF8A65"
+        android:pathData="M24,10 m-2.5,0 a2.5,2.5,0,1,1,5,0 a2.5,2.5,0,1,1,-5,0" />
+
+    <!-- Beanie band -->
+    <path
+        android:fillColor="#FF8A65"
+        android:pathData="M14,20 L34,20 L34,22 L14,22 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,32 m-8,0 a8,8,0,1,1,16,0 a8,8,0,1,1,-16,0" />
+
+    <!-- Eyes -->
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M21,30 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M27,30 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+
+    <!-- Big bushy beard -->
+    <path
+        android:fillColor="#795548"
+        android:pathData="M14,32 Q14,34 16,36 Q18,42 24,42 Q30,42 32,36 Q34,34 34,32 Q32,34 28,35 Q24,36 20,35 Q16,34 14,32 Z" />
+
+    <!-- Nose -->
+    <path
+        android:fillColor="#FFB74D"
+        android:pathData="M24,33 m-1.2,0 a1.2,1.5,0,1,1,2.4,0 a1.2,1.5,0,1,1,-2.4,0" />
+
+</vector>

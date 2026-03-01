@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#1565C0"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Helmet outer -->
+    <path
+        android:fillColor="#E0E0E0"
+        android:pathData="M24,26 m-14,0 a14,15,0,1,1,28,0 a14,15,0,1,1,-28,0" />
+
+    <!-- Helmet antenna base -->
+    <path
+        android:fillColor="#9E9E9E"
+        android:pathData="M23,11 L25,11 L25,8 L23,8 Z" />
+
+    <!-- Antenna ball -->
+    <path
+        android:fillColor="#F44336"
+        android:pathData="M24,7 m-2,0 a2,2,0,1,1,4,0 a2,2,0,1,1,-4,0" />
+
+    <!-- Visor -->
+    <path
+        android:fillColor="#42A5F5"
+        android:pathData="M24,27 m-9,0 a9,10,0,1,1,18,0 a9,10,0,1,1,-18,0" />
+
+    <!-- Visor shine -->
+    <path
+        android:fillColor="#90CAF9"
+        android:pathData="M19,22 Q22,18 28,20 Q24,22 19,22 Z" />
+
+    <!-- Face behind visor -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,28 m-6,0 a6,7,0,1,1,12,0 a6,7,0,1,1,-12,0" />
+
+    <!-- Eyes -->
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M21,27 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M27,27 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+
+    <!-- Smile -->
+    <path
+        android:pathData="M22,31 Q24,33 26,31"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- Ear covers -->
+    <path
+        android:fillColor="#9E9E9E"
+        android:pathData="M10,26 m-2,0 a2,3,0,1,1,4,0 a2,3,0,1,1,-4,0" />
+    <path
+        android:fillColor="#9E9E9E"
+        android:pathData="M38,26 m-2,0 a2,3,0,1,1,4,0 a2,3,0,1,1,-4,0" />
+
+</vector>

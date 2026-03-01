@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#D84315"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Hat crown -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16,27 Q16,16 24,13 Q32,16 32,27 Z" />
+
+    <!-- Hat brim -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M8,27 L40,27 L39,31 L9,31 Z" />
+
+    <!-- Hat band -->
+    <path
+        android:fillColor="#D84315"
+        android:pathData="M16,24 L32,24 L32,26 L16,26 Z" />
+
+    <!-- Star on band -->
+    <path
+        android:fillColor="#FFD54F"
+        android:pathData="M24,22.5 L25,24.2 L27,24.2 L25.5,25.4 L26,27 L24,25.8 L22,27 L22.5,25.4 L21,24.2 L23,24.2 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,38 m-5,0 a5,6,0,1,1,10,0 a5,6,0,1,1,-10,0" />
+
+    <!-- Eyes -->
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M22,36 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0" />
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M26,36 m-0.8,0 a0.8,0.8,0,1,1,1.6,0 a0.8,0.8,0,1,1,-1.6,0" />
+
+    <!-- Smile -->
+    <path
+        android:pathData="M22,39 Q24,41 26,39"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+</vector>

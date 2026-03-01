@@ -15,11 +15,11 @@
         android:padding="12dp"
         android:gravity="center_vertical">
 
-        <View
-            android:id="@+id/avatarColorIndicator"
+        <ImageView
+            android:id="@+id/avatarIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="@drawable/circle_background" />
+            android:contentDescription="Avatar icon" />
 
         <TextView
             android:id="@+id/avatarName"

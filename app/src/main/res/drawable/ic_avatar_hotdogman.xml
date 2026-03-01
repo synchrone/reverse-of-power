@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Circle background -->
+    <path
+        android:fillColor="#EF6C00"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Bun back (bottom half) -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M10,24 Q10,40 24,40 Q38,40 38,24 Z" />
+
+    <!-- Bun front (top half) -->
+    <path
+        android:fillColor="#FFE0B2"
+        android:pathData="M10,24 Q10,8 24,8 Q38,8 38,24 Z" />
+
+    <!-- Sausage poking out top -->
+    <path
+        android:fillColor="#D84315"
+        android:pathData="M18,6 Q24,4 30,6 L30,10 Q24,8 18,10 Z" />
+
+    <!-- Sausage poking out bottom -->
+    <path
+        android:fillColor="#D84315"
+        android:pathData="M18,38 Q24,40 30,38 L30,42 Q24,44 18,42 Z" />
+
+    <!-- Face -->
+    <path
+        android:fillColor="#FFCC80"
+        android:pathData="M24,28 m-6,0 a6,6,0,1,1,12,0 a6,6,0,1,1,-12,0" />
+
+    <!-- Eyes -->
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M21,26 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path
+        android:fillColor="#3E2723"
+        android:pathData="M27,26 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+
+    <!-- Big smile -->
+    <path
+        android:pathData="M20,30 Q24,34 28,30"
+        android:strokeColor="#3E2723"
+        android:strokeWidth="1"
+        android:fillColor="#00000000" />
+
+    <!-- Mustard zigzag -->
+    <path
+        android:pathData="M13,20 L17,18 L21,22 L25,18 L29,22 L33,18 L35,20"
+        android:strokeColor="#FFD600"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+</vector>
