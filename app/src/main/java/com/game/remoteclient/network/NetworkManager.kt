@@ -1,6 +1,9 @@
 package com.game.remoteclient.network
 
 import android.content.Context
+import android.net.wifi.WifiManager
+import android.os.Build
+import android.os.PowerManager
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
 import com.game.protocol.ClientHoldingScreenCommandMessage
@@ -106,6 +109,10 @@ class NetworkManager private constructor() {
     // Received images indexed by GUID
     val receivedImages = mutableMapOf<String, ByteArray>()
 
+    // Locks to keep connection alive in background
+    private var wifiLock: WifiManager.WifiLock? = null
+    private var wakeLock: PowerManager.WakeLock? = null
+
     companion object {
         @Volatile
         private var instance: NetworkManager? = null
@@ -156,6 +163,7 @@ class NetworkManager private constructor() {
 
             if (connected) {
                 Log.d(TAG, "Connected to ${server.ipAddress}:${server.port} with UID: $deviceUID")
+                acquireLocks()
             } else {
                 // Check if there's a specific error from the protocol client
                 val errorMessage = protocolClient?.connectionError ?: "Connection timed out"
@@ -430,6 +438,7 @@ class NetworkManager private constructor() {
     }
 
     fun disconnect() {
+        releaseLocks()
         protocolClient?.close()
         protocolClient = null
         currentServer = null
@@ -438,5 +447,33 @@ class NetworkManager private constructor() {
         availableAvatars.clear()
         _gameState.value = GameState.DISCONNECTED
         Log.d(TAG, "Disconnected from server")
+    }
+
+    private fun acquireLocks() {
+        val wifiManager = appContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            WifiManager.WIFI_MODE_FULL_LOW_LATENCY else @Suppress("DEPRECATION") WifiManager.WIFI_MODE_FULL_HIGH_PERF
+        wifiLock = wifiManager.createWifiLock(wifiMode, "KIP:connection").apply {
+            setReferenceCounted(false)
+            acquire()
+        }
+        val powerManager = appContext.getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "KIP:connection").apply {
+            setReferenceCounted(false)
+            acquire()
+        }
+        Log.d(TAG, "Acquired WiFi and wake locks")
+    }
+
+    private fun releaseLocks() {
+        wifiLock?.let {
+            if (it.isHeld) it.release()
+            wifiLock = null
+        }
+        wakeLock?.let {
+            if (it.isHeld) it.release()
+            wakeLock = null
+        }
+        Log.d(TAG, "Released WiFi and wake locks")
     }
 }

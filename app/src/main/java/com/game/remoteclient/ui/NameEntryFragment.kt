@@ -1,10 +1,13 @@
 package com.game.remoteclient.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.game.remoteclient.BuildConfig
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -29,6 +32,17 @@ class NameEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupListeners()
+
+        if (BuildConfig.DEBUG) {
+            binding.nameInput.setText("Player")
+        }
+
+        binding.nameInput.requestFocus()
+        binding.nameInput.selectAll()
+        binding.nameInput.post {
+            val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.nameInput, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     private fun setupListeners() {
