@@ -42,6 +42,9 @@ class ServerDiscoveryFragment : Fragment() {
         navigated = false
         setupRecyclerView()
         setupListeners()
+        if (BuildConfig.DEBUG) {
+            binding.ipAddressInput.setText("192.168.1.152")
+        }
         startServerScan()
     }
 
@@ -116,10 +119,20 @@ class ServerDiscoveryFragment : Fragment() {
         }
     }
 
+    private fun setServerOptionsVisible(visible: Boolean) {
+        val vis = if (visible) View.VISIBLE else View.GONE
+        binding.serversRecyclerView.visibility = vis
+        binding.manualEntryContainer.visibility = vis
+        binding.rescanButton.visibility = vis
+        binding.discoveredServersLabel.visibility = vis
+        if (!visible) binding.noServersText.visibility = View.GONE
+    }
+
     private fun onServerSelected(server: GameServer) {
         binding.connectButton.isEnabled = false
         binding.scanningContainer.visibility = View.VISIBLE
         binding.scanningText.text = "Connecting to server..."
+        setServerOptionsVisible(false)
 
         // Listen for rejoin — server sends this during handshake if we were previously connected
         networkManager.onRejoining = { _ ->
@@ -161,6 +174,7 @@ class ServerDiscoveryFragment : Fragment() {
                 if (!success) {
                     binding.scanningContainer.visibility = View.GONE
                     binding.connectButton.isEnabled = true
+                    setServerOptionsVisible(true)
                     clearCallbacks()
                     Toast.makeText(
                         requireContext(),
@@ -173,6 +187,7 @@ class ServerDiscoveryFragment : Fragment() {
                 if (_binding == null) return@launch
                 binding.scanningContainer.visibility = View.GONE
                 binding.connectButton.isEnabled = true
+                setServerOptionsVisible(true)
                 clearCallbacks()
                 Toast.makeText(
                     requireContext(),

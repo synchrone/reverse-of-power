@@ -8,10 +8,11 @@
     android:background="@color/background">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="520dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layout_gravity="center_horizontal">
 
         <!-- Title -->
         <TextView
@@ -116,6 +117,7 @@
 
         <!-- Collapsible manual IP entry -->
         <LinearLayout
+            android:id="@+id/manualEntryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -162,12 +164,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/ipAddressInput"
@@ -175,17 +179,16 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/ip_address_hint"
                             android:inputType="textNoSuggestions"
-                            android:maxLines="1"
-                            android:text="192.168.1.152" />
+                            android:maxLines="1" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/connectButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="@string/connect_button"
                         android:textSize="16sp"
-                        android:layout_marginTop="12dp" />
+                        android:layout_marginStart="12dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
