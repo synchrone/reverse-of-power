@@ -49,12 +49,7 @@ class CameraCaptureFragment : Fragment() {
         if (isGranted) {
             startCamera()
         } else {
-            Toast.makeText(
-                requireContext(),
-                R.string.camera_permission_required,
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().popBackStack()
+            useStubPhoto()
         }
     }
 
@@ -86,42 +81,63 @@ class CameraCaptureFragment : Fragment() {
     // --- Camera ---
 
     private fun setupCameraListeners() {
-        binding.captureButton.setOnClickListener { capturePhoto() }
         binding.retakeButton.setOnClickListener { retakePhoto() }
-        binding.confirmButton.setOnClickListener { confirmPhoto() }
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        try {
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
-        cameraProviderFuture.addListener({
-            val cameraProvider = cameraProviderFuture.get()
+            cameraProviderFuture.addListener({
+                try {
+                    val cameraProvider = cameraProviderFuture.get()
 
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.cameraPreview.surfaceProvider)
+                    val preview = Preview.Builder()
+                        .build()
+                        .also {
+                            it.setSurfaceProvider(binding.cameraPreview.surfaceProvider)
+                        }
+
+                    imageCapture = ImageCapture.Builder()
+                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .build()
+
+                    val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+
+                    cameraProvider.unbindAll()
+                    cameraProvider.bindToLifecycle(
+                        this,
+                        cameraSelector,
+                        preview,
+                        imageCapture
+                    )
+                    cameraAvailable = true
+                    updateContinueButton()
+                } catch (e: Exception) {
+                    useStubPhoto()
                 }
 
-            imageCapture = ImageCapture.Builder()
-                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                .build()
+            }, ContextCompat.getMainExecutor(requireContext()))
+        } catch (e: Exception) {
+            useStubPhoto()
+        }
+    }
 
-            val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+    private var cameraAvailable = false
 
-            try {
-                cameraProvider.unbindAll()
-                cameraProvider.bindToLifecycle(
-                    this,
-                    cameraSelector,
-                    preview,
-                    imageCapture
-                )
-            } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Camera failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-
-        }, ContextCompat.getMainExecutor(requireContext()))
+    private fun useStubPhoto() {
+        if (_binding == null) return
+        cameraAvailable = false
+        val stubBitmap = BitmapFactory.decodeStream(
+            resources.openRawResource(R.raw.avatar_stub)
+        )
+        capturedBitmap = stubBitmap
+        photoConfirmed = true
+        binding.cameraPreview.visibility = View.GONE
+        binding.capturedImage.visibility = View.VISIBLE
+        binding.capturedImage.setImageBitmap(stubBitmap)
+        binding.retakeButton.visibility = View.GONE
+        updateContinueButton()
     }
 
     private fun capturePhoto() {
@@ -152,12 +168,12 @@ class CameraCaptureFragment : Fragment() {
     }
 
     private fun showCapturedPhoto() {
+        photoConfirmed = true
         binding.cameraPreview.visibility = View.GONE
         binding.capturedImage.visibility = View.VISIBLE
         binding.capturedImage.setImageBitmap(capturedBitmap)
-        binding.captureButton.visibility = View.GONE
         binding.retakeButton.visibility = View.VISIBLE
-        binding.confirmButton.visibility = View.VISIBLE
+        updateContinueButton()
     }
 
     private fun retakePhoto() {
@@ -165,16 +181,7 @@ class CameraCaptureFragment : Fragment() {
         photoConfirmed = false
         binding.cameraPreview.visibility = View.VISIBLE
         binding.capturedImage.visibility = View.GONE
-        binding.captureButton.visibility = View.VISIBLE
         binding.retakeButton.visibility = View.GONE
-        binding.confirmButton.visibility = View.GONE
-        updateContinueButton()
-    }
-
-    private fun confirmPhoto() {
-        photoConfirmed = true
-        binding.retakeButton.visibility = View.VISIBLE
-        binding.confirmButton.visibility = View.GONE
         updateContinueButton()
     }
 
@@ -242,15 +249,29 @@ class CameraCaptureFragment : Fragment() {
     }
 
     private fun updateContinueButton() {
-        val avatarReady = selectedAvatar != null && networkManager.isAvatarConfirmed
-        binding.continueButton.visibility = if (selectedAvatar != null) View.VISIBLE else View.GONE
-        binding.continueButton.isEnabled = avatarReady
-        binding.continueButton.alpha = if (avatarReady) 1.0f else 0.5f
+        if (cameraAvailable && !photoConfirmed) {
+            binding.continueButton.text = "Take Photo"
+            binding.continueButton.isEnabled = true
+            binding.continueButton.alpha = 1.0f
+        } else {
+            binding.continueButton.text = getString(R.string.continue_button)
+            val avatarReady = selectedAvatar != null && networkManager.isAvatarConfirmed
+            binding.continueButton.isEnabled = true
+            binding.continueButton.alpha = if (photoConfirmed && avatarReady) 1.0f else 0.65f
+        }
     }
 
     private fun setupContinueButton() {
         binding.continueButton.setOnClickListener {
-            proceedToWaitingRoom()
+            if (cameraAvailable && !photoConfirmed) {
+                capturePhoto()
+            } else if (!photoConfirmed) {
+                Toast.makeText(requireContext(), "Take a photo first", Toast.LENGTH_SHORT).show()
+            } else if (selectedAvatar == null || !networkManager.isAvatarConfirmed) {
+                Toast.makeText(requireContext(), "Pick an avatar first", Toast.LENGTH_SHORT).show()
+            } else {
+                proceedToWaitingRoom()
+            }
         }
     }
 
