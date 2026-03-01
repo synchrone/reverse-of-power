@@ -57,7 +57,7 @@
                         android:id="@+id/answer0"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="42sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
@@ -96,7 +96,7 @@
                         android:id="@+id/answer1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="42sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
@@ -156,7 +156,7 @@
                         android:id="@+id/answer2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="42sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
@@ -195,7 +195,7 @@
                         android:id="@+id/answer3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textSize="42sp"
+                        android:textSize="34sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#CC444444"
@@ -228,6 +228,14 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Full-screen touch interceptor for gloop wiping (allows starting swipe from anywhere) -->
+    <View
+        android:id="@+id/gloopTouchInterceptor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="9.5dp"
+        android:visibility="gone" />
 
     <com.game.remoteclient.ui.BomblesOverlayView
         android:id="@+id/bomblesOverlay"

@@ -162,30 +162,29 @@ class GloopOverlayView @JvmOverloads constructor(
         }
 
         // Eraser width: inversely proportional to count (thicker gloop = smaller brush)
-        eraserPaint.strokeWidth = min(wf, hf) * 0.18f / layerCount
+        // 1.2x multiplier so the wipe feels wider than the finger contact area
+        eraserPaint.strokeWidth = min(wf, hf) * 0.18f * 1.2f / layerCount
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        if (!active || cleared) return false
+    // Touch is dispatched by the full-screen gloopTouchInterceptor in the fragment.
+    override fun onTouchEvent(event: MotionEvent): Boolean = false
 
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                lastX = event.x
-                lastY = event.y
-                eraseAt(event.x, event.y)
-                return true
-            }
-            MotionEvent.ACTION_MOVE -> {
-                gloopCanvas?.drawLine(lastX, lastY, event.x, event.y, eraserPaint)
-                markAlongLine(lastX, lastY, event.x, event.y)
-                lastX = event.x
-                lastY = event.y
-                invalidate()
-                checkCoverage()
-                return true
-            }
+    /** Called by the touch interceptor with coordinates in this view's local space. */
+    fun handleSwipe(x: Float, y: Float, isNewContact: Boolean) {
+        if (!active || cleared) return
+
+        if (isNewContact) {
+            lastX = x
+            lastY = y
+            eraseAt(x, y)
+        } else {
+            gloopCanvas?.drawLine(lastX, lastY, x, y, eraserPaint)
+            markAlongLine(lastX, lastY, x, y)
+            lastX = x
+            lastY = y
+            invalidate()
+            checkCoverage()
         }
-        return true
     }
 
     private fun eraseAt(x: Float, y: Float) {

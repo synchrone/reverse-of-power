@@ -8,6 +8,7 @@ import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -36,6 +37,14 @@ class TriviaAnsweringFragment : Fragment() {
 
     private var triviaCb: ((ServerBeginTriviaAnsweringPhase) -> Unit)? = null
     private var holdingScreenCb: ((com.game.protocol.ClientHoldingScreenCommandMessage) -> Unit)? = null
+
+    // Gloop cross-button swipe state
+    private var gloopOverlays = emptyList<GloopOverlayView>()
+    private var gloopButtons = emptyList<Button>()
+    private var lastGloopTarget: GloopOverlayView? = null
+    private var gloopDownX = 0f
+    private var gloopDownY = 0f
+    private var gloopMoved = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -146,6 +155,9 @@ class TriviaAnsweringFragment : Fragment() {
             }
         }
 
+        // Set up full-screen gloop touch interceptor for cross-button swiping
+        if (gloopCount > 0) setupGloopInterceptor(buttons)
+
         // Check for bombles power plays (PowerType 5) — multiple players can stack
         val bomblesCount = trivia.PowerPlays.filter { it.PowerType == PowerType.BOMBLES }.sumOf { it.Count }
         if (bomblesCount > 0) {
@@ -176,7 +188,7 @@ class TriviaAnsweringFragment : Fragment() {
     private fun onWrongAnswer(buttons: List<Button>) {
         wrongAnswerCount++
         penaltyActive = true
-        Log.d("TriviaAnswering", "Wrong answer #$wrongAnswerCount, 2s penalty")
+        Log.d("TriviaAnswering", "Wrong answer #$wrongAnswerCount, 1.9s penalty")
 
         // Flash full-screen red overlay
         binding.wrongAnswerOverlay.visibility = View.VISIBLE
@@ -194,12 +206,12 @@ class TriviaAnsweringFragment : Fragment() {
                     button.isEnabled = true
                 }
             }
-        }, 2000)
+        }, 1900)
     }
 
     private fun onBombleTouched(buttons: List<Button>) {
         penaltyActive = true
-        Log.d("TriviaAnswering", "Bomble touched! 2.5s penalty")
+        Log.d("TriviaAnswering", "Bomble touched! 1.9s penalty")
 
         binding.bomblesExplosionOverlay.visibility = View.VISIBLE
         buttons.forEach { it.isEnabled = false }
@@ -213,7 +225,7 @@ class TriviaAnsweringFragment : Fragment() {
                     button.isEnabled = true
                 }
             }
-        }, 2500)
+        }, 1900)
     }
 
     private fun highlightSelected(buttons: List<Button>, selectedIndex: Int) {
@@ -224,6 +236,99 @@ class TriviaAnsweringFragment : Fragment() {
 
     private fun navigateToHoldingScreen() {
         findNavController().popBackStack(R.id.holdingScreenFragment, false)
+    }
+
+    private fun setupGloopInterceptor(buttons: List<Button>) {
+        gloopOverlays = listOf(
+            binding.gloopOverlay0, binding.gloopOverlay1,
+            binding.gloopOverlay2, binding.gloopOverlay3
+        )
+        gloopButtons = buttons
+
+        // Hide interceptor when each overlay clears; remove when all done
+        gloopOverlays.forEach { overlay ->
+            overlay.onGloopCleared = {
+                if (gloopOverlays.none { it.visibility == View.VISIBLE }) {
+                    binding.gloopTouchInterceptor.visibility = View.GONE
+                }
+            }
+        }
+
+        binding.gloopTouchInterceptor.visibility = View.VISIBLE
+        binding.gloopTouchInterceptor.setOnTouchListener { _, event ->
+            val rx = event.rawX
+            val ry = event.rawY
+
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    gloopDownX = rx
+                    gloopDownY = ry
+                    gloopMoved = false
+                    lastGloopTarget = null
+
+                    val hit = findGloopAt(rx, ry)
+                    if (hit != null) {
+                        val loc = IntArray(2)
+                        hit.getLocationOnScreen(loc)
+                        hit.handleSwipe(rx - loc[0], ry - loc[1], isNewContact = true)
+                        lastGloopTarget = hit
+                    }
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    val dx = rx - gloopDownX
+                    val dy = ry - gloopDownY
+                    if (dx * dx + dy * dy > 20 * 20) gloopMoved = true
+
+                    val hit = findGloopAt(rx, ry)
+                    if (hit != null) {
+                        val loc = IntArray(2)
+                        hit.getLocationOnScreen(loc)
+                        hit.handleSwipe(rx - loc[0], ry - loc[1], isNewContact = hit != lastGloopTarget)
+                        lastGloopTarget = hit
+                    }
+                    true
+                }
+                MotionEvent.ACTION_UP -> {
+                    // If it was a tap (no significant movement), forward click to button underneath
+                    if (!gloopMoved) {
+                        val btnIndex = findButtonAt(rx, ry)
+                        if (btnIndex >= 0) {
+                            gloopButtons[btnIndex].performClick()
+                        }
+                    }
+                    lastGloopTarget = null
+                    true
+                }
+                else -> true
+            }
+        }
+    }
+
+    private fun findGloopAt(screenX: Float, screenY: Float): GloopOverlayView? {
+        for (overlay in gloopOverlays) {
+            if (overlay.visibility != View.VISIBLE) continue
+            val loc = IntArray(2)
+            overlay.getLocationOnScreen(loc)
+            if (screenX >= loc[0] && screenX < loc[0] + overlay.width &&
+                screenY >= loc[1] && screenY < loc[1] + overlay.height) {
+                return overlay
+            }
+        }
+        return null
+    }
+
+    private fun findButtonAt(screenX: Float, screenY: Float): Int {
+        for ((i, button) in gloopButtons.withIndex()) {
+            if (button.visibility != View.VISIBLE) continue
+            val loc = IntArray(2)
+            button.getLocationOnScreen(loc)
+            if (screenX >= loc[0] && screenX < loc[0] + button.width &&
+                screenY >= loc[1] && screenY < loc[1] + button.height) {
+                return i
+            }
+        }
+        return -1
     }
 
     private fun colorTintToInt(tint: ColorTint): Int {
