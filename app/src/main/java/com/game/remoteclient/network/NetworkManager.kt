@@ -378,6 +378,19 @@ class NetworkManager private constructor() {
         selectedAvatarId = avatarId
         pendingAvatarRequest = avatarId
         isAvatarConfirmed = false
+
+        if (protocolClient == null) {
+            // No server connection (debug mode) — auto-confirm
+            isAvatarConfirmed = true
+            pendingAvatarRequest = null
+            onAvatarRequestResponse?.invoke(ServerAvatarRequestResponseMessage(
+                RequestID = "",
+                AvatarID = avatarId,
+                Available = true
+            ))
+            return
+        }
+
         scope.launch {
             // Release previously selected avatar
             if (previousAvatarId != null && previousAvatarId != avatarId) {

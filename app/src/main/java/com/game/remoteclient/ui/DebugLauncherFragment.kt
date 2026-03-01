@@ -13,6 +13,7 @@ import com.game.protocol.PowerPlay
 import com.game.protocol.PowerPlayPlayer
 import com.game.protocol.PowerType
 import com.game.protocol.LinkingAnswer
+import com.game.protocol.ServerAvatarStatusMessage
 import com.game.protocol.ServerBeginLinkingAnsweringPhase
 import com.game.protocol.ServerBeginPowerPlayPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
@@ -91,6 +92,7 @@ class DebugLauncherFragment : Fragment() {
         binding.btnLaunchPowerPlay.setOnClickListener { launchPowerPlay() }
         binding.btnLinking.setOnClickListener { launchLinking() }
         binding.btnSorting.setOnClickListener { launchSorting() }
+        binding.btnAvatarSelection.setOnClickListener { launchAvatarSelection() }
     }
 
     private fun setupStepper(powerType: Int, minus: View, plus: View, display: TextView) {
@@ -236,6 +238,24 @@ class DebugLauncherFragment : Fragment() {
             )
         )
         findNavController().navigate(R.id.action_debugLauncher_to_sortingAnswers)
+    }
+
+    private fun launchAvatarSelection() {
+        val stubAvatars = listOf(
+            ServerAvatarStatusMessage(AvatarID = "avatar_knight", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_wizard", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_pirate", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_robot", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_alien", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_ninja", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_viking", Available = true),
+            ServerAvatarStatusMessage(AvatarID = "avatar_dragon", Available = true)
+        )
+        networkManager.availableAvatars.clear()
+        networkManager.availableAvatars.addAll(stubAvatars)
+
+        val action = DebugLauncherFragmentDirections.actionDebugLauncherToCameraCapture(playerName = "Debug")
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

@@ -36,28 +36,12 @@
             android:background="#80000000">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/captureButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Take Photo"
-                app:icon="@android:drawable/ic_menu_camera" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/retakeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Retake"
                 android:visibility="gone"
-                android:layout_marginStart="8dp"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/confirmButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Use Photo"
-                android:visibility="gone"
-                android:layout_marginStart="8dp" />
 
         </LinearLayout>
 
@@ -116,8 +100,7 @@
             android:layout_height="48dp"
             android:text="@string/continue_button"
             android:textSize="16sp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone" />
+            android:layout_marginTop="8dp" />
 
     </LinearLayout>
 
