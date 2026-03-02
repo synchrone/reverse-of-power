@@ -290,7 +290,7 @@ class LinkingAnswersFragment : Fragment() {
     }
 
     private fun getSlotViews(): List<TextView> =
-        listOf(binding.slot0, binding.slot1, binding.slot2, binding.slot3)
+        listOf(binding.slot0, binding.slot1, binding.slot2, binding.slot3, binding.slot4)
 
     private fun getSlotView(index: Int): TextView = getSlotViews()[index]
 
