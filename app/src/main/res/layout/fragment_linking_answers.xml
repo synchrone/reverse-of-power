@@ -42,6 +42,9 @@
         android:layout_marginTop="40dp"
         android:gravity="center"
         android:textSize="16sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
         android:textStyle="bold"
         android:textColor="#009688"
         android:background="@drawable/circle_background"
@@ -61,6 +64,9 @@
         android:layout_marginTop="32dp"
         android:gravity="center"
         android:textSize="16sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
         android:textStyle="bold"
         android:textColor="#009688"
         android:background="@drawable/circle_background"
@@ -79,6 +85,9 @@
         android:layout_marginBottom="40dp"
         android:gravity="center"
         android:textSize="16sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
         android:textStyle="bold"
         android:textColor="#009688"
         android:background="@drawable/circle_background"
@@ -88,7 +97,7 @@
         android:focusable="true"
         tools:text="This" />
 
-    <!-- Circle 3: lower-left (only for 4-item rounds) -->
+    <!-- Circle 3: lower-left (only for 4+ item rounds) -->
     <TextView
         android:id="@+id/slot3"
         android:layout_width="144dp"
@@ -98,6 +107,9 @@
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:textSize="16sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
         android:textStyle="bold"
         android:textColor="#009688"
         android:background="@drawable/circle_background"
@@ -107,6 +119,29 @@
         android:focusable="true"
         android:visibility="gone"
         tools:text="One" />
+
+    <!-- Circle 4: lower-right (only for 5-item rounds) -->
+    <TextView
+        android:id="@+id/slot4"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="10sp"
+        android:autoSizeMaxTextSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#009688"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#F0EAD6"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        tools:text="Two" />
 
     <!-- Instruction text -->
     <TextView

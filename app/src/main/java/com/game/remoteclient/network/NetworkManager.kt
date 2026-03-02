@@ -6,7 +6,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
-import com.game.protocol.ClientEliminatingAnswer
+import com.game.protocol.ClientToServerEliminatingAnswer
 import com.game.protocol.ClientToServerMatchingAnswer
 import com.game.protocol.ClientToServerOngoingChallengeMessage
 import com.game.protocol.PrototypeClientToServerMissingLetterAnswer
@@ -433,8 +433,8 @@ class NetworkManager private constructor() {
     fun sendEliminationAnswer(correctCount: Int) {
         Log.d(TAG, "Elimination answer: $correctCount correct")
         scope.launch {
-            protocolClient?.sendMessage(ClientEliminatingAnswer(
-                ClientEliminatingCorrectAnswerCount = correctCount
+            protocolClient?.sendMessage(ClientToServerEliminatingAnswer(
+                AnswerCount = correctCount
             ))
         }
     }
