@@ -462,12 +462,10 @@ data class ServerBeginEliminatingAnsweringPhase(
     val serverTick: Long = 0
 ) : GameMessage()
 
-// TODO: PROVISIONAL — TypeString and fields are guessed based on other answer types.
-//  Capture the real ClientEliminatingAnswer from a Decades game session and update accordingly.
-@Serializable
-data class ClientEliminatingAnswer(
-    override val TypeString: String = "KnowledgeIsPower.ClientEliminatingAnswer", // TODO: verify TypeString from capture
-    val ClientEliminatingCorrectAnswerCount: Int // TODO: verify field names from capture
+/@Serializable
+data class ClientToServerEliminatingAnswer(
+    override val TypeString: String = "KnowledgeIsPower.ClientToServerEliminatingAnswer",
+    val AnswerCount: Int
 ) : GameMessage()
 
 @Serializable
