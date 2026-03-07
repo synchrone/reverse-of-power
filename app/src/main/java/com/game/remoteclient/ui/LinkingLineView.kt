@@ -21,8 +21,8 @@ class LinkingLineView @JvmOverloads constructor(
     private val dragPath = Path()
     private var isDrawing = false
 
-    // Persistent chain lines (connected pairs)
-    private val chainLines = mutableListOf<FloatArray>() // [x1, y1, x2, y2]
+    // Persistent chain lines (drawn paths between connected pairs)
+    private val chainPaths = mutableListOf<Path>()
 
     private val stripeShader: BitmapShader by lazy { createStripeShader() }
 
@@ -78,24 +78,21 @@ class LinkingLineView @JvmOverloads constructor(
         invalidate()
     }
 
-    fun updateLineStart(x: Float, y: Float) {
-        dragPath.reset()
-        dragPath.moveTo(x, y)
-    }
-
     fun clearLine() {
         isDrawing = false
         dragPath.reset()
         invalidate()
     }
 
-    fun addChainLine(x1: Float, y1: Float, x2: Float, y2: Float) {
-        chainLines.add(floatArrayOf(x1, y1, x2, y2))
+    fun commitDragAsChain(endX: Float, endY: Float) {
+        dragPath.lineTo(endX, endY)
+        chainPaths.add(Path(dragPath))
+        dragPath.reset()
         invalidate()
     }
 
     fun clearChainLines() {
-        chainLines.clear()
+        chainPaths.clear()
         invalidate()
     }
 
@@ -129,10 +126,10 @@ class LinkingLineView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         stripePaint.shader = stripeShader
 
-        // Draw persistent chain lines
-        for (line in chainLines) {
-            canvas.drawLine(line[0], line[1], line[2], line[3], outlinePaint)
-            canvas.drawLine(line[0], line[1], line[2], line[3], stripePaint)
+        // Draw persistent chain paths
+        for (path in chainPaths) {
+            canvas.drawPath(path, outlinePaint)
+            canvas.drawPath(path, stripePaint)
         }
 
         // Draw active drag path

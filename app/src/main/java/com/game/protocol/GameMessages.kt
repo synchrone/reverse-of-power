@@ -462,7 +462,7 @@ data class ServerBeginEliminatingAnsweringPhase(
     val serverTick: Long = 0
 ) : GameMessage()
 
-/@Serializable
+@Serializable
 data class ClientToServerEliminatingAnswer(
     override val TypeString: String = "KnowledgeIsPower.ClientToServerEliminatingAnswer",
     val AnswerCount: Int
