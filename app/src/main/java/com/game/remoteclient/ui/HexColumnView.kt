@@ -9,6 +9,9 @@ import android.graphics.PixelFormat
 import android.graphics.RectF
 import android.graphics.Typeface
 import android.opengl.GLES20
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.opengl.GLSurfaceView
 import android.opengl.GLUtils
 import android.util.AttributeSet
@@ -493,16 +496,7 @@ class HexColumnView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
 
             // Text (slightly shifted down)
-            paint.color = Color.parseColor("#555555")
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textSize = size * 0.22f
-            val maxWidth = size - screenMargin * 2.5f
-            while (paint.measureText(text) > maxWidth && paint.textSize > size * 0.1f) {
-                paint.textSize -= 2f
-            }
-            val textY = size * 0.51f - (paint.descent() + paint.ascent()) / 2f + size * 0.01f
-            c.drawText(text, size / 2f, textY, paint)
+            drawWrappedText(c, text, size, screenMargin, Color.parseColor("#555555"), size * 0.01f)
         } else {
             // Raised: drop shadow, highlight, full color
             val shadowOff = size * 0.02f
@@ -539,20 +533,41 @@ class HexColumnView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
 
             // Text
-            paint.color = Color.parseColor("#333333")
-            paint.textAlign = Paint.Align.CENTER
-            paint.typeface = Typeface.DEFAULT_BOLD
-            paint.textSize = size * 0.22f
-            val maxWidth = size - screenMargin * 2.5f
-            while (paint.measureText(text) > maxWidth && paint.textSize > size * 0.1f) {
-                paint.textSize -= 2f
-            }
-            val textY = size * 0.5f - (paint.descent() + paint.ascent()) / 2f
-            c.drawText(text, size / 2f, textY, paint)
+            drawWrappedText(c, text, size, screenMargin, Color.parseColor("#333333"), 0f)
         }
 
         return uploadTexture(bmp)
     }
+
+    private fun drawWrappedText(c: Canvas, text: String, size: Int, screenMargin: Float, color: Int, yOffset: Float) {
+        val maxWidth = (size - screenMargin * 2.5f).toInt()
+        val tp = TextPaint(Paint.ANTI_ALIAS_FLAG).apply {
+            this.color = color
+            textAlign = Paint.Align.CENTER
+            typeface = Typeface.DEFAULT_BOLD
+            textSize = size * 0.22f
+        }
+
+        // Shrink font until text fits within 3 lines max
+        var layout = buildStaticLayout(text, tp, maxWidth)
+        while (layout.lineCount > 3 && tp.textSize > size * 0.1f) {
+            tp.textSize -= 2f
+            layout = buildStaticLayout(text, tp, maxWidth)
+        }
+
+        val textHeight = layout.height.toFloat()
+        val centerY = size / 2f + yOffset
+        c.save()
+        c.translate(size / 2f, centerY - textHeight / 2f)
+        layout.draw(c)
+        c.restore()
+    }
+
+    private fun buildStaticLayout(text: String, tp: TextPaint, width: Int): StaticLayout =
+        StaticLayout.Builder.obtain(text, 0, text.length, tp, width)
+            .setAlignment(Layout.Alignment.ALIGN_CENTER)
+            .setIncludePad(false)
+            .build()
 
     private fun createBodyTexture(size: Int): Int {
         val bmp = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
