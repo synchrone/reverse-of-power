@@ -20,7 +20,7 @@ Knowledge Is Power brought families and friends together around the TV for hilar
 - PS4 or PS5 with Knowledge Is Power installed
 - Both devices on the same WiFi network
 
-Download the latest APK from the [Releases](../../releases) page, or build from source with `./gradlew assembleDebug`.
+[**Download latest APK**](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk) or see all versions on the [Releases](../../releases) page. You can also build from source with `./gradlew assembleDebug`.
 
 ## Known Limitations
 
