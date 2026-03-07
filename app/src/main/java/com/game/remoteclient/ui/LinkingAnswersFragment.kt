@@ -109,14 +109,13 @@ class LinkingAnswersFragment : Fragment() {
                 val slot = findSlotAt(x, y)
                 if (slot != null && !connectedChain.contains(slot)) {
                     if (isCorrectNext(slot)) {
-                        // Correct next item — snap chain line
-                        val fromCenter = getSlotCenter(getSlotView(connectedChain.last()))
+                        // Correct next item — commit the drawn path as a chain line
                         val toCenter = getSlotCenter(getSlotView(slot))
-                        binding.linkingLine.addChainLine(fromCenter[0], fromCenter[1], toCenter[0], toCenter[1])
+                        binding.linkingLine.commitDragAsChain(toCenter[0], toCenter[1])
 
                         connectedChain.add(slot)
                         updateSlotHighlights()
-                        binding.linkingLine.updateLineStart(toCenter[0], toCenter[1])
+                        binding.linkingLine.startLine(toCenter[0], toCenter[1])
 
                         if (connectedChain.size == currentSlots.size) {
                             binding.linkingLine.clearLine()
@@ -147,7 +146,8 @@ class LinkingAnswersFragment : Fragment() {
     }
 
     private fun canStartFrom(slot: Int): Boolean {
-        return connectedChain.isEmpty() && slot < currentSlots.size
+        return connectedChain.isEmpty() && slot < currentSlots.size &&
+            currentSlots[slot].AnswerID == correctOrder[0].AnswerID
     }
 
     private fun isCorrectNext(slot: Int): Boolean {
