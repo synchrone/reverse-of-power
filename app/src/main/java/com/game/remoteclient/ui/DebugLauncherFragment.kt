@@ -47,7 +47,7 @@ class DebugLauncherFragment : Fragment() {
 
     // Power play slot config: index into powerTypeOptions (-1 = none)
     private val powerTypeOptions = listOf(
-        -1 to "(none)",
+        PowerType.NONE to "(none)",
         PowerType.FREEZE to "Freeze",
         PowerType.BOMBLES to "Bombles",
         PowerType.NIBBLERS to "Nibblers",
@@ -114,7 +114,7 @@ class DebugLauncherFragment : Fragment() {
         binding.btnEndOfGameFact.setOnClickListener { launchEndOfGameFact() }
     }
 
-    private fun setupStepper(powerType: Int, minus: View, plus: View, display: TextView) {
+    private fun setupStepper(powerType: PowerType, minus: View, plus: View, display: TextView) {
         minus.setOnClickListener {
             val current = counts[powerType] ?: 0
             if (current > 0) {
@@ -176,7 +176,7 @@ class DebugLauncherFragment : Fragment() {
         val newChecks = listOf(binding.chkPPSlot1New.isChecked, binding.chkPPSlot2New.isChecked, binding.chkPPSlot3New.isChecked)
         val selectedTypes = ppSlotSelections.toList().mapIndexedNotNull { slotIdx, optionIdx ->
             val powerType = powerTypeOptions[optionIdx].first
-            if (powerType < 0) null
+            if (powerType == PowerType.NONE) null
             else Triple(slotIdx, powerType, newChecks[slotIdx])
         }
 

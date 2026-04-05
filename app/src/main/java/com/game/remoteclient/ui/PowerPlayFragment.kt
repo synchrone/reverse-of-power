@@ -103,6 +103,7 @@ class PowerPlayFragment : Fragment() {
         binding.powerPlayContainer.removeAllViews()
 
         for (powerPlay in powerPlays) {
+            if (powerPlay.effectivePowerType == PowerType.NONE) continue
             val (name, description) = getPowerPlayInfo(powerPlay.effectivePowerType)
             val itemView = layoutInflater.inflate(R.layout.item_power_play, binding.powerPlayContainer, false)
 
@@ -133,7 +134,7 @@ class PowerPlayFragment : Fragment() {
         nameView: TextView,
         descView: TextView,
         icon: ImageView,
-        realPowerType: Int
+        realPowerType: PowerType
     ) {
         val allTypes = listOf(
             PowerType.FREEZE, PowerType.BOMBLES, PowerType.NIBBLERS, PowerType.GLOOP,
@@ -208,18 +209,48 @@ class PowerPlayFragment : Fragment() {
         selectedPowerPlay = powerPlay
         val (name, description) = getPowerPlayInfo(powerPlay.effectivePowerType)
 
-        // Animate transition to phase 2
-        binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
-            binding.titleText.text = "CHOOSE A TARGET"
-            binding.titleText.animate().alpha(1f).setDuration(200).start()
-        }.start()
-
         binding.selectedPowerPlayLabel.text = name
         binding.selectedPowerPlayLabel.visibility = View.VISIBLE
         binding.selectedPowerPlayLabel.alpha = 0f
         binding.selectedPowerPlayLabel.animate().alpha(1f).setDuration(300).start()
 
         binding.descriptionText.text = description
+
+        // No choosable targets — auto-send with whatever targets the server provided
+        val choosableTargets = players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
+        if (choosableTargets.isEmpty()) {
+            val selfPlayer = players.find { it.Self }
+            if (selfPlayer != null) {
+                selectionEnabled = false
+
+                binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
+                    binding.titleText.text = name
+                    binding.titleText.animate().alpha(1f).setDuration(200).start()
+                }.start()
+
+                val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.5f)
+                val scaleY = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleY", 1f, 0.5f)
+                val fadeOut = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "alpha", 1f, 0f)
+                AnimatorSet().apply {
+                    playTogether(scaleX, scaleY, fadeOut)
+                    duration = 300
+                    start()
+                }
+
+                binding.powerPlayScrollView.postDelayed({
+                    if (_binding == null) return@postDelayed
+                    binding.powerPlayScrollView.visibility = View.GONE
+                    showSelfTarget(powerPlay, selfPlayer)
+                }, 300)
+                return
+            }
+        }
+
+        // Animate transition to phase 2
+        binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
+            binding.titleText.text = "CHOOSE A TARGET"
+            binding.titleText.animate().alpha(1f).setDuration(200).start()
+        }.start()
 
         // Shrink power play options
         val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.5f)
@@ -275,6 +306,51 @@ class PowerPlayFragment : Fragment() {
 
             binding.targetContainer.addView(itemView)
         }
+    }
+
+    private fun showSelfTarget(powerPlay: PowerPlay, selfPlayer: PowerPlayPlayer) {
+        binding.targetArea.visibility = View.VISIBLE
+        binding.targetArea.alpha = 0f
+        binding.targetArea.animate().alpha(1f).setDuration(300).start()
+
+        binding.targetContainer.removeAllViews()
+
+        val itemView = layoutInflater.inflate(R.layout.item_power_play_target, binding.targetContainer, false)
+        itemView.findViewById<TextView>(R.id.targetName).text = selfPlayer.Name
+
+        val photo = itemView.findViewById<ImageView>(R.id.targetPhoto)
+        val imageData = networkManager.receivedImages[selfPlayer.ImageGUID]
+        if (imageData != null) {
+            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+            if (bitmap != null) {
+                photo.setImageBitmap(bitmap)
+            } else {
+                photo.background.setTint(Color.parseColor("#80FFFFFF"))
+            }
+        } else {
+            photo.background.setTint(Color.parseColor("#80FFFFFF"))
+        }
+
+        binding.targetContainer.addView(itemView)
+
+        // Show glow on self
+        val glowRing = itemView.findViewById<View>(R.id.targetGlowRing)
+        glowRing.visibility = View.VISIBLE
+        glowRing.alpha = 0f
+        glowRing.animate().alpha(1f).setDuration(300).withEndAction { pulseGlow(glowRing) }.start()
+
+        val spotlight = itemView.findViewById<View>(R.id.targetSpotlight)
+        spotlight.visibility = View.VISIBLE
+        spotlight.alpha = 0f
+        spotlight.scaleX = 0.5f
+        spotlight.scaleY = 0.5f
+        spotlight.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(400).start()
+
+        Log.d("PowerPlayFragment", "Auto-targeting power play ${powerPlay.DisplayIndex} (${powerPlay.effectivePowerType})")
+        networkManager.sendPowerPlayChoice(
+            powerPlaySlotIndex = powerPlay.DisplayIndex,
+            targetSlotIndices = powerPlay.PowerPlayTargets
+        )
     }
 
     private fun onTargetSelected(player: PowerPlayPlayer) {
@@ -350,7 +426,7 @@ class PowerPlayFragment : Fragment() {
             .start()
     }
 
-    private fun getPowerPlayInfo(powerType: Int): Pair<String, String> {
+    private fun getPowerPlayInfo(powerType: PowerType): Pair<String, String> {
         return when (powerType) {
             PowerType.FREEZE -> "FREEZE" to "Encase answers in ice"
             PowerType.BOMBLES -> "BOMBLES" to "Throw bombs over answers"
@@ -366,11 +442,11 @@ class PowerPlayFragment : Fragment() {
             PowerType.DISCO_INFERNO -> "DISCO INFERNO" to "Disco lights dazzle the screen"
             PowerType.FIFTY_FIFTY -> "50/50" to "Remove half the answers"
             PowerType.POINTS_DOUBLER -> "POINTS DOUBLER" to "Double your points"
-            else -> "POWER PLAY #$powerType" to "please remember the effect and tell developers"
+            else -> "POWER PLAY #${powerType.value}" to "please remember the effect and tell developers"
         }
     }
 
-    private fun getPowerPlayDrawable(powerType: Int): Int? {
+    private fun getPowerPlayDrawable(powerType: PowerType): Int? {
         return when (powerType) {
             PowerType.FREEZE -> R.drawable.ic_powerplay_freeze
             PowerType.BOMBLES -> R.drawable.ic_powerplay_bombles
@@ -390,7 +466,7 @@ class PowerPlayFragment : Fragment() {
         }
     }
 
-    private fun getPowerPlayColor(powerType: Int): Int {
+    private fun getPowerPlayColor(powerType: PowerType): Int {
         return when (powerType) {
             PowerType.FREEZE -> Color.parseColor("#4FC3F7")  // ice blue
             PowerType.BOMBLES -> Color.parseColor("#FFD600")  // black/yellow
