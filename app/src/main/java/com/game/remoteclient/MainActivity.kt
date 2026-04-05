@@ -48,6 +48,19 @@ class MainActivity : AppCompatActivity() {
         // Setup navigation
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        val networkManager = GameRemoteClientApplication.getInstance().networkManager
+        networkManager.onResetToNameEntry = {
+            runOnUiThread {
+                if (!navController.popBackStack(R.id.nameEntryFragment, false)) {
+                    // nameEntryFragment not on back stack (e.g. still on ServerDiscovery) —
+                    // pop to start and navigate forward
+                    navController.popBackStack(R.id.serverDiscoveryFragment, false)
+                    navController.navigate(R.id.action_serverDiscovery_to_nameEntry)
+                }
+            }
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {

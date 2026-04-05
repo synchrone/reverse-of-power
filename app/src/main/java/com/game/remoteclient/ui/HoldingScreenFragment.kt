@@ -83,7 +83,6 @@ class HoldingScreenFragment : Fragment() {
             activity?.runOnUiThread {
                 when (message.action) {
                     ClientQuizCommandMessage.ACTION_CONTINUE -> navigateToContinue()
-                    ClientQuizCommandMessage.ACTION_RESET_TO_NAME -> navigateToNameEntry()
                 }
             }
         }
@@ -171,9 +170,7 @@ class HoldingScreenFragment : Fragment() {
         findNavController().navigate(R.id.action_holdingScreen_to_endOfGameFact)
     }
 
-    private fun navigateToNameEntry() {
-        findNavController().popBackStack(R.id.nameEntryFragment, false)
-    }
+
 
     private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
         val text = message.HoldingScreenText.replace("\\n", "\n")
