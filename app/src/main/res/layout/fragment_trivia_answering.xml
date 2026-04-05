@@ -71,6 +71,13 @@
                         android:translationZ="7dp"
                         android:visibility="gone" />
 
+                    <com.game.remoteclient.ui.LetterScatterOverlayView
+                        android:id="@+id/letterScatterOverlay0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7.1dp"
+                        android:visibility="gone" />
+
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay0"
                         android:layout_width="match_parent"
@@ -84,6 +91,14 @@
                         android:layout_height="match_parent"
                         android:translationZ="9dp"
                         android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.ZipperOverlayView
+                        android:id="@+id/zipperOverlay0"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9.5dp"
+                        android:visibility="gone" />
+
                 </FrameLayout>
 
                 <FrameLayout
@@ -110,6 +125,13 @@
                         android:translationZ="7dp"
                         android:visibility="gone" />
 
+                    <com.game.remoteclient.ui.LetterScatterOverlayView
+                        android:id="@+id/letterScatterOverlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7.1dp"
+                        android:visibility="gone" />
+
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay1"
                         android:layout_width="match_parent"
@@ -123,6 +145,14 @@
                         android:layout_height="match_parent"
                         android:translationZ="9dp"
                         android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.ZipperOverlayView
+                        android:id="@+id/zipperOverlay1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9.5dp"
+                        android:visibility="gone" />
+
                 </FrameLayout>
             </LinearLayout>
 
@@ -170,6 +200,13 @@
                         android:translationZ="7dp"
                         android:visibility="gone" />
 
+                    <com.game.remoteclient.ui.LetterScatterOverlayView
+                        android:id="@+id/letterScatterOverlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7.1dp"
+                        android:visibility="gone" />
+
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay2"
                         android:layout_width="match_parent"
@@ -183,6 +220,14 @@
                         android:layout_height="match_parent"
                         android:translationZ="9dp"
                         android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.ZipperOverlayView
+                        android:id="@+id/zipperOverlay2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9.5dp"
+                        android:visibility="gone" />
+
                 </FrameLayout>
 
                 <FrameLayout
@@ -209,6 +254,13 @@
                         android:translationZ="7dp"
                         android:visibility="gone" />
 
+                    <com.game.remoteclient.ui.LetterScatterOverlayView
+                        android:id="@+id/letterScatterOverlay3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="7.1dp"
+                        android:visibility="gone" />
+
                     <com.game.remoteclient.ui.IceOverlayView
                         android:id="@+id/iceOverlay3"
                         android:layout_width="match_parent"
@@ -222,12 +274,29 @@
                         android:layout_height="match_parent"
                         android:translationZ="9dp"
                         android:visibility="gone" />
+
+                    <com.game.remoteclient.ui.ZipperOverlayView
+                        android:id="@+id/zipperOverlay3"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:translationZ="9.5dp"
+                        android:visibility="gone" />
+
                 </FrameLayout>
             </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <com.game.remoteclient.ui.DiscoOverlayView
+        android:id="@+id/discoOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="7.5dp"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone" />
 
     <!-- Full-screen touch interceptor for gloop wiping (allows starting swipe from anywhere) -->
     <View
@@ -242,6 +311,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:translationZ="10dp"
+        android:visibility="gone" />
+
+    <com.game.remoteclient.ui.LockdownOverlayView
+        android:id="@+id/lockdownOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="10.5dp"
+        android:visibility="gone" />
+
+    <com.game.remoteclient.ui.BugOverlayView
+        android:id="@+id/bugOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationZ="11dp"
         android:visibility="gone" />
 
     <View
