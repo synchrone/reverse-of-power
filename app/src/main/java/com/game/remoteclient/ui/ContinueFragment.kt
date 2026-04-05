@@ -39,9 +39,12 @@ class ContinueFragment : Fragment() {
             networkManager.sendContinueButtonPressed()
         }
 
-        holdingScreenCb = { _ ->
-            activity?.runOnUiThread {
-                findNavController().popBackStack(R.id.holdingScreenFragment, false)
+        holdingScreenCb = { message ->
+            // HoldingScreenType 5 is a player-join notification — ignore it, the button press should dismiss this screen.
+            if (message.HoldingScreenType != 5) {
+                activity?.runOnUiThread {
+                    findNavController().popBackStack(R.id.holdingScreenFragment, false)
+                }
             }
         }
         networkManager.onHoldingScreenMessage = holdingScreenCb
