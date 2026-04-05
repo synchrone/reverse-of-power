@@ -97,21 +97,30 @@ class TriviaAnsweringFragment : Fragment() {
         val nibblersOverlays = listOf(binding.nibblersOverlay0, binding.nibblersOverlay1, binding.nibblersOverlay2, binding.nibblersOverlay3)
         val iceOverlays = listOf(binding.iceOverlay0, binding.iceOverlay1, binding.iceOverlay2, binding.iceOverlay3)
         val gloopOverlays = listOf(binding.gloopOverlay0, binding.gloopOverlay1, binding.gloopOverlay2, binding.gloopOverlay3)
+        val zipperOverlays = listOf(binding.zipperOverlay0, binding.zipperOverlay1, binding.zipperOverlay2, binding.zipperOverlay3)
+        val letterScatterOverlays = listOf(binding.letterScatterOverlay0, binding.letterScatterOverlay1, binding.letterScatterOverlay2, binding.letterScatterOverlay3)
         val isFinals = trivia.RoundType == 5
 
         // Check for power play stacks
         val nibblersCount = trivia.PowerPlays.filter { it.PowerType == PowerType.NIBBLERS }.sumOf { it.Count }
         val freezeCount = trivia.PowerPlays.filter { it.PowerType == PowerType.FREEZE }.sumOf { it.Count }
         val gloopCount = trivia.PowerPlays.filter { it.PowerType == PowerType.GLOOP }.sumOf { it.Count }
+        val zipperCount = trivia.PowerPlays.filter { it.PowerType == PowerType.ZIPPERS }.sumOf { it.Count }
+        val letterScatterCount = trivia.PowerPlays.filter { it.PowerType == PowerType.LETTER_SCATTER }.sumOf { it.Count }
 
         // Reset all overlays
         nibblersOverlays.forEach { it.reset() }
         iceOverlays.forEach { it.reset() }
         gloopOverlays.forEach { it.reset() }
+        zipperOverlays.forEach { it.reset() }
+        letterScatterOverlays.forEach { it.reset() }
+
+        // Map answers by DisplayIndex so 50/50 (2 answers) lands on correct button positions
+        val answerByIndex = trivia.Answers.associateBy { it.DisplayIndex }
 
         buttons.forEachIndexed { index, button ->
-            if (index < trivia.Answers.size) {
-                val answer = trivia.Answers[index]
+            val answer = answerByIndex[index]
+            if (answer != null) {
                 button.text = answer.DisplayText
                 button.visibility = View.VISIBLE
                 button.alpha = 1.0f
@@ -131,8 +140,11 @@ class TriviaAnsweringFragment : Fragment() {
                     }
                 }
 
-                // Apply nibblers overlay if active — render nibbled text, hide button's own text
-                if (nibblersCount > 0) {
+                // Letter scatter subsumes nibblers when both are active
+                if (letterScatterCount > 0) {
+                    letterScatterOverlays[index].activate(answer.DisplayText, index, nibblersCount)
+                    button.setTextColor(Color.TRANSPARENT)
+                } else if (nibblersCount > 0) {
                     nibblersOverlays[index].activate(nibblersCount, index, answer.DisplayText)
                     button.setTextColor(Color.TRANSPARENT)
                 }
@@ -150,6 +162,14 @@ class TriviaAnsweringFragment : Fragment() {
                     overlay.activate(gloopCount, index)
                     overlay.onGloopCleared = null
                 }
+
+                // Apply zipper overlay if active
+                if (zipperCount > 0) {
+                    val overlay = zipperOverlays[index]
+                    overlay.activate(zipperCount, index)
+                    overlay.onZipperOpened = null
+                }
+
             } else {
                 button.visibility = View.INVISIBLE
             }
@@ -158,7 +178,7 @@ class TriviaAnsweringFragment : Fragment() {
         // Set up full-screen gloop touch interceptor for cross-button swiping
         if (gloopCount > 0) setupGloopInterceptor(buttons)
 
-        // Check for bombles power plays (PowerType 5) — multiple players can stack
+        // Check for bombles power plays — multiple players can stack
         val bomblesCount = trivia.PowerPlays.filter { it.PowerType == PowerType.BOMBLES }.sumOf { it.Count }
         if (bomblesCount > 0) {
             binding.bomblesOverlay.activate(bomblesCount)
@@ -170,6 +190,38 @@ class TriviaAnsweringFragment : Fragment() {
         } else {
             binding.bomblesOverlay.deactivate()
         }
+
+        // Check for bug power play — rendered on top of all other effects
+        val bugCount = trivia.PowerPlays.filter { it.PowerType == PowerType.BUG }.sumOf { it.Count }
+        if (bugCount > 0) {
+            binding.bugOverlay.activate(bugCount)
+            binding.bugOverlay.onBugCleared = null
+        } else {
+            binding.bugOverlay.reset()
+        }
+
+        // Check for lockdown power play — full-screen chains with padlocks
+        val lockdownCount = trivia.PowerPlays.filter { it.PowerType == PowerType.LOCKDOWN }.sumOf { it.Count }
+        if (lockdownCount > 0) {
+            binding.lockdownOverlay.activate(lockdownCount * 3)
+            binding.lockdownOverlay.onLockdownCleared = null
+        } else {
+            binding.lockdownOverlay.reset()
+        }
+
+        // Check for disco inferno — flashing color grid at bottom of effect stack
+        val discoCount = trivia.PowerPlays.filter { it.PowerType == PowerType.DISCO_INFERNO }.sumOf { it.Count }
+        if (discoCount > 0) {
+            binding.discoOverlay.activate()
+        } else {
+            binding.discoOverlay.reset()
+        }
+
+        // No visual trivia effect needed for:
+        // - BET: rewards the caster, no hindrance to the target
+        // - POINTS_DOUBLER / FIFTY_FIFTY: server adjusts answers/scoring, no overlay
+        // - DOUBLE_TROUBLE variants: server sends the component types (FREEZE+GLOOP etc.) individually
+        // - LETTER_SCATTER: handled per-button above (dancing text, subsumes nibblers)
 
         // Send a "no answer" response when time runs out
         timer?.cancel()

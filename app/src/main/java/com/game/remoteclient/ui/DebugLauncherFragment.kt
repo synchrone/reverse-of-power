@@ -42,7 +42,12 @@ class DebugLauncherFragment : Fragment() {
         PowerType.FREEZE to 0,
         PowerType.BOMBLES to 0,
         PowerType.NIBBLERS to 0,
-        PowerType.GLOOP to 0
+        PowerType.GLOOP to 0,
+        PowerType.BUG to 0,
+        PowerType.ZIPPERS to 0,
+        PowerType.LOCKDOWN to 0,
+        PowerType.DISCO_INFERNO to 0,
+        PowerType.LETTER_SCATTER to 0
     )
 
     // Power play slot config: index into powerTypeOptions (-1 = none)
@@ -84,11 +89,17 @@ class DebugLauncherFragment : Fragment() {
         setupStepper(PowerType.BOMBLES, binding.btnBomblesMinus, binding.btnBomblesPlus, binding.txtBomblesCount)
         setupStepper(PowerType.NIBBLERS, binding.btnNibblersMinus, binding.btnNibblersPlus, binding.txtNibblersCount)
         setupStepper(PowerType.GLOOP, binding.btnGloopMinus, binding.btnGloopPlus, binding.txtGloopCount)
+        setupStepper(PowerType.BUG, binding.btnBugMinus, binding.btnBugPlus, binding.txtBugCount)
+        setupStepper(PowerType.ZIPPERS, binding.btnZippersMinus, binding.btnZippersPlus, binding.txtZippersCount)
+        setupStepper(PowerType.LOCKDOWN, binding.btnLockdownMinus, binding.btnLockdownPlus, binding.txtLockdownCount)
+        setupStepper(PowerType.DISCO_INFERNO, binding.btnDiscoMinus, binding.btnDiscoPlus, binding.txtDiscoCount)
+        setupStepper(PowerType.LETTER_SCATTER, binding.btnLetterScatterMinus, binding.btnLetterScatterPlus, binding.txtLetterScatterCount)
 
         setupPPSlotCycler(0, binding.btnPPSlot1Prev, binding.btnPPSlot1Next, binding.txtPPSlot1)
         setupPPSlotCycler(1, binding.btnPPSlot2Prev, binding.btnPPSlot2Next, binding.txtPPSlot2)
         setupPPSlotCycler(2, binding.btnPPSlot3Prev, binding.btnPPSlot3Next, binding.txtPPSlot3)
 
+        binding.txtTargetsCount.text = targetPlayerCount.toString()
         binding.btnTargetsMinus.setOnClickListener {
             if (targetPlayerCount > 1) {
                 targetPlayerCount--
@@ -115,6 +126,7 @@ class DebugLauncherFragment : Fragment() {
     }
 
     private fun setupStepper(powerType: PowerType, minus: View, plus: View, display: TextView) {
+        display.text = (counts[powerType] ?: 0).toString()
         minus.setOnClickListener {
             val current = counts[powerType] ?: 0
             if (current > 0) {
@@ -132,6 +144,7 @@ class DebugLauncherFragment : Fragment() {
     }
 
     private fun setupPPSlotCycler(slotIndex: Int, prev: View, next: View, display: TextView) {
+        display.text = powerTypeOptions[ppSlotSelections[slotIndex]].second
         prev.setOnClickListener {
             val current = ppSlotSelections[slotIndex]
             ppSlotSelections[slotIndex] = if (current <= 0) powerTypeOptions.size - 1 else current - 1
