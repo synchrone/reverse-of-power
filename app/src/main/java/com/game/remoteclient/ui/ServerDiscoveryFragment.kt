@@ -143,20 +143,6 @@ class ServerDiscoveryFragment : Fragment() {
             }
         }
 
-        // Listen for quiz command action=31 — server is ready for avatar selection
-        networkManager.onQuizCommand = { cmd ->
-            if (cmd.action == 31) {
-                activity?.runOnUiThread {
-                    if (_binding == null || navigated) return@runOnUiThread
-                    navigated = true
-                    binding.scanningContainer.visibility = View.GONE
-                    binding.connectButton.isEnabled = true
-                    val action = ServerDiscoveryFragmentDirections.actionServerDiscoveryToNameEntry()
-                    findNavController().navigate(action)
-                }
-            }
-        }
-
         // Listen for holding screen — game already in progress
         networkManager.onHoldingScreenMessage = { _ ->
             activity?.runOnUiThread {
@@ -200,7 +186,6 @@ class ServerDiscoveryFragment : Fragment() {
 
     private fun clearCallbacks() {
         networkManager.onRejoining = null
-        networkManager.onQuizCommand = null
         networkManager.onHoldingScreenMessage = null
     }
 

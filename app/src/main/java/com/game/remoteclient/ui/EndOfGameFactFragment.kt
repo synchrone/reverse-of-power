@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.game.protocol.ClientHoldingScreenCommandMessage
-import com.game.protocol.ClientQuizCommandMessage
+
 import com.game.remoteclient.BuildConfig
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -22,7 +22,6 @@ class EndOfGameFactFragment : Fragment() {
     private val networkManager by lazy { GameRemoteClientApplication.getInstance().networkManager }
 
     private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
-    private var quizCb: ((ClientQuizCommandMessage) -> Unit)? = null
     private var isScrollOpened = false
     private var canContinue = false
 
@@ -91,21 +90,19 @@ class EndOfGameFactFragment : Fragment() {
         }
         networkManager.onHoldingScreenMessage = holdingScreenCb
 
-        quizCb = { message ->
-            if (message.action == ClientQuizCommandMessage.ACTION_RESET_TO_NAME) {
-                activity?.runOnUiThread {
-                    canContinue = true
-                    if (isScrollOpened) enableContinue()
-                }
+        // Delay reset-to-name: show the fact first, let the user continue manually
+        networkManager.onResetToNameEntryInterceptor = {
+            activity?.runOnUiThread {
+                canContinue = true
+                if (isScrollOpened) enableContinue()
             }
         }
-        networkManager.onQuizCommand = quizCb
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         if (networkManager.onHoldingScreenMessage === holdingScreenCb) networkManager.onHoldingScreenMessage = null
-        if (networkManager.onQuizCommand === quizCb) networkManager.onQuizCommand = null
+        networkManager.onResetToNameEntryInterceptor = null
         _binding = null
     }
 }

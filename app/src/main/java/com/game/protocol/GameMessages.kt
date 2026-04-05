@@ -166,7 +166,7 @@ data class ClientHoldingScreenCommandMessage(
     val action: Int, // 5 = look at the TV;
     val time: Double = 0.0,
     val HoldingScreenText: String,
-    val HoldingScreenType: Int, // 4 = look at the tv;  9 = get ready
+    val HoldingScreenType: Int, // 4 = look at the tv;  9 = get ready, 5 = players joining
     val OtherPlayerIndex: Int,
     val ShowPortraitPhotoControls: Boolean,
     val serverTick: Long = 0
@@ -312,6 +312,8 @@ object PowerType {
     const val DOUBLE_TROUBLE_NIBBLERS_GLOOP = 12
 
     // Decades:
+    const val NONE = -1 // empty slot
+    const val BET = 1 // on someone's answering correctly
     const val X  = 8 // ?
     const val LOCKDOWN = 20
     const val ZIPPERS = 22

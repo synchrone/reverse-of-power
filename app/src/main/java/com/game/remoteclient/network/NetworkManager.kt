@@ -97,6 +97,10 @@ class NetworkManager private constructor() {
     var onCategoryOverrideSuccess: ((ServerCategorySelectOverrideSuccess) -> Unit)? = null
     var onRejoining: ((RejoiningClientOwnProfileMessage) -> Unit)? = null
     var onEndOfGameFact: ((ClientEndOfGameFactCommandMessage) -> Unit)? = null
+    /** Global handler — set once by Activity, never overridden by fragments. */
+    var onResetToNameEntry: (() -> Unit)? = null
+    /** Fragment-level interceptor — takes priority over [onResetToNameEntry] when set. */
+    var onResetToNameEntryInterceptor: (() -> Unit)? = null
 
     // Reconnection state
     var isRejoining: Boolean = false
@@ -254,7 +258,11 @@ class NetworkManager private constructor() {
             }
 
             is ClientQuizCommandMessage -> {
-                onQuizCommand?.invoke(message)
+                if (message.action == ClientQuizCommandMessage.ACTION_RESET_TO_NAME) {
+                    (onResetToNameEntryInterceptor ?: onResetToNameEntry)?.invoke()
+                } else {
+                    onQuizCommand?.invoke(message)
+                }
             }
 
             is ClientHoldingScreenCommandMessage -> {
