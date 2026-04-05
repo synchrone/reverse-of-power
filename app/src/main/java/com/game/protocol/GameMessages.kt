@@ -1,6 +1,10 @@
 package com.game.protocol
 
 import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 // ==================== Message Models ====================
 
@@ -301,33 +305,46 @@ data class PowerPlayPlayer(
     val Away: Boolean
 )
 
-object PowerType {
+@Serializable(with = PowerTypeSerializer::class)
+enum class PowerType(val value: Int) {
     // KIP types:
-    const val FREEZE = 4
-    const val BOMBLES = 5
-    const val NIBBLERS = 6
-    const val GLOOP = 7
-    const val DOUBLE_TROUBLE_FREEZE_GLOOP = 10
-    const val DOUBLE_TROUBLE_FREEZE_BOMBLES = 11
-    const val DOUBLE_TROUBLE_NIBBLERS_GLOOP = 12
+    FREEZE(4),
+    BOMBLES(5),
+    NIBBLERS(6),
+    GLOOP(7),
+    DOUBLE_TROUBLE_FREEZE_GLOOP(10),
+    DOUBLE_TROUBLE_FREEZE_BOMBLES(11),
+    DOUBLE_TROUBLE_NIBBLERS_GLOOP(12),
 
     // Decades:
-    const val NONE = -1 // empty slot
-    const val BET = 1 // on someone's answering correctly
-    const val X  = 8 // ?
-    const val LOCKDOWN = 20
-    const val ZIPPERS = 22
-    const val BUG = 24
-    const val POINTS_DOUBLER = 25 // also target is yourself only
-    const val LETTER_SCATTER = 28
-    const val DISCO_INFERNO = 29
-    const val FIFTY_FIFTY = 0 // ? also target is yourself only
+    NONE(-1), // empty slot
+    BET(1), // on someone's answering correctly
+    POINTS_DOUBLER(8), // points doubler, party, pinata — targets everyone, no player choice needed
+    LOCKDOWN(20),
+    ZIPPERS(22),
+    BUG(24),
+    UNKNOWN_25(25), // ?
+    UNKNOWN_26(26), // ?
+    LETTER_SCATTER(28),
+    DISCO_INFERNO(29),
+    FIFTY_FIFTY(0); // ? also target is yourself only
 
+    companion object {
+        private val byValue = entries.associateBy { it.value }
+        fun fromValue(value: Int): PowerType = byValue[value] ?: NONE
+    }
 }
+
+object PowerTypeSerializer : KSerializer<PowerType> {
+    override val descriptor = PrimitiveSerialDescriptor("PowerType", PrimitiveKind.INT)
+    override fun serialize(encoder: Encoder, value: PowerType) = encoder.encodeInt(value.value)
+    override fun deserialize(decoder: Decoder): PowerType = PowerType.fromValue(decoder.decodeInt())
+}
+
 
 @Serializable
 data class ActivePowerPlay(
-    val PowerType: Int,
+    val PowerType: PowerType,
     val Count: Int,
     val Culprits: List<Int> = emptyList()
 )
@@ -394,15 +411,15 @@ data class ClientToServerOrderingAnswer(
 @Serializable
 data class PowerPlay(
     val DisplayIndex: Int,
-    val PowerType: Int = -1,
-    val PowerTypes: List<Int> = emptyList(),
+    val PowerType: PowerType = com.game.protocol.PowerType.NONE,
+    val PowerTypes: List<PowerType> = emptyList(),
     val PowerTarget: Int,
     val PowerPlayTargets: List<Int>,
     val New: Boolean,
     val TargetCount: Int
 ) {
-    val effectivePowerType: Int get() = if (PowerType >= 0) PowerType else PowerTypes.firstOrNull() ?: -1 // Decades uses PowerTypes list
-    val effectivePowerTypes: List<Int> get() = if (PowerType >= 0) listOf(PowerType) else PowerTypes
+    val effectivePowerType: PowerType get() = if (PowerType != com.game.protocol.PowerType.NONE) PowerType else PowerTypes.firstOrNull() ?: com.game.protocol.PowerType.NONE // Decades uses PowerTypes list
+    val effectivePowerTypes: List<PowerType> get() = if (PowerType != com.game.protocol.PowerType.NONE) listOf(PowerType) else PowerTypes
     // TODO: represent double trouble as a list of basic PowerTypes. Clearly this early protocol issue has been fixed in Decades
 }
 
