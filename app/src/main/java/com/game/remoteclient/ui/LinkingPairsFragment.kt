@@ -154,7 +154,7 @@ class LinkingPairsFragment : Fragment() {
 
     private fun fillRow(slots: Array<LinkingAnswer?>, queue: MutableList<LinkingAnswer>) {
         val occupied = slots.count { it != null }
-        val toFill = minOf(2 - occupied, queue.size)
+        val toFill = minOf(3 - occupied, queue.size)
         if (toFill <= 0) return
 
         val emptyIndices = slots.indices.filter { slots[it] == null }.shuffled()
@@ -169,16 +169,34 @@ class LinkingPairsFragment : Fragment() {
 
         if (topKeys.intersect(bottomKeys).isNotEmpty()) return
 
-        val topItem = activeTop.filterNotNull().firstOrNull() ?: return
-        val topKey = getMatchKey(topItem.AnswerID)
-
-        val matchIdx = bottomQueue.indexOfFirst { getMatchKey(it.AnswerID) == topKey }
-        if (matchIdx >= 0) {
-            val match = bottomQueue.removeAt(matchIdx)
-            val swapIdx = activeBottom.indices.first { activeBottom[it] != null }
-            activeBottom[swapIdx]?.let { bottomQueue.add(0, it) }
-            activeBottom[swapIdx] = match
+        // Try swapping from bottom queue to match any active top item
+        for (topItem in activeTop.filterNotNull()) {
+            val topKey = getMatchKey(topItem.AnswerID)
+            val matchIdx = bottomQueue.indexOfFirst { getMatchKey(it.AnswerID) == topKey }
+            if (matchIdx >= 0) {
+                val match = bottomQueue.removeAt(matchIdx)
+                val swapIdx = activeBottom.indices.first { activeBottom[it] != null }
+                activeBottom[swapIdx]?.let { bottomQueue.add(it) }
+                activeBottom[swapIdx] = match
+                return
+            }
         }
+
+        // Try swapping from top queue to match any active bottom item
+        for (bottomItem in activeBottom.filterNotNull()) {
+            val bottomKey = getMatchKey(bottomItem.AnswerID)
+            val matchIdx = topQueue.indexOfFirst { getMatchKey(it.AnswerID) == bottomKey }
+            if (matchIdx >= 0) {
+                val match = topQueue.removeAt(matchIdx)
+                val swapIdx = activeTop.indices.first { activeTop[it] != null }
+                activeTop[swapIdx]?.let { topQueue.add(it) }
+                activeTop[swapIdx] = match
+                return
+            }
+        }
+
+        // Both queues exhausted and no matches visible — auto-submit
+        sendAnswer()
     }
 
     private fun getMatchKey(answerId: String): String {
