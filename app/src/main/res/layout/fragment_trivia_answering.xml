@@ -160,7 +160,7 @@
                 android:id="@+id/finalsWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Finals! Wrong answers are rejected!"
+                android:text="@string/finals_warning"
                 android:textSize="14sp"
                 android:textStyle="bold|italic"
                 android:textColor="#FFDDDD"

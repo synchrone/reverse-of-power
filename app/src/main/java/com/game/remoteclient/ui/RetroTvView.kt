@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.game.remoteclient.R
 import kotlin.math.min
 
 class RetroTvView @JvmOverloads constructor(
@@ -41,7 +42,7 @@ class RetroTvView @JvmOverloads constructor(
         isFakeBoldText = true
     }
 
-    var text: String = "Look at the\nTV"
+    var text: String = context.getString(R.string.look_at_tv)
         set(value) {
             field = value
             invalidate()

@@ -219,7 +219,7 @@ class TriviaAnsweringFragment : Fragment() {
 
         // No visual trivia effect needed for:
         // - BET: rewards the caster, no hindrance to the target
-        // - POINTS_DOUBLER / FIFTY_FIFTY: server adjusts answers/scoring, no overlay
+        // - POINTS_DOUBLER / POINTS_PARTY / FIFTY_FIFTY: server adjusts scoring, no overlay
         // - DOUBLE_TROUBLE variants: server sends the component types (FREEZE+GLOOP etc.) individually
         // - LETTER_SCATTER: handled per-button above (dancing text, subsumes nibblers)
 

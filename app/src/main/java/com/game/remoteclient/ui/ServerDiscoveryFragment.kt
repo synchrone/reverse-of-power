@@ -66,7 +66,7 @@ class ServerDiscoveryFragment : Fragment() {
                 val server = GameServer(ipAddress)
                 onServerSelected(server)
             } else {
-                Toast.makeText(requireContext(), "Please enter an IP address", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.enter_ip_prompt), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -114,7 +114,7 @@ class ServerDiscoveryFragment : Fragment() {
                 binding.scanningContainer.visibility = View.GONE
                 binding.rescanButton.isEnabled = true
                 binding.noServersText.visibility = View.VISIBLE
-                Toast.makeText(requireContext(), "Scan failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.scan_failed, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -131,7 +131,7 @@ class ServerDiscoveryFragment : Fragment() {
     private fun onServerSelected(server: GameServer) {
         binding.connectButton.isEnabled = false
         binding.scanningContainer.visibility = View.VISIBLE
-        binding.scanningText.text = "Connecting to server..."
+        binding.scanningText.text = getString(R.string.connecting_to_server)
         setServerOptionsVisible(false)
 
         // Listen for rejoin — server sends this during handshake if we were previously connected
@@ -164,7 +164,7 @@ class ServerDiscoveryFragment : Fragment() {
                     clearCallbacks()
                     Toast.makeText(
                         requireContext(),
-                        "Failed to connect to ${server.fullAddress}",
+                        getString(R.string.failed_to_connect, server.fullAddress),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -177,7 +177,7 @@ class ServerDiscoveryFragment : Fragment() {
                 clearCallbacks()
                 Toast.makeText(
                     requireContext(),
-                    "Connection error: ${e.message}",
+                    getString(R.string.connection_error_detail, e.message),
                     Toast.LENGTH_LONG
                 ).show()
             }

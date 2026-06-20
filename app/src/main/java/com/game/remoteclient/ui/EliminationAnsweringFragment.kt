@@ -163,7 +163,7 @@ class EliminationAnsweringFragment : Fragment() {
 
     private fun updateCounter() {
         val remaining = totalRounds - currentRoundIndex
-        binding.counterText.text = "$remaining to go"
+        binding.counterText.text = getString(R.string.x_to_go, remaining)
     }
 
     private fun sendAnswer() {

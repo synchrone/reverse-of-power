@@ -83,7 +83,7 @@ class AvatarSelectionFragment : Fragment() {
                 if (response.AvatarID == selectedAvatar?.AvatarID) {
                     updateContinueButton()
                     if (!response.Available) {
-                        Toast.makeText(requireContext(), "Avatar unavailable", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.avatar_unavailable), Toast.LENGTH_SHORT).show()
                     }
                 }
             }

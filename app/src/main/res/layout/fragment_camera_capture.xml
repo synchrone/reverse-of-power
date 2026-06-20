@@ -37,7 +37,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:visibility="gone"
-            android:contentDescription="Captured photo" />
+            android:contentDescription="@string/cd_captured_photo" />
 
         <!-- Camera controls at bottom -->
         <LinearLayout
@@ -53,7 +53,7 @@
                 android:id="@+id/retakeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Retake"
+                android:text="@string/retake_photo"
                 android:visibility="gone"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
@@ -77,7 +77,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Select Avatar"
+            android:text="@string/select_avatar"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Waiting for avatars..."
+                android:text="@string/waiting_for_avatars"
                 android:textColor="@color/text_secondary"
                 android:visibility="gone" />
 
