@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Piñata donkey (facing left) -->
+
+    <!-- Hanging string -->
+    <path
+        android:pathData="M62,50 L62,9"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round" />
+
+    <!-- Ears -->
+    <path
+        android:pathData="M24,33 L19,16 L32,30 Z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M33,30 L41,16 L44,33 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Neck (bridges head and body) -->
+    <path
+        android:pathData="M28,48 L50,46 L52,68 L30,68 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Body -->
+    <path
+        android:pathData="M46,50 L84,50 Q94,50 94,60 L94,66 Q94,76 84,76 L46,76 Q36,76 36,66 L36,60 Q36,50 46,50 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Head (overlaps the neck and body) -->
+    <path
+        android:pathData="M30,42 m-14,0 a14,14 0 1,0 28,0 a14,14 0 1,0 -28,0"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Snout -->
+    <path
+        android:pathData="M18,46 Q9,47 9,52 Q9,57 18,57 L27,54 L27,47 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Legs -->
+    <path
+        android:pathData="M46,75 L44,98 M58,76 L58,98 M74,76 L75,98 M86,75 L88,98"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="7"
+        android:strokeLineCap="round" />
+
+    <!-- Tail -->
+    <path
+        android:pathData="M94,58 C104,55 106,65 99,70"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="5"
+        android:strokeLineCap="round" />
+
+    <!-- Confetti -->
+    <path
+        android:pathData="M14,22 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M108,20 m-3,0 a3,3 0 1,0 6,0 a3,3 0 1,0 -6,0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M106,92 m-3.5,0 a3.5,3.5 0 1,0 7,0 a3.5,3.5 0 1,0 -7,0"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M14,99 L17,94 L20,99 L17,104 Z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M100,42 L104,46 L100,50 L96,46 Z"
+        android:fillColor="#FFFFFF" />
+
+</vector>

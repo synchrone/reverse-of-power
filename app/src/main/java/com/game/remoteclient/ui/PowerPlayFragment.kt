@@ -471,7 +471,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.DISCO_INFERNO -> R.drawable.ic_powerplay_disco
             PowerType.FIFTY_FIFTY -> R.drawable.ic_powerplay_fifty_fifty
             PowerType.POINTS_DOUBLER -> R.drawable.ic_powerplay_points_doubler
-            // TODO: dedicated POINTS_PARTY icon — falls through to no icon (generic) for now
+            PowerType.POINTS_PARTY -> R.drawable.ic_powerplay_points_party
             else -> null
         }
     }
