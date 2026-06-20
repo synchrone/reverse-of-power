@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -94,7 +93,7 @@ class PowerPlayFragment : Fragment() {
         // Enable selection immediately (request may arrive before or after)
         selectionEnabled = true
 
-        binding.titleText.text = "PICK A POWER PLAY"
+        binding.titleText.text = getString(R.string.pick_a_power_play)
         binding.descriptionText.text = ""
         binding.selectedPowerPlayLabel.visibility = View.GONE
         binding.targetArea.visibility = View.GONE
@@ -216,10 +215,11 @@ class PowerPlayFragment : Fragment() {
 
         binding.descriptionText.text = description
 
-        // FIFTY_FIFTY is a self-buff (removes half your wrong answers) — it always applies to you, never an opponent
-        val isSelfTargeted = powerPlay.effectivePowerType == PowerType.FIFTY_FIFTY
+        // FIFTY_FIFTY and POINTS_DOUBLER are self-buffs; POINTS_PARTY hits everyone — none of these let you pick an opponent
+        val autoTargeted = isSelfTargetedType(powerPlay.effectivePowerType)
+            || powerPlay.effectivePowerType == PowerType.POINTS_PARTY
         // No choosable targets — auto-send with whatever targets the server provided
-        val choosableTargets = if (isSelfTargeted) emptyList<PowerPlayPlayer>()
+        val choosableTargets = if (autoTargeted) emptyList<PowerPlayPlayer>()
             else players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
         if (choosableTargets.isEmpty()) {
             val selfPlayer = players.find { it.Self }
@@ -251,7 +251,7 @@ class PowerPlayFragment : Fragment() {
 
         // Animate transition to phase 2
         binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
-            binding.titleText.text = "CHOOSE A TARGET"
+            binding.titleText.text = getString(R.string.choose_a_target)
             binding.titleText.animate().alpha(1f).setDuration(200).start()
         }.start()
 
@@ -349,8 +349,8 @@ class PowerPlayFragment : Fragment() {
         spotlight.scaleY = 0.5f
         spotlight.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(400).start()
 
-        // Self-targeted power plays (e.g. FIFTY_FIFTY) apply to you only, regardless of the server-provided target list
-        val targetSlots = if (powerPlay.effectivePowerType == PowerType.FIFTY_FIFTY)
+        // Self-buffs (FIFTY_FIFTY, POINTS_DOUBLER) apply to you only; everyone-targets (POINTS_PARTY) use the server's full list
+        val targetSlots = if (isSelfTargetedType(powerPlay.effectivePowerType))
             listOf(selfPlayer.SlotIndex)
         else
             powerPlay.PowerPlayTargets
@@ -449,6 +449,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.LETTER_SCATTER -> getString(R.string.pp_letter_scatter_name) to getString(R.string.pp_letter_scatter_desc)
             PowerType.DISCO_INFERNO -> getString(R.string.pp_disco_name) to getString(R.string.pp_disco_desc)
             PowerType.FIFTY_FIFTY -> getString(R.string.pp_fifty_fifty_name) to getString(R.string.pp_fifty_fifty_desc)
+            PowerType.POINTS_PARTY -> getString(R.string.pp_points_party_name) to getString(R.string.pp_points_party_desc)
             PowerType.POINTS_DOUBLER -> getString(R.string.pp_points_doubler_name) to getString(R.string.pp_points_doubler_desc)
             else -> getString(R.string.pp_unknown_name, powerType.value) to getString(R.string.pp_unknown_desc)
         }
@@ -470,6 +471,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.DISCO_INFERNO -> R.drawable.ic_powerplay_disco
             PowerType.FIFTY_FIFTY -> R.drawable.ic_powerplay_fifty_fifty
             PowerType.POINTS_DOUBLER -> R.drawable.ic_powerplay_points_doubler
+            // TODO: dedicated POINTS_PARTY icon — falls through to no icon (generic) for now
             else -> null
         }
     }
@@ -489,10 +491,15 @@ class PowerPlayFragment : Fragment() {
             PowerType.LETTER_SCATTER -> Color.parseColor("#FFA726")  // amber
             PowerType.DISCO_INFERNO -> Color.parseColor("#EC407A")  // hot pink
             PowerType.FIFTY_FIFTY -> Color.parseColor("#26C6DA")  // cyan
-            PowerType.POINTS_DOUBLER -> Color.parseColor("#FFD700")  // gold
+            PowerType.POINTS_DOUBLER -> Color.parseColor("#FFD700")  // gold (x2 your own points)
+            PowerType.POINTS_PARTY -> Color.parseColor("#E91E63")  // party pink (points for everyone)
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
+
+    /** Power plays that apply to the caster only (no opponent picker; send just your own slot). */
+    private fun isSelfTargetedType(type: PowerType) =
+        type == PowerType.FIFTY_FIFTY || type == PowerType.POINTS_DOUBLER
 
     override fun onDestroyView() {
         super.onDestroyView()

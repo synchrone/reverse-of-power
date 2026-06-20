@@ -22,7 +22,7 @@
         android:id="@+id/avatarTypeLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Avatar Type"
+        android:text="@string/select_avatar_type"
         android:textSize="14sp"
         android:textStyle="bold"
         android:textColor="@color/text_primary"
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Waiting for avatars..."
+            android:text="@string/waiting_for_avatars"
             android:textColor="@color/text_secondary"
             android:visibility="gone" />
 

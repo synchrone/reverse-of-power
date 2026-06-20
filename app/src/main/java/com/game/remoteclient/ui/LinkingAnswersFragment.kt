@@ -180,7 +180,7 @@ class LinkingAnswersFragment : Fragment() {
         attempts.clear()
         answerSent = false
 
-        binding.instructionText.text = "Drag to link in order"
+        binding.instructionText.text = getString(R.string.drag_to_link_in_order)
         updateCounter()
         displayRound()
 
@@ -286,7 +286,7 @@ class LinkingAnswersFragment : Fragment() {
 
     private fun updateCounter() {
         val remaining = totalRounds - currentRoundIndex
-        binding.timerText.text = "$remaining to go"
+        binding.timerText.text = getString(R.string.x_to_go, remaining)
     }
 
     private fun getSlotViews(): List<TextView> =

@@ -19,7 +19,7 @@
             android:id="@+id/avatarIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="Avatar icon" />
+            android:contentDescription="@string/cd_avatar_icon" />
 
         <TextView
             android:id="@+id/avatarName"

@@ -74,11 +74,78 @@
     <string name="pp_disco_desc">Диско-огни слепят экран</string>
     <string name="pp_fifty_fifty_name">50/50</string>
     <string name="pp_fifty_fifty_desc">Убрать половину ответов</string>
-    <string name="pp_points_doubler_name">УДВОИТЕЛЬ ОЧКОВ</string>
-    <string name="pp_points_doubler_desc">Удвоить ваши очки</string>
+    <string name="pp_points_doubler_name">УДВОЕНИЕ</string>
+    <string name="pp_points_doubler_desc">Вы получаете ×2 призовых очков</string>
+    <string name="pp_points_party_name">ВЕЧЕРИНКА</string>
+    <string name="pp_points_party_desc">Победители получают двойной выигрыш</string>
     <string name="pp_unknown_name">СПЕЦХОД #%1$d</string>
     <string name="pp_unknown_desc">Запомните эффект и сообщите разработчикам</string>
 
     <!-- Trivia -->
     <string name="dont_touch_bombs">Не трогайте бомбы!</string>
+
+    <!-- Server Discovery (extra) -->
+    <string name="debug">Отладка</string>
+    <string name="rescan">Повторить поиск</string>
+    <string name="manual_ip_address">Ввести IP вручную</string>
+    <string name="enter_ip_prompt">Введите IP-адрес</string>
+    <string name="scan_failed">Сбой поиска: %1$s</string>
+    <string name="failed_to_connect">Не удалось подключиться к %1$s</string>
+    <string name="connection_error_detail">Ошибка подключения: %1$s</string>
+
+    <!-- Name Entry (extra) -->
+    <string name="default_player_name">Игрок</string>
+    <string name="name_required">Введите ваше имя</string>
+    <string name="name_too_short">Имя должно быть не короче 2 символов</string>
+
+    <!-- Avatar / Camera -->
+    <string name="select_avatar_type">Выберите тип аватара</string>
+    <string name="waiting_for_avatars">Ожидание аватаров…</string>
+    <string name="select_avatar">Выбрать аватар</string>
+    <string name="avatar_unavailable">Аватар недоступен</string>
+    <string name="take_photo_first">Сначала сделайте фото</string>
+    <string name="pick_avatar_first">Сначала выберите аватар</string>
+    <string name="photo_capture_failed">Не удалось сделать фото: %1$s</string>
+
+    <!-- Category / Continue / Power Pick / Power Play -->
+    <string name="choose_a_category">ВЫБЕРИТЕ КАТЕГОРИЮ</string>
+    <string name="continue_caps">ПРОДОЛЖИТЬ</string>
+    <string name="category_selected">КАТЕГОРИЯ ВЫБРАНА</string>
+    <string name="power_pick">СУПЕРВЫБОР</string>
+    <string name="power_pick_description">Используйте Супервыбор раз за игру,\nчтобы переопределить выбор остальных</string>
+    <string name="power_pick_accepted">Супервыбор принят!</string>
+    <string name="pick_a_power_play">ВЫБЕРИТЕ СПЕЦХОД</string>
+
+    <!-- Minigame prompts -->
+    <string name="smash_odd_one_out">Нажмите, чтобы разбить лишнее</string>
+    <string name="drag_to_link">Перетащите, чтобы связать ответы</string>
+    <string name="swipe_to_match">Проведите для поиска, нажмите для пары</string>
+    <string name="finals_warning">Финал! Неверные ответы отклоняются!</string>
+
+    <!-- Waiting Room (extra) -->
+    <string name="waiting_for_other_players">Ожидание других игроков…</string>
+    <string name="hold_to_start">Удерживайте для старта!</string>
+    <string name="hold_to_start_hint">Нажмите и удерживайте, пока не загорятся все огни</string>
+
+    <!-- Player list -->
+    <string name="host">ХОСТ</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_captured_photo">Сделанное фото</string>
+    <string name="cd_expand">Развернуть</string>
+    <string name="cd_avatar_icon">Значок аватара</string>
+    <string name="cd_power_play_icon">Значок спецхода</string>
+
+    <!-- In-code UI strings (second i18n pass) -->
+    <string name="connecting_to_server">Подключение к серверу…</string>
+    <string name="avatar_selected">Выбран</string>
+    <string name="avatar_available">Доступен</string>
+    <string name="avatar_taken">Занят</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="x_to_go">Осталось %1$s</string>
+    <string name="look_at_tv">Смотрите на ТВ</string>
+    <string name="drag_to_link_in_order">Перетащите, чтобы соединить по порядку</string>
+    <string name="done_waiting">Готово, ждём других игроков</string>
+    <string name="choose_a_target">ВЫБЕРИТЕ ЦЕЛЬ</string>
+    <string name="start_caps">СТАРТ</string>
 </resources>

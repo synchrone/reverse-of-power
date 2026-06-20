@@ -19,7 +19,7 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHOOSE A CATEGORY"
+            android:text="@string/choose_a_category"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"

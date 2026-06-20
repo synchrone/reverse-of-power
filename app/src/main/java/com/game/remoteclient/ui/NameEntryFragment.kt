@@ -34,7 +34,7 @@ class NameEntryFragment : Fragment() {
         setupListeners()
 
         if (BuildConfig.DEBUG) {
-            binding.nameInput.setText("Player")
+            binding.nameInput.setText(getString(R.string.default_player_name))
         }
 
         binding.nameInput.requestFocus()
@@ -50,12 +50,12 @@ class NameEntryFragment : Fragment() {
             val name = binding.nameInput.text.toString().trim()
 
             if (name.isEmpty()) {
-                Toast.makeText(requireContext(), "Please enter your name", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.name_required), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             if (name.length < 2) {
-                Toast.makeText(requireContext(), "Name must be at least 2 characters", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.name_too_short), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 

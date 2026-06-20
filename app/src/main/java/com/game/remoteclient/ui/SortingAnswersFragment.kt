@@ -231,7 +231,7 @@ class SortingAnswersFragment : Fragment() {
     private fun updateRemainingCount() {
         val remaining = itemQueue.size + (if (currentItem != null) 1 else 0)
         if (remaining > 0) {
-            binding.timerText.text = "$remaining to go"
+            binding.timerText.text = getString(R.string.x_to_go, remaining)
             binding.timerText.visibility = View.VISIBLE
         } else {
             binding.timerText.visibility = View.GONE

@@ -51,12 +51,12 @@ class AvatarAdapter(
 
             // Set availability status
             if (avatar.Available) {
-                binding.avatarStatus.text = if (isSelected) "Selected" else "Available"
+                binding.avatarStatus.text = binding.root.context.getString(if (isSelected) R.string.avatar_selected else R.string.avatar_available)
                 binding.avatarStatus.setTextColor(context.getColor(R.color.primary))
                 binding.root.alpha = 1.0f
                 binding.root.isEnabled = true
             } else {
-                binding.avatarStatus.text = "Taken"
+                binding.avatarStatus.text = binding.root.context.getString(R.string.avatar_taken)
                 binding.avatarStatus.setTextColor(context.getColor(R.color.text_secondary))
                 binding.root.alpha = 0.5f
                 binding.root.isEnabled = false

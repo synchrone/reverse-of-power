@@ -319,14 +319,14 @@ enum class PowerType(val value: Int) {
     // Decades:
     NONE(-1), // empty slot
     BET(1), // on someone's answering correctly
-    POINTS_DOUBLER(8), // points doubler, party, pinata — targets everyone, no player choice needed
-    LOCKDOWN(20),
-    ZIPPERS(22),
-    BUG(24),
-    UNKNOWN_25(25), // ?
-    LETTER_SCATTER(28),
-    DISCO_INFERNO(29),
-    FIFTY_FIFTY(26); // target is yourself only
+    POINTS_PARTY(8), // points party, pinata — targets everyone
+    LOCKDOWN(20), // chains across answer buttons
+    ZIPPERS(22), // unzip each answer button
+    BUG(24), // annoying overlay on top of buttons
+    POINTS_DOUBLER(25), // x2 your own points if you win, target self
+    FIFTY_FIFTY(26), // target is yourself only
+    LETTER_SCATTER(28), // dancing answer button font
+    DISCO_INFERNO(29); // colorful blinking overlay over buttons
 
     companion object {
         private val byValue = entries.associateBy { it.value }

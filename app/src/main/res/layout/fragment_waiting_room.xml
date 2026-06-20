@@ -23,7 +23,7 @@
             android:id="@+id/waitingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Waiting for other players..."
+            android:text="@string/waiting_for_other_players"
             android:textSize="20sp"
             android:textColor="@color/text_primary" />
 
@@ -42,7 +42,7 @@
             android:id="@+id/readyText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hold to Start!"
+            android:text="@string/hold_to_start"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
@@ -57,7 +57,7 @@
             android:id="@+id/instructionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Press and hold until the lights fill up"
+            android:text="@string/hold_to_start_hint"
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="24dp" />

@@ -133,7 +133,7 @@ class LinkingPairsFragment : Fragment() {
         fillSlots()
         updateUI()
 
-        binding.instructionText.text = "Drag to link answers"
+        binding.instructionText.text = getString(R.string.drag_to_link)
         updateRemainingCount()
 
         val durationMs = (phase.QuestionDuration * 1000).toLong()
@@ -280,12 +280,12 @@ class LinkingPairsFragment : Fragment() {
     private fun updateRemainingCount() {
         val remaining = totalPairs - correctCount
         if (remaining > 0) {
-            binding.timerText.text = "$remaining to go"
+            binding.timerText.text = getString(R.string.x_to_go, remaining)
             binding.timerText.visibility = View.VISIBLE
-            binding.instructionText.text = "Drag to link answers"
+            binding.instructionText.text = getString(R.string.drag_to_link)
         } else {
             binding.timerText.visibility = View.GONE
-            binding.instructionText.text = "Done, waiting for other players"
+            binding.instructionText.text = getString(R.string.done_waiting)
         }
     }
 
