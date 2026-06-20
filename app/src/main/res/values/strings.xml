@@ -78,6 +78,8 @@
     <string name="pp_points_doubler_desc">You get ×2 prize points</string>
     <string name="pp_points_party_name">POINTS PARTY</string>
     <string name="pp_points_party_desc">Winners get double winnings</string>
+    <string name="pp_locked_in">✓ Locked in!</string>
+    <string name="pp_everyone">Everyone</string>
     <string name="pp_unknown_name">POWER PLAY #%1$d</string>
     <string name="pp_unknown_desc">please remember the effect and tell developers</string>
 

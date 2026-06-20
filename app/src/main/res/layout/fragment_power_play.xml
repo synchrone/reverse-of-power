@@ -115,4 +115,12 @@
 
     </LinearLayout>
 
+    <!-- Tap zone over the title + peeking picker; steps back to power-play selection (target phase only) -->
+    <View
+        android:id="@+id/stepBackZone"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:layout_gravity="top"
+        android:visibility="gone" />
+
 </FrameLayout>
