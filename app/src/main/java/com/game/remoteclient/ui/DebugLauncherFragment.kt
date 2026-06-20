@@ -196,27 +196,37 @@ class DebugLauncherFragment : Fragment() {
 
         if (selectedTypes.isEmpty()) return
 
-        val targetSlots = (0 until targetPlayerCount).toList()
+        val allSlots = (0 until targetPlayerCount).toList()
+        val selfSlot = 0  // first fake player is "you" for the test
         val defaultColor = ColorTint(r = 0.5f, g = 0.5f, b = 0.5f, a = 1f)
 
         val powerPlays = selectedTypes.map { (slotIdx, powerType, isNew) ->
+            // Simulate the server's targeting per power type so the client routes correctly:
+            //  everyone (Points Party)        -> all slots, TargetCount = N, PowerTarget 4
+            //  self (Points Doubler / 50-50)  -> [self],    TargetCount = 1, PowerTarget 1
+            //  sabotage (everything else)     -> opponents, TargetCount = 1, PowerTarget 2 (pick one)
+            val (powerTarget, targets, count) = when (powerType) {
+                PowerType.POINTS_PARTY -> Triple(4, allSlots, allSlots.size)
+                PowerType.POINTS_DOUBLER, PowerType.FIFTY_FIFTY -> Triple(1, listOf(selfSlot), 1)
+                else -> Triple(2, allSlots.filter { it != selfSlot }.ifEmpty { allSlots }, 1)
+            }
             PowerPlay(
                 DisplayIndex = slotIdx,
                 PowerType = powerType,
-                PowerTarget = -1,
-                PowerPlayTargets = targetSlots,
+                PowerTarget = powerTarget,
+                PowerPlayTargets = targets,
                 New = isNew,
-                TargetCount = 1
+                TargetCount = count
             )
         }
 
-        val players = (0 until targetPlayerCount).map { i ->
+        val players = allSlots.map { i ->
             PowerPlayPlayer(
                 SlotIndex = i,
                 Name = fakePlayerNames[i],
                 ImageGUID = "",
                 Colour = defaultColor,
-                Self = false,
+                Self = i == selfSlot,
                 Away = false
             )
         }
