@@ -216,8 +216,11 @@ class PowerPlayFragment : Fragment() {
 
         binding.descriptionText.text = description
 
+        // FIFTY_FIFTY is a self-buff (removes half your wrong answers) — it always applies to you, never an opponent
+        val isSelfTargeted = powerPlay.effectivePowerType == PowerType.FIFTY_FIFTY
         // No choosable targets — auto-send with whatever targets the server provided
-        val choosableTargets = players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
+        val choosableTargets = if (isSelfTargeted) emptyList<PowerPlayPlayer>()
+            else players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
         if (choosableTargets.isEmpty()) {
             val selfPlayer = players.find { it.Self }
             if (selfPlayer != null) {
@@ -346,10 +349,15 @@ class PowerPlayFragment : Fragment() {
         spotlight.scaleY = 0.5f
         spotlight.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(400).start()
 
-        Log.d("PowerPlayFragment", "Auto-targeting power play ${powerPlay.DisplayIndex} (${powerPlay.effectivePowerType})")
+        // Self-targeted power plays (e.g. FIFTY_FIFTY) apply to you only, regardless of the server-provided target list
+        val targetSlots = if (powerPlay.effectivePowerType == PowerType.FIFTY_FIFTY)
+            listOf(selfPlayer.SlotIndex)
+        else
+            powerPlay.PowerPlayTargets
+        Log.d("PowerPlayFragment", "Auto-targeting power play ${powerPlay.DisplayIndex} (${powerPlay.effectivePowerType}) -> $targetSlots")
         networkManager.sendPowerPlayChoice(
             powerPlaySlotIndex = powerPlay.DisplayIndex,
-            targetSlotIndices = powerPlay.PowerPlayTargets
+            targetSlotIndices = targetSlots
         )
     }
 

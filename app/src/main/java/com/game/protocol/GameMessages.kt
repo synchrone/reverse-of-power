@@ -324,10 +324,9 @@ enum class PowerType(val value: Int) {
     ZIPPERS(22),
     BUG(24),
     UNKNOWN_25(25), // ?
-    UNKNOWN_26(26), // ?
     LETTER_SCATTER(28),
     DISCO_INFERNO(29),
-    FIFTY_FIFTY(0); // ? also target is yourself only
+    FIFTY_FIFTY(26); // target is yourself only
 
     companion object {
         private val byValue = entries.associateBy { it.value }
