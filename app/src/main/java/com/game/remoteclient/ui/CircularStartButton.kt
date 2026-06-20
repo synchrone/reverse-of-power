@@ -1,5 +1,7 @@
 package com.game.remoteclient.ui
 
+import com.game.remoteclient.R
+
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
@@ -109,7 +111,7 @@ class CircularStartButton @JvmOverloads constructor(
 
         // Draw "START" text
         val textY = centerY - (textPaint.descent() + textPaint.ascent()) / 2
-        canvas.drawText("START", centerX, textY, textPaint)
+        canvas.drawText(context.getString(R.string.start_caps), centerX, textY, textPaint)
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

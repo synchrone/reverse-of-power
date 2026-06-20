@@ -141,7 +141,7 @@
         android:background="#60000000"
         android:paddingHorizontal="20dp"
         android:paddingVertical="8dp"
-        android:text="Tap to smash odd one out" />
+        android:text="@string/smash_odd_one_out" />
 
     <!-- Wrong answer overlay (red flash) -->
     <View

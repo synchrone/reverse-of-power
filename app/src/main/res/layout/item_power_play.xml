@@ -16,7 +16,7 @@
         android:layout_height="120dp"
         android:background="@drawable/circle_background"
         android:scaleType="centerInside"
-        android:contentDescription="Power play icon" />
+        android:contentDescription="@string/cd_power_play_icon" />
 
     <TextView
         android:id="@+id/powerPlayName"

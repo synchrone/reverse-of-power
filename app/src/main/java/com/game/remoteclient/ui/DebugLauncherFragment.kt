@@ -66,6 +66,7 @@ class DebugLauncherFragment : Fragment() {
         PowerType.LETTER_SCATTER to "Letter Scatter",
         PowerType.DISCO_INFERNO to "Disco Inferno",
         PowerType.FIFTY_FIFTY to "50/50",
+        PowerType.POINTS_PARTY to "Points Party",
         PowerType.POINTS_DOUBLER to "Points Doubler"
     )
     private val ppSlotSelections = intArrayOf(0, 0, 0) // index into powerTypeOptions

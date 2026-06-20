@@ -175,8 +175,8 @@ class HoldingScreenFragment : Fragment() {
     private fun handleHoldingScreenMessage(message: ClientHoldingScreenCommandMessage) {
         val text = message.HoldingScreenText.replace("\\n", "\n")
         val defaultText = when (message.HoldingScreenType) {
-            9 -> "Get ready!"
-            else -> "Look at the TV"
+            9 -> getString(R.string.get_ready)
+            else -> getString(R.string.look_at_tv)
         }
         binding.retroTv.text = text.ifEmpty { defaultText }
     }

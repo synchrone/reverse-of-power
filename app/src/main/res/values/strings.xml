@@ -75,10 +75,77 @@
     <string name="pp_fifty_fifty_name">50/50</string>
     <string name="pp_fifty_fifty_desc">Remove half the answers</string>
     <string name="pp_points_doubler_name">POINTS DOUBLER</string>
-    <string name="pp_points_doubler_desc">Double your points</string>
+    <string name="pp_points_doubler_desc">You get ×2 prize points</string>
+    <string name="pp_points_party_name">POINTS PARTY</string>
+    <string name="pp_points_party_desc">Winners get double winnings</string>
     <string name="pp_unknown_name">POWER PLAY #%1$d</string>
     <string name="pp_unknown_desc">please remember the effect and tell developers</string>
 
     <!-- Trivia -->
     <string name="dont_touch_bombs">Don\'t touch the bombs!</string>
+
+    <!-- Server Discovery (extra) -->
+    <string name="debug">Debug</string>
+    <string name="rescan">Rescan</string>
+    <string name="manual_ip_address">Manual IP Address</string>
+    <string name="enter_ip_prompt">Please enter an IP address</string>
+    <string name="scan_failed">Scan failed: %1$s</string>
+    <string name="failed_to_connect">Failed to connect to %1$s</string>
+    <string name="connection_error_detail">Connection error: %1$s</string>
+
+    <!-- Name Entry (extra) -->
+    <string name="default_player_name">Player</string>
+    <string name="name_required">Please enter your name</string>
+    <string name="name_too_short">Name must be at least 2 characters</string>
+
+    <!-- Avatar / Camera -->
+    <string name="select_avatar_type">Select Avatar Type</string>
+    <string name="waiting_for_avatars">Waiting for avatars...</string>
+    <string name="select_avatar">Select Avatar</string>
+    <string name="avatar_unavailable">Avatar unavailable</string>
+    <string name="take_photo_first">Take a photo first</string>
+    <string name="pick_avatar_first">Pick an avatar first</string>
+    <string name="photo_capture_failed">Photo capture failed: %1$s</string>
+
+    <!-- Category / Continue / Power Pick / Power Play -->
+    <string name="choose_a_category">CHOOSE A CATEGORY</string>
+    <string name="continue_caps">CONTINUE</string>
+    <string name="category_selected">CATEGORY SELECTED</string>
+    <string name="power_pick">POWER PICK</string>
+    <string name="power_pick_description">Play a Power Pick once per game\nto overrule everyone else\'s choice</string>
+    <string name="power_pick_accepted">Power Pick accepted!</string>
+    <string name="pick_a_power_play">PICK A POWER PLAY</string>
+
+    <!-- Minigame prompts -->
+    <string name="smash_odd_one_out">Tap to smash odd one out</string>
+    <string name="drag_to_link">Drag to link answers</string>
+    <string name="swipe_to_match">Swipe to find, tap to match</string>
+    <string name="finals_warning">Finals! Wrong answers are rejected!</string>
+
+    <!-- Waiting Room (extra) -->
+    <string name="waiting_for_other_players">Waiting for other players...</string>
+    <string name="hold_to_start">Hold to Start!</string>
+    <string name="hold_to_start_hint">Press and hold until the lights fill up</string>
+
+    <!-- Player list -->
+    <string name="host">HOST</string>
+
+    <!-- Content descriptions -->
+    <string name="cd_captured_photo">Captured photo</string>
+    <string name="cd_expand">Expand</string>
+    <string name="cd_avatar_icon">Avatar icon</string>
+    <string name="cd_power_play_icon">Power play icon</string>
+
+    <!-- In-code UI strings (second i18n pass) -->
+    <string name="connecting_to_server">Connecting to server...</string>
+    <string name="avatar_selected">Selected</string>
+    <string name="avatar_available">Available</string>
+    <string name="avatar_taken">Taken</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="x_to_go">%1$s to go</string>
+    <string name="look_at_tv">Look at the TV</string>
+    <string name="drag_to_link_in_order">Drag to link in order</string>
+    <string name="done_waiting">Done, waiting for other players</string>
+    <string name="choose_a_target">CHOOSE A TARGET</string>
+    <string name="start_caps">START</string>
 </resources>

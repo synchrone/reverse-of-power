@@ -70,6 +70,6 @@
         android:background="#60000000"
         android:paddingHorizontal="20dp"
         android:paddingVertical="8dp"
-        android:text="Swipe to find, tap to match" />
+        android:text="@string/swipe_to_match" />
 
 </FrameLayout>

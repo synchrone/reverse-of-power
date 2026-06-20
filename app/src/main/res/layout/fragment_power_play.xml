@@ -19,7 +19,7 @@
             android:id="@+id/titleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="PICK A POWER PLAY"
+            android:text="@string/pick_a_power_play"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@android:color/white"

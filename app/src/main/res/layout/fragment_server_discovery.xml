@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Debug"
+            android:text="@string/debug"
             android:textSize="12sp"
             android:layout_marginTop="4dp"
             android:visibility="gone" />
@@ -60,7 +60,7 @@
                 style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rescan"
+                android:text="@string/rescan"
                 android:textSize="14sp" />
         </LinearLayout>
 
@@ -139,7 +139,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Manual IP Address"
+                    android:text="@string/manual_ip_address"
                     android:textSize="16sp"
                     android:textColor="@color/text_secondary" />
 
@@ -148,7 +148,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_chevron_down"
-                    android:contentDescription="Expand" />
+                    android:contentDescription="@string/cd_expand" />
             </LinearLayout>
 
             <!-- Collapsible content -->

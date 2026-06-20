@@ -159,7 +159,7 @@ class CameraCaptureFragment : Fragment() {
                 override fun onError(exception: ImageCaptureException) {
                     Toast.makeText(
                         requireContext(),
-                        "Photo capture failed: ${exception.message}",
+                        getString(R.string.photo_capture_failed, exception.message),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -215,7 +215,7 @@ class CameraCaptureFragment : Fragment() {
                 if (response.AvatarID == selectedAvatar?.AvatarID) {
                     updateContinueButton()
                     if (!response.Available) {
-                        Toast.makeText(requireContext(), "Avatar unavailable", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.avatar_unavailable), Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -250,7 +250,7 @@ class CameraCaptureFragment : Fragment() {
 
     private fun updateContinueButton() {
         if (cameraAvailable && !photoConfirmed) {
-            binding.continueButton.text = "Take Photo"
+            binding.continueButton.text = getString(R.string.take_photo)
             binding.continueButton.isEnabled = true
             binding.continueButton.alpha = 1.0f
         } else {
@@ -266,9 +266,9 @@ class CameraCaptureFragment : Fragment() {
             if (cameraAvailable && !photoConfirmed) {
                 capturePhoto()
             } else if (!photoConfirmed) {
-                Toast.makeText(requireContext(), "Take a photo first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.take_photo_first), Toast.LENGTH_SHORT).show()
             } else if (selectedAvatar == null || !networkManager.isAvatarConfirmed) {
-                Toast.makeText(requireContext(), "Pick an avatar first", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.pick_avatar_first), Toast.LENGTH_SHORT).show()
             } else {
                 proceedToWaitingRoom()
             }
