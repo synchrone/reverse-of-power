@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path android:fillColor="#EC407A"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Hair -->
+    <path android:fillColor="#4E342E"
+        android:pathData="M12,30 Q11,12 24,11 Q37,12 36,30 L31,30 Q33,17 24,16 Q15,17 17,30 Z" />
+
+    <!-- Face -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M24,30 m-6,0 a6,7,0,1,1,12,0 a6,7,0,1,1,-12,0" />
+
+    <!-- Oversized sunglasses -->
+    <path android:fillColor="#ECEFF1"
+        android:pathData="M20,28 m-4,0 a4,3,0,1,1,8,0 a4,3,0,1,1,-8,0" />
+    <path android:fillColor="#ECEFF1"
+        android:pathData="M28,28 m-4,0 a4,3,0,1,1,8,0 a4,3,0,1,1,-8,0" />
+    <path android:fillColor="#B3E5FC"
+        android:pathData="M20,28 m-2.5,0 a2.5,1.8,0,1,1,5,0 a2.5,1.8,0,1,1,-5,0" />
+    <path android:fillColor="#B3E5FC"
+        android:pathData="M28,28 m-2.5,0 a2.5,1.8,0,1,1,5,0 a2.5,1.8,0,1,1,-5,0" />
+
+    <!-- Lips -->
+    <path android:fillColor="#E53935"
+        android:pathData="M22,35 Q24,37 26,35 Q24,36 22,35 Z" />
+
+</vector>

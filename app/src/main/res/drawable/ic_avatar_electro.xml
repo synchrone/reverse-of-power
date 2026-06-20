@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path android:fillColor="#283593"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Headphone band -->
+    <path android:pathData="M12,25 Q12,12 24,12 Q36,12 36,25"
+        android:strokeColor="#263238" android:strokeWidth="3"
+        android:fillColor="#00000000" />
+
+    <!-- Face -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M24,28 m-6,0 a6,7,0,1,1,12,0 a6,7,0,1,1,-12,0" />
+
+    <!-- Eyes -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M21,27 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path android:fillColor="#3E2723"
+        android:pathData="M27,27 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <!-- Smile -->
+    <path android:pathData="M22,31 Q24,33 26,31"
+        android:strokeColor="#3E2723" android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- Ear cups -->
+    <path android:fillColor="#263238"
+        android:pathData="M12,27 m-3,0 a3,5,0,1,1,6,0 a3,5,0,1,1,-6,0" />
+    <path android:fillColor="#263238"
+        android:pathData="M36,27 m-3,0 a3,5,0,1,1,6,0 a3,5,0,1,1,-6,0" />
+    <!-- Neon glow on cups -->
+    <path android:fillColor="#00E5FF"
+        android:pathData="M12,27 m-1.3,0 a1.3,1.3,0,1,1,2.6,0 a1.3,1.3,0,1,1,-2.6,0" />
+    <path android:fillColor="#00E5FF"
+        android:pathData="M36,27 m-1.3,0 a1.3,1.3,0,1,1,2.6,0 a1.3,1.3,0,1,1,-2.6,0" />
+
+</vector>
