@@ -351,7 +351,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Don\u0027t touch the bombles!"
+            android:text="@string/dont_touch_bombs"
             android:textSize="42sp"
             android:textStyle="bold"
             android:textColor="#333333" />
