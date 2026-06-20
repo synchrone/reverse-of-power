@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,15 @@ class PowerPlayFragment : Fragment() {
     private var selectedPowerPlay: PowerPlay? = null
     private var selectionEnabled = false
 
+    // The phase currently being shown, so step-back can rebuild the picker without reconstructing it.
+    private var currentPhase: ServerBeginPowerPlayPhase? = null
+    // True while a target screen (choose-one or everyone) is showing and the player can still step back.
+    private var targetScreenActive = false
+    // True once a choice has been sent to the server; step-back is no longer allowed.
+    private var choiceCommitted = false
+    // The pending 300ms picker->target transition; stored so it can be cancelled on step-back.
+    private var pendingTransition: Runnable? = null
+
     // Default colors (orange for power play phase)
     private var backgroundColor = Color.parseColor("#E8A040")
     private var backgroundSecondary = Color.parseColor("#D08830")
@@ -60,6 +70,23 @@ class PowerPlayFragment : Fragment() {
 
         binding.sunburstBackground.setColors(backgroundColor, backgroundSecondary)
         observeMessages()
+
+        // Tap the top section (title) to step back from a target screen to the picker,
+        // but only while a target screen is active and no choice has been committed.
+        binding.stepBackZone.setOnClickListener {
+            if (targetScreenActive && !choiceCommitted) {
+                stepBackToPicker()
+            }
+        }
+
+        // BUG #2: the peeking picker itself is a step-back affordance too. Card taps are handled
+        // per-card (see showPowerPlayOptions), but tapping the gaps/background between the peeking
+        // circles dispatches to the scrollview — handle that here so the whole top zone goes back.
+        binding.powerPlayScrollView.setOnClickListener {
+            if (targetScreenActive && !choiceCommitted) {
+                stepBackToPicker()
+            }
+        }
 
         // Apply pending power play data
         networkManager.pendingPowerPlay?.let { phase ->
@@ -86,18 +113,52 @@ class PowerPlayFragment : Fragment() {
         networkManager.onPowerPlayRequest = powerPlayRequestCb
     }
 
-    private fun showPowerPlayOptions(phase: ServerBeginPowerPlayPhase) {
+    private fun showPowerPlayOptions(phase: ServerBeginPowerPlayPhase, animateNew: Boolean = true) {
+        currentPhase = phase
         powerPlays = phase.PowerPlays
         players = phase.PowerPlayPlayers
 
+        // Cancel any pending transition + reel steps + in-flight animations from a prior target screen.
+        pendingTransition?.let { binding.powerPlayScrollView.removeCallbacks(it) }
+        pendingTransition = null
+        randomizeRunnables.forEach { handler.removeCallbacks(it) }
+        randomizeRunnables.clear()
+        binding.powerPlayScrollView.animate().cancel()
+        binding.titleText.animate().cancel()
+        binding.descriptionText.animate().cancel()
+        binding.selectedPowerPlayLabel.animate().cancel()
+        for (i in 0 until binding.targetContainer.childCount) {
+            val c = binding.targetContainer.getChildAt(i)
+            c.findViewById<View>(R.id.targetGlowRing)?.animate()?.cancel()
+            c.findViewById<View>(R.id.targetSpotlight)?.animate()?.cancel()
+        }
+
         // Enable selection immediately (request may arrive before or after)
         selectionEnabled = true
+        targetScreenActive = false
+        choiceCommitted = false
+        selectedPowerPlay = null
 
         binding.titleText.text = getString(R.string.pick_a_power_play)
+        binding.titleText.alpha = 1f
         binding.descriptionText.text = ""
+        binding.descriptionText.alpha = 1f
+        binding.descriptionText.visibility = View.VISIBLE   // peekPicker() hides this during target phase
         binding.selectedPowerPlayLabel.visibility = View.GONE
+        binding.selectedPowerPlayLabel.alpha = 1f
         binding.targetArea.visibility = View.GONE
+        binding.targetContainer.removeAllViews()
         binding.powerPlayScrollView.visibility = View.VISIBLE
+        binding.powerPlayScrollView.scaleX = 1f
+        binding.powerPlayScrollView.scaleY = 1f
+        binding.powerPlayScrollView.pivotY = 0f             // peekPicker() pivots from the top; reset to a sane default
+        binding.powerPlayScrollView.alpha = 1f
+        (binding.powerPlayScrollView.layoutParams as android.widget.LinearLayout.LayoutParams).let {
+            it.height = 0
+            it.weight = 1f
+            binding.powerPlayScrollView.layoutParams = it
+        }
+        binding.stepBackZone.visibility = View.GONE
 
         binding.powerPlayContainer.removeAllViews()
 
@@ -113,12 +174,16 @@ class PowerPlayFragment : Fragment() {
             itemView.setOnClickListener {
                 if (selectionEnabled) {
                     onPowerPlaySelected(powerPlay)
+                } else if (targetScreenActive && !choiceCommitted) {
+                    // BUG #2: during the target phase the peeking picker circles act as a
+                    // step-back affordance (the title's stepBackZone may not cover them).
+                    stepBackToPicker()
                 }
             }
 
             binding.powerPlayContainer.addView(itemView)
 
-            if (powerPlay.New) {
+            if (powerPlay.New && animateNew) {
                 startRandomizeAnimation(nameView, descView, icon, powerPlay.effectivePowerType)
             } else {
                 nameView.text = name
@@ -215,38 +280,36 @@ class PowerPlayFragment : Fragment() {
 
         binding.descriptionText.text = description
 
-        // FIFTY_FIFTY and POINTS_DOUBLER are self-buffs; POINTS_PARTY hits everyone — none of these let you pick an opponent
-        val autoTargeted = isSelfTargetedType(powerPlay.effectivePowerType)
-            || powerPlay.effectivePowerType == PowerType.POINTS_PARTY
-        // No choosable targets — auto-send with whatever targets the server provided
-        val choosableTargets = if (autoTargeted) emptyList<PowerPlayPlayer>()
-            else players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
-        if (choosableTargets.isEmpty()) {
-            val selfPlayer = players.find { it.Self }
-            if (selfPlayer != null) {
-                selectionEnabled = false
+        // Targeting is server-driven: PowerPlayTargets lists the candidate slots and TargetCount how many are
+        // hit. TargetCount > 1 = a fixed multi-target set (e.g. everyone) → auto-send; TargetCount == 1 = the
+        // player picks one candidate (self-help powers list only the player's own slot).
+        if (powerPlay.TargetCount > 1) {
+            selectionEnabled = false
 
-                binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
-                    binding.titleText.text = name
-                    binding.titleText.animate().alpha(1f).setDuration(200).start()
-                }.start()
+            binding.titleText.animate().alpha(0f).setDuration(200).withEndAction {
+                binding.titleText.text = name
+                binding.titleText.animate().alpha(1f).setDuration(200).start()
+            }.start()
 
-                val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.5f)
-                val scaleY = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleY", 1f, 0.5f)
-                val fadeOut = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "alpha", 1f, 0f)
-                AnimatorSet().apply {
-                    playTogether(scaleX, scaleY, fadeOut)
-                    duration = 300
-                    start()
-                }
-
-                binding.powerPlayScrollView.postDelayed({
-                    if (_binding == null) return@postDelayed
-                    binding.powerPlayScrollView.visibility = View.GONE
-                    showSelfTarget(powerPlay, selfPlayer)
-                }, 300)
-                return
+            val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.8f)
+            val scaleY = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleY", 1f, 0.8f)
+            val fadeOut = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "alpha", 1f, 0.4f)
+            AnimatorSet().apply {
+                playTogether(scaleX, scaleY, fadeOut)
+                duration = 300
+                start()
             }
+
+            val t = Runnable {
+                if (_binding == null) return@Runnable
+                pendingTransition = null
+                targetScreenActive = true
+                peekPicker()
+                showEveryoneTarget(powerPlay)
+            }
+            pendingTransition = t
+            binding.powerPlayScrollView.postDelayed(t, 300)
+            return
         }
 
         // Animate transition to phase 2
@@ -256,9 +319,9 @@ class PowerPlayFragment : Fragment() {
         }.start()
 
         // Shrink power play options
-        val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.5f)
-        val scaleY = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleY", 1f, 0.5f)
-        val fadeOut = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "alpha", 1f, 0f)
+        val scaleX = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleX", 1f, 0.8f)
+        val scaleY = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "scaleY", 1f, 0.8f)
+        val fadeOut = ObjectAnimator.ofFloat(binding.powerPlayScrollView, "alpha", 1f, 0.4f)
         AnimatorSet().apply {
             playTogether(scaleX, scaleY, fadeOut)
             duration = 300
@@ -266,11 +329,15 @@ class PowerPlayFragment : Fragment() {
         }
 
         // Show target area
-        binding.powerPlayScrollView.postDelayed({
-            if (_binding == null) return@postDelayed
-            binding.powerPlayScrollView.visibility = View.GONE
+        val t = Runnable {
+            if (_binding == null) return@Runnable
+            pendingTransition = null
+            targetScreenActive = true
+            peekPicker()
             showTargetPlayers(powerPlay)
-        }, 300)
+        }
+        pendingTransition = t
+        binding.powerPlayScrollView.postDelayed(t, 300)
     }
 
     private fun showTargetPlayers(powerPlay: PowerPlay) {
@@ -280,8 +347,8 @@ class PowerPlayFragment : Fragment() {
 
         binding.targetContainer.removeAllViews()
 
-        // Filter to non-self players that are valid targets
-        val targets = players.filter { !it.Self && powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
+        // Candidates = whatever slots the server marked targetable (includes self for self-help powers)
+        val targets = players.filter { powerPlay.PowerPlayTargets.contains(it.SlotIndex) }
 
         for (player in targets) {
             val itemView = layoutInflater.inflate(R.layout.item_power_play_target, binding.targetContainer, false)
@@ -311,59 +378,117 @@ class PowerPlayFragment : Fragment() {
         }
     }
 
-    private fun showSelfTarget(powerPlay: PowerPlay, selfPlayer: PowerPlayPlayer) {
+    private fun showEveryoneTarget(powerPlay: PowerPlay) {
         binding.targetArea.visibility = View.VISIBLE
         binding.targetArea.alpha = 0f
         binding.targetArea.animate().alpha(1f).setDuration(300).start()
 
         binding.targetContainer.removeAllViews()
 
+        // Fixed multi-target play (TargetCount > 1): show a single selectable "Everyone" card.
+        // No auto-send — the player must tap it to confirm, or tap the title to step back.
         val itemView = layoutInflater.inflate(R.layout.item_power_play_target, binding.targetContainer, false)
-        itemView.findViewById<TextView>(R.id.targetName).text = selfPlayer.Name
+        itemView.findViewById<TextView>(R.id.targetName).text = getString(R.string.pp_everyone)
 
         val photo = itemView.findViewById<ImageView>(R.id.targetPhoto)
-        val imageData = networkManager.receivedImages[selfPlayer.ImageGUID]
-        if (imageData != null) {
-            val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-            if (bitmap != null) {
-                photo.setImageBitmap(bitmap)
-            } else {
-                photo.background.setTint(Color.parseColor("#80FFFFFF"))
-            }
-        } else {
-            photo.background.setTint(Color.parseColor("#80FFFFFF"))
-        }
+        photo.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        photo.background.setTint(getPowerPlayColor(powerPlay.effectivePowerType))
+        getPowerPlayDrawable(powerPlay.effectivePowerType)?.let { photo.setImageResource(it) }
+
+        itemView.setOnClickListener { onEveryoneSelected(powerPlay, itemView) }
 
         binding.targetContainer.addView(itemView)
+    }
 
-        // Show glow on self
-        val glowRing = itemView.findViewById<View>(R.id.targetGlowRing)
-        glowRing.visibility = View.VISIBLE
-        glowRing.alpha = 0f
-        glowRing.animate().alpha(1f).setDuration(300).withEndAction { pulseGlow(glowRing) }.start()
+    /** Player tapped the "Everyone" card: echo the server target list verbatim and confirm. */
+    private fun onEveryoneSelected(powerPlay: PowerPlay, card: View) {
+        if (choiceCommitted) return
+        choiceCommitted = true
+        targetScreenActive = false
+        selectionEnabled = false
 
-        val spotlight = itemView.findViewById<View>(R.id.targetSpotlight)
-        spotlight.visibility = View.VISIBLE
-        spotlight.alpha = 0f
-        spotlight.scaleX = 0.5f
-        spotlight.scaleY = 0.5f
-        spotlight.animate().alpha(1f).scaleX(1f).scaleY(1f).setDuration(400).start()
-
-        // Self-buffs (FIFTY_FIFTY, POINTS_DOUBLER) apply to you only; everyone-targets (POINTS_PARTY) use the server's full list
-        val targetSlots = if (isSelfTargetedType(powerPlay.effectivePowerType))
-            listOf(selfPlayer.SlotIndex)
-        else
-            powerPlay.PowerPlayTargets
-        Log.d("PowerPlayFragment", "Auto-targeting power play ${powerPlay.DisplayIndex} (${powerPlay.effectivePowerType}) -> $targetSlots")
+        val targetSlots = powerPlay.PowerPlayTargets
+        Log.d("PowerPlayFragment", "Everyone multi-target slot=${powerPlay.DisplayIndex} -> $targetSlots")
         networkManager.sendPowerPlayChoice(
             powerPlaySlotIndex = powerPlay.DisplayIndex,
             targetSlotIndices = targetSlots
         )
+
+        val glowRing = card.findViewById<View>(R.id.targetGlowRing)
+        glowRing.visibility = View.VISIBLE
+        glowRing.alpha = 0f
+        glowRing.animate().alpha(1f).setDuration(300).withEndAction { pulseGlow(glowRing) }.start()
+
+        showChoiceConfirmed()
     }
 
+    /** Return from a target screen to the picker, restoring all picker state (no re-spin of New! reels). */
+    private fun stepBackToPicker() {
+        binding.targetArea.visibility = View.GONE
+        currentPhase?.let { showPowerPlayOptions(it, animateNew = false) }
+    }
+
+    /**
+     * Shrink the picker to a row of full-size circles whose BOTTOM rounded arcs peek out from under
+     * the title (kept visible as the step-back affordance). BUG #1: windowing a tall match_parent
+     * card to a short strip with the icon centred slices the 120dp icon with a hard horizontal line.
+     * Instead we keep the circles at full scale and bottom-align each peeking card's icon inside a
+     * ~72dp window, so only the rounded bottom arc shows — reading as circles tucked under the title,
+     * never a flat bar. Per-card gravity/visibility changes are undone naturally by showPowerPlayOptions,
+     * which re-inflates every card fresh on rebuild/step-back.
+     */
+    private fun peekPicker() {
+        val sv = binding.powerPlayScrollView
+        (sv.layoutParams as android.widget.LinearLayout.LayoutParams).let {
+            it.height = (72 * resources.displayMetrics.density).toInt()
+            it.weight = 0f
+            sv.layoutParams = it
+        }
+        // Keep circles full-size (no scale slice). Bottom-align each card's icon and hide its name/desc
+        // so only the icon's rounded bottom arc shows inside the short window.
+        sv.scaleX = 1f
+        sv.scaleY = 1f
+        sv.alpha = 0.4f
+        for (i in 0 until binding.powerPlayContainer.childCount) {
+            val card = binding.powerPlayContainer.getChildAt(i)
+            if (card is android.widget.LinearLayout) {
+                card.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
+            }
+            card.findViewById<View>(R.id.powerPlayName)?.visibility = View.GONE
+            card.findViewById<View>(R.id.powerPlayDescription)?.visibility = View.GONE
+        }
+        binding.stepBackZone.visibility = View.VISIBLE
+
+        // BUG #3: the ~208dp target card won't fit the cramped landscape targetArea while the power
+        // name label and description still take vertical space. Per the approved trade-off, hide
+        // both during target selection — the title already shows context. (showChoiceConfirmed
+        // re-shows descriptionText just for the "Locked in!" confirmation; showPowerPlayOptions
+        // restores both on reset.)
+        binding.selectedPowerPlayLabel.animate().cancel()
+        binding.selectedPowerPlayLabel.visibility = View.GONE
+        binding.descriptionText.animate().cancel()
+        binding.descriptionText.visibility = View.GONE
+    }
+
+    /** Swap the description for a clear "locked in" confirmation once a choice is committed. */
+    private fun showChoiceConfirmed() {
+        // descriptionText was hidden by peekPicker() to free vertical space for the target card;
+        // re-show it (just below the target area) so the confirmation stays visible after committing.
+        val d = binding.descriptionText
+        d.animate().cancel()
+        d.text = getString(R.string.pp_locked_in)
+        d.alpha = 0f
+        d.visibility = View.VISIBLE
+        d.animate().alpha(1f).setDuration(200).start()
+    }
+
+
     private fun onTargetSelected(player: PowerPlayPlayer) {
+        if (choiceCommitted || !selectionEnabled) return
         val powerPlay = selectedPowerPlay ?: return
         selectionEnabled = false
+        choiceCommitted = true
+        targetScreenActive = false
 
         Log.d("PowerPlayFragment", "Selected power play ${powerPlay.DisplayIndex} targeting ${player.Name} (slot ${player.SlotIndex})")
 
@@ -496,10 +621,6 @@ class PowerPlayFragment : Fragment() {
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
-
-    /** Power plays that apply to the caster only (no opponent picker; send just your own slot). */
-    private fun isSelfTargetedType(type: PowerType) =
-        type == PowerType.FIFTY_FIFTY || type == PowerType.POINTS_DOUBLER
 
     override fun onDestroyView() {
         super.onDestroyView()

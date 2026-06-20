@@ -78,6 +78,8 @@
     <string name="pp_points_doubler_desc">Вы получаете ×2 призовых очков</string>
     <string name="pp_points_party_name">ВЕЧЕРИНКА</string>
     <string name="pp_points_party_desc">Победители получают двойной выигрыш</string>
+    <string name="pp_locked_in">✓ Готово!</string>
+    <string name="pp_everyone">Все</string>
     <string name="pp_unknown_name">СПЕЦХОД #%1$d</string>
     <string name="pp_unknown_desc">Запомните эффект и сообщите разработчикам</string>
 
