@@ -44,7 +44,7 @@ class AvatarAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(avatar: ServerAvatarStatusMessage) {
-            binding.avatarName.text = avatar.AvatarID
+            binding.avatarName.text = avatarDisplayName(avatar.AvatarID)
 
             val isSelected = avatar.AvatarID == selectedAvatarId
             val context = binding.root.context
@@ -76,6 +76,11 @@ class AvatarAdapter(
             }
         }
 
+        private fun avatarDisplayName(avatarId: String): String =
+            avatarId.split('_').joinToString(" ") { word ->
+                word.lowercase().replaceFirstChar { it.uppercase() }
+            }
+
         private fun getAvatarDrawable(avatarId: String): Int {
             return when (avatarId.uppercase()) {
                 "COWGIRL" -> R.drawable.ic_avatar_cowgirl
@@ -86,6 +91,14 @@ class AvatarAdapter(
                 "SCIENTIST" -> R.drawable.ic_avatar_scientist
                 "SPACEMAN" -> R.drawable.ic_avatar_spaceman
                 "MAGICIAN" -> R.drawable.ic_avatar_magician
+                "COUNTRY" -> R.drawable.ic_avatar_country
+                "ELECTRO" -> R.drawable.ic_avatar_electro
+                "FASHION" -> R.drawable.ic_avatar_fashion
+                "FUTURE" -> R.drawable.ic_avatar_future
+                "GAMER" -> R.drawable.ic_avatar_gamer
+                "HIP_HOP" -> R.drawable.ic_avatar_hip_hop
+                "POPCORN" -> R.drawable.ic_avatar_popcorn
+                "ROCKER" -> R.drawable.ic_avatar_rocker
                 else -> R.drawable.circle_background
             }
         }

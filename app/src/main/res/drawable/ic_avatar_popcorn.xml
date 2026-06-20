@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path android:fillColor="#D32F2F"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Popcorn pieces -->
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M18,13 m-3,0 a3,3,0,1,1,6,0 a3,3,0,1,1,-6,0" />
+    <path android:fillColor="#FFFDE7"
+        android:pathData="M24,11 m-3.5,0 a3.5,3.5,0,1,1,7,0 a3.5,3.5,0,1,1,-7,0" />
+    <path android:fillColor="#FFECB3"
+        android:pathData="M30,13 m-3,0 a3,3,0,1,1,6,0 a3,3,0,1,1,-6,0" />
+    <path android:fillColor="#FFF9C4"
+        android:pathData="M21,15 m-2.5,0 a2.5,2.5,0,1,1,5,0 a2.5,2.5,0,1,1,-5,0" />
+    <path android:fillColor="#FFFDE7"
+        android:pathData="M27,15 m-2.5,0 a2.5,2.5,0,1,1,5,0 a2.5,2.5,0,1,1,-5,0" />
+
+    <!-- Box -->
+    <path android:fillColor="#FAFAFA"
+        android:pathData="M15,17 L33,17 L31,35 L17,35 Z" />
+    <!-- Red stripes -->
+    <path android:fillColor="#E53935"
+        android:pathData="M19,17 L22,17 L21,35 L18.5,35 Z" />
+    <path android:fillColor="#E53935"
+        android:pathData="M26,17 L29,17 L27.5,35 L25,35 Z" />
+
+    <!-- Face on the box -->
+    <path android:fillColor="#3E2723"
+        android:pathData="M21,24 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path android:fillColor="#3E2723"
+        android:pathData="M27,24 m-1,0 a1,1,0,1,1,2,0 a1,1,0,1,1,-2,0" />
+    <path android:pathData="M21,28 Q24,31 27,28"
+        android:strokeColor="#3E2723" android:strokeWidth="1"
+        android:fillColor="#00000000" />
+
+</vector>

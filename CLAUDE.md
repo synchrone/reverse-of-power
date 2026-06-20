@@ -184,6 +184,11 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 
 # Replay a PCAP file through decoder
 ./gradlew test -Dpcap.file=docs/successful-game-start.pcapng --tests "PcapReplayTest"
+
+# Running inside an Android emulator: forward the client UDP listen port (9060)
+# into the emulator — otherwise the console's responses are never carried into
+# the emulator (the emulator NATs the device network and drops inbound UDP).
+scripts/redir-udp        # optional port arg; defaults to 9060
 ```
 
 ## Key Dependencies
@@ -206,6 +211,5 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 - Category selection is one-shot: once a door is chosen, subsequent ServerCategorySelectChoices updates preserve the highlight without re-enabling selection
 
 ## Known TODOs not yet implemented
-- Avatar selection assets are not bundled, we need to reinvent them, as well as face masks
-- End of game facts are not bundled in the game, we need to reinvent them- Trivia power play effects not rendered (ice/bombs/gloop overlays on answer buttons)
+- Photo overlay face masks (costume frames over player selfies) are not bundled; need original replacements
 - Mid-game reconnect is sometimes buggy, getting the whole game stuck, especially around powerplay (is it resource management?)

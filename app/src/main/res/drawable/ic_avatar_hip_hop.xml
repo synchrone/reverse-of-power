@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <path android:fillColor="#6A1B9A"
+        android:pathData="M24,24m-23,0a23,23,0,1,1,46,0a23,23,0,1,1,-46,0" />
+
+    <!-- Face -->
+    <path android:fillColor="#FFCC80"
+        android:pathData="M24,31 m-6,0 a6,7,0,1,1,12,0 a6,7,0,1,1,-12,0" />
+
+    <!-- Backwards cap bill -->
+    <path android:fillColor="#212121"
+        android:pathData="M33,21 L42,22 L42,25 L33,25 Z" />
+    <!-- Cap dome -->
+    <path android:fillColor="#212121"
+        android:pathData="M13,25 Q13,13 24,13 Q35,13 35,25 Z" />
+    <!-- Cap gold band -->
+    <path android:fillColor="#FFD54F"
+        android:pathData="M13,24 L35,24 L35,26 L13,26 Z" />
+
+    <!-- Sunglasses -->
+    <path android:fillColor="#1A1A1A"
+        android:pathData="M18,29 L30,29 L30,32 L18,32 Z" />
+
+    <!-- Smile -->
+    <path android:pathData="M22,35 Q24,37 26,35"
+        android:strokeColor="#3E2723" android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- Gold chain -->
+    <path android:pathData="M18,40 Q24,46 30,40"
+        android:strokeColor="#FFD54F" android:strokeWidth="1.6"
+        android:fillColor="#00000000" />
+    <path android:fillColor="#FFD54F"
+        android:pathData="M24,44 m-1.3,0 a1.3,1.3,0,1,1,2.6,0 a1.3,1.3,0,1,1,-2.6,0" />
+
+</vector>
