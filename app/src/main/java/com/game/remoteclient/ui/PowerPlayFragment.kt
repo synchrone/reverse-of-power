@@ -436,21 +436,21 @@ class PowerPlayFragment : Fragment() {
 
     private fun getPowerPlayInfo(powerType: PowerType): Pair<String, String> {
         return when (powerType) {
-            PowerType.FREEZE -> "FREEZE" to "Encase answers in ice"
-            PowerType.BOMBLES -> "BOMBLES" to "Throw bombs over answers"
-            PowerType.NIBBLERS -> "NIBBLERS" to "Nibble away at answers"
-            PowerType.GLOOP -> "GLOOP" to "Cover answers in gloop"
-            PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> "DOUBLE TROUBLE" to "Freeze and gloop"
-            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> "DOUBLE TROUBLE" to "Freeze and bombles"
-            PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> "DOUBLE TROUBLE" to "Nibblers and gloop"
-            PowerType.LOCKDOWN -> "LOCKDOWN" to "Lock the answers in place"
-            PowerType.ZIPPERS -> "ZIPPERS" to "Zip up the answers"
-            PowerType.BUG -> "BUG" to "Bugs crawl over the answers"
-            PowerType.LETTER_SCATTER -> "LETTER SCATTER" to "Scatter the letters"
-            PowerType.DISCO_INFERNO -> "DISCO INFERNO" to "Disco lights dazzle the screen"
-            PowerType.FIFTY_FIFTY -> "50/50" to "Remove half the answers"
-            PowerType.POINTS_DOUBLER -> "POINTS DOUBLER" to "Double your points"
-            else -> "POWER PLAY #${powerType.value}" to "please remember the effect and tell developers"
+            PowerType.FREEZE -> getString(R.string.pp_freeze_name) to getString(R.string.pp_freeze_desc)
+            PowerType.BOMBLES -> getString(R.string.pp_bombs_name) to getString(R.string.pp_bombs_desc)
+            PowerType.NIBBLERS -> getString(R.string.pp_munchers_name) to getString(R.string.pp_munchers_desc)
+            PowerType.GLOOP -> getString(R.string.pp_gloop_name) to getString(R.string.pp_gloop_desc)
+            PowerType.DOUBLE_TROUBLE_FREEZE_GLOOP -> getString(R.string.pp_double_trouble_name) to getString(R.string.pp_dt_freeze_gloop_desc)
+            PowerType.DOUBLE_TROUBLE_FREEZE_BOMBLES -> getString(R.string.pp_double_trouble_name) to getString(R.string.pp_dt_freeze_bombs_desc)
+            PowerType.DOUBLE_TROUBLE_NIBBLERS_GLOOP -> getString(R.string.pp_double_trouble_name) to getString(R.string.pp_dt_munchers_gloop_desc)
+            PowerType.LOCKDOWN -> getString(R.string.pp_lockdown_name) to getString(R.string.pp_lockdown_desc)
+            PowerType.ZIPPERS -> getString(R.string.pp_zippers_name) to getString(R.string.pp_zippers_desc)
+            PowerType.BUG -> getString(R.string.pp_bug_name) to getString(R.string.pp_bug_desc)
+            PowerType.LETTER_SCATTER -> getString(R.string.pp_letter_scatter_name) to getString(R.string.pp_letter_scatter_desc)
+            PowerType.DISCO_INFERNO -> getString(R.string.pp_disco_name) to getString(R.string.pp_disco_desc)
+            PowerType.FIFTY_FIFTY -> getString(R.string.pp_fifty_fifty_name) to getString(R.string.pp_fifty_fifty_desc)
+            PowerType.POINTS_DOUBLER -> getString(R.string.pp_points_doubler_name) to getString(R.string.pp_points_doubler_desc)
+            else -> getString(R.string.pp_unknown_name, powerType.value) to getString(R.string.pp_unknown_desc)
         }
     }
 

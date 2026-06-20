@@ -31,7 +31,7 @@
         android:shadowRadius="3"
         android:gravity="center"
         android:layout_marginTop="12dp"
-        tools:text="BOMBLES" />
+        tools:text="BOMBS" />
 
     <TextView
         android:id="@+id/powerPlayDescription"

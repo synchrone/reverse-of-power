@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Knowledge is Power</string>
+    <string name="app_name">Reverse of Power</string>
 
     <!-- Server Discovery -->
     <string name="server_discovery_title">Find Game Server</string>
@@ -48,4 +48,37 @@
     <string name="error_server_unreachable">Cannot reach server</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+
+    <!-- Power Plays -->
+    <string name="pp_freeze_name">FREEZE</string>
+    <string name="pp_freeze_desc">Encase answers in ice</string>
+    <string name="pp_bombs_name">BOMBS</string>
+    <string name="pp_bombs_desc">Throw bombs over answers</string>
+    <string name="pp_munchers_name">MUNCHERS</string>
+    <string name="pp_munchers_desc">Munch away at answers</string>
+    <string name="pp_gloop_name">GLOOP</string>
+    <string name="pp_gloop_desc">Cover answers in gloop</string>
+    <string name="pp_double_trouble_name">DOUBLE TROUBLE</string>
+    <string name="pp_dt_freeze_gloop_desc">Freeze and gloop</string>
+    <string name="pp_dt_freeze_bombs_desc">Freeze and bombs</string>
+    <string name="pp_dt_munchers_gloop_desc">Munchers and gloop</string>
+    <string name="pp_lockdown_name">LOCKDOWN</string>
+    <string name="pp_lockdown_desc">Lock the answers in place</string>
+    <string name="pp_zippers_name">ZIPPERS</string>
+    <string name="pp_zippers_desc">Zip up the answers</string>
+    <string name="pp_bug_name">BUG</string>
+    <string name="pp_bug_desc">Bugs crawl over the answers</string>
+    <string name="pp_letter_scatter_name">LETTER SCATTER</string>
+    <string name="pp_letter_scatter_desc">Scatter the letters</string>
+    <string name="pp_disco_name">DISCO INFERNO</string>
+    <string name="pp_disco_desc">Disco lights dazzle the screen</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Remove half the answers</string>
+    <string name="pp_points_doubler_name">POINTS DOUBLER</string>
+    <string name="pp_points_doubler_desc">Double your points</string>
+    <string name="pp_unknown_name">POWER PLAY #%1$d</string>
+    <string name="pp_unknown_desc">please remember the effect and tell developers</string>
+
+    <!-- Trivia -->
+    <string name="dont_touch_bombs">Don\'t touch the bombs!</string>
 </resources>
