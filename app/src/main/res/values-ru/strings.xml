@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Знание — сила</string>
+
+    <!-- Server Discovery -->
+    <string name="server_discovery_title">Поиск игрового сервера</string>
+    <string name="enter_ip_address">Введите IP-адрес</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Подключиться</string>
+    <string name="discovered_servers">Найденные серверы</string>
+    <string name="scanning">Поиск серверов…</string>
+    <string name="no_servers_found">Серверы не найдены</string>
+
+    <!-- Name Entry -->
+    <string name="enter_name_title">Как вас зовут?</string>
+    <string name="name_hint">Введите ваше имя</string>
+    <string name="continue_button">Продолжить</string>
+
+    <!-- Avatar Selection -->
+    <string name="avatar_selection_title">Выберите аватар</string>
+    <string name="use_camera">Использовать камеру</string>
+    <string name="choose_avatar">Выбрать аватар</string>
+    <string name="camera_permission_required">Требуется разрешение на использование камеры</string>
+    <string name="capture_photo">Сделать фото</string>
+    <string name="retake_photo">Переснять</string>
+    <string name="use_this_photo">Использовать это фото</string>
+
+    <!-- Waiting Room -->
+    <string name="waiting_room_title">Комната ожидания</string>
+    <string name="players_joined">Игроки:</string>
+    <string name="start_game">Начать игру</string>
+    <string name="waiting_for_players">Ожидание подключения игроков…</string>
+    <string name="you">Вы</string>
+
+    <!-- Get Ready -->
+    <string name="get_ready">Приготовьтесь!</string>
+    <string name="game_starting">Игра скоро начнётся…</string>
+
+    <!-- Quiz Screen -->
+    <string name="question_placeholder">Здесь появится вопрос</string>
+    <string name="answer_a">Ответ A</string>
+    <string name="answer_b">Ответ B</string>
+    <string name="answer_c">Ответ C</string>
+    <string name="answer_d">Ответ D</string>
+
+    <!-- Common -->
+    <string name="error_connection">Ошибка подключения</string>
+    <string name="error_server_unreachable">Не удаётся подключиться к серверу</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">ОК</string>
+
+    <!-- Power Plays -->
+    <string name="pp_freeze_name">ЗАМОРОЗКА</string>
+    <string name="pp_freeze_desc">Заковать ответы в лёд</string>
+    <string name="pp_bombs_name">БОМБЁЖКИ</string>
+    <string name="pp_bombs_desc">Забросать ответы бомбами</string>
+    <string name="pp_munchers_name">ОБЖОРЫ</string>
+    <string name="pp_munchers_desc">Объедают ответы</string>
+    <string name="pp_gloop_name">СЛИЗЬ</string>
+    <string name="pp_gloop_desc">Залить ответы слизью</string>
+    <string name="pp_double_trouble_name">ДВОЙНАЯ БЕДА</string>
+    <string name="pp_dt_freeze_gloop_desc">Заморозка и слизь</string>
+    <string name="pp_dt_freeze_bombs_desc">Заморозка и бомбы</string>
+    <string name="pp_dt_munchers_gloop_desc">Обжоры и слизь</string>
+    <string name="pp_lockdown_name">БЛОКИРОВКА</string>
+    <string name="pp_lockdown_desc">Заблокировать ответы</string>
+    <string name="pp_zippers_name">МОЛНИИ</string>
+    <string name="pp_zippers_desc">Застегнуть ответы</string>
+    <string name="pp_bug_name">ЖУКИ</string>
+    <string name="pp_bug_desc">Жуки ползают по ответам</string>
+    <string name="pp_letter_scatter_name">РАЗБРОС БУКВ</string>
+    <string name="pp_letter_scatter_desc">Разбросать буквы</string>
+    <string name="pp_disco_name">ДИСКО-АД</string>
+    <string name="pp_disco_desc">Диско-огни слепят экран</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Убрать половину ответов</string>
+    <string name="pp_points_doubler_name">УДВОИТЕЛЬ ОЧКОВ</string>
+    <string name="pp_points_doubler_desc">Удвоить ваши очки</string>
+    <string name="pp_unknown_name">СПЕЦХОД #%1$d</string>
+    <string name="pp_unknown_desc">Запомните эффект и сообщите разработчикам</string>
+
+    <!-- Trivia -->
+    <string name="dont_touch_bombs">Не трогайте бомбы!</string>
+</resources>
