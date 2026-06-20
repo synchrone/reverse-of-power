@@ -131,6 +131,23 @@ Client                          Server
 | 7         | GLOOP          | Cover answers in gloop       | Green       |
 | 11        | DOUBLE TROUBLE | Freeze and bombles combined  | Purple      |
 
+(Decades adds POINTS_PARTY=8, LOCKDOWN=20, ZIPPERS=22, BUG=24, POINTS_DOUBLER=25, FIFTY_FIFTY=26, LETTER_SCATTER=28, DISCO_INFERNO=29; see the `PowerType` enum in `GameMessages.kt` for the source of truth.)
+
+### Power Play Targeting (`PowerTarget` + `ClientPowerPlayChoice`)
+Each `PowerPlay` in `ServerBeginPowerPlayPhase` carries `DisplayIndex`, `PowerTarget` (targeting scope), and `PowerPlayTargets` (the exact target slot indexes the server has already resolved).
+
+`PowerTarget` is the **scope**, independent of whether the play helps or harms (that's the PowerType):
+- `1` = **self** (self-helping: Points Doubler 25, 50/50 26)
+- `2` = **one chosen opponent** (sabotage: Freeze/Bombs/Nibblers/Gloop — classic KIP's only mode)
+- `4` = **everyone / all players** (e.g. Points Party 8 helps everyone; a hit-all sabotage would also be 4)
+- (`5` seen once in a classic capture — meaning unknown.)
+
+`ClientPowerPlayChoice` just **echoes the server's data** (same wire format in classic KIP `KIP_2016` and Decades `KIP2_2018`):
+- `PowerPlaySlotIndex` = the play's `DisplayIndex` (NOT the PowerType id).
+- `TargetSlotIndex` = the play's `PowerPlayTargets`, verbatim — for scope 1/4 there is no player choice; for scope 2 the player picks one candidate slot and only that one is sent.
+
+`PowerPlayFragment` currently routes auto-target vs picker by `effectivePowerType`, but `PowerTarget` is the more general signal (classic and Decades use disjoint PowerType value sets, so either works).
+
 ### Protocol Auto-Responses (handled by GameProtocolClient)
 These messages are handled automatically at the protocol level without UI involvement:
 - `SessionStateMessage` → sends `ClientRequestPlayerIDMessage`
