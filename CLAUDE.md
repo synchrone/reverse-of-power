@@ -31,6 +31,10 @@ app/src/test/java/com/game/protocol/
 ├── GameProtocolClientTest.kt    # Packet parsing unit tests (fixture-based)
 └── UdpPacketFixtures.kt         # Real captured packets as byte arrays (~260KB)
 
+harness/                         # Real-console harness: drives the PS5 over Remote Play (Python, see harness/README.md)
+├── psctl/                       # Console session, button sequences, HTTP control server, chiaki-ng pairing import
+└── tests/test_remote_play.py    # Runs against the real console only (PS_HOST)
+
 docs/                            # Protocol captures and analysis
 ├── command format.txt           # Binary packet format reference
 ├── protocol ordering.txt        # Message sequence documentation
@@ -207,6 +211,13 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 # the emulator (the emulator NATs the device network and drops inbound UDP).
 scripts/redir-udp        # optional port arg; defaults to 9060
 ```
+
+## Console Harness (Remote Play)
+`harness/` drives the real console instead of a physical controller: `psctl serve` holds one Remote Play
+session (pyremoteplay, pairing imported from chiaki-ng on macOS) and exposes `press`/`shot`/`status`.
+Agents can act on the console with `python -m psctl press "ps 2s down cross"` and read `psctl shot -o f.png`.
+Only one Remote Play client can connect at a time, so close chiaki-ng streams first. Never add fake/mock
+console implementations: the harness exists only to test against real hardware.
 
 ## Key Dependencies
 - **OkHttp3** (5.3.2) + **Retrofit2** (3.0.0): present but protocol is custom UDP, not HTTP

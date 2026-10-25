@@ -1,0 +1,9 @@
+# pyremoteplay 0.7.6 (the latest release) predates current PyAV/pyee:
+# - pyee>=9 dropped the top-level ExecutorEventEmitter it imports, so pin 8.x
+# - async_timeout is imported by its pyps4-2ndscreen dependency but not declared
+# - PyAV's renamed codec flags are worked around in psctl/receiver.py
+pyremoteplay==0.7.6
+pyee==8.2.2
+async_timeout==5.0.1
+av==19.0.2
+pillow==13.0.0
