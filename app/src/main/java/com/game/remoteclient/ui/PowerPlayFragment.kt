@@ -576,6 +576,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.FIFTY_FIFTY -> getString(R.string.pp_fifty_fifty_name) to getString(R.string.pp_fifty_fifty_desc)
             PowerType.POINTS_PARTY -> getString(R.string.pp_points_party_name) to getString(R.string.pp_points_party_desc)
             PowerType.POINTS_DOUBLER -> getString(R.string.pp_points_doubler_name) to getString(R.string.pp_points_doubler_desc)
+            PowerType.GUESS -> getString(R.string.pp_guess_name) to getString(R.string.pp_guess_desc)
             else -> getString(R.string.pp_unknown_name, powerType.value) to getString(R.string.pp_unknown_desc)
         }
     }
@@ -597,6 +598,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.FIFTY_FIFTY -> R.drawable.ic_powerplay_fifty_fifty
             PowerType.POINTS_DOUBLER -> R.drawable.ic_powerplay_points_doubler
             PowerType.POINTS_PARTY -> R.drawable.ic_powerplay_points_party
+            PowerType.GUESS -> R.drawable.ic_powerplay_guess
             else -> null
         }
     }
@@ -618,6 +620,7 @@ class PowerPlayFragment : Fragment() {
             PowerType.FIFTY_FIFTY -> Color.parseColor("#26C6DA")  // cyan
             PowerType.POINTS_DOUBLER -> Color.parseColor("#FFD700")  // gold (x2 your own points)
             PowerType.POINTS_PARTY -> Color.parseColor("#E91E63")  // party pink (points for everyone)
+            PowerType.GUESS -> Color.parseColor("#5C6BC0")  // indigo
             else -> Color.parseColor("#AB47BC") // Purple fallback
         }
     }
