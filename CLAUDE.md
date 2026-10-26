@@ -8,7 +8,7 @@ Android app that acts as a controller for the PS4 game "Knowledge Is Power" by r
 - **Language**: Kotlin (2.3.0)
 - **Min SDK**: 26 (Android 8.0), **Target SDK**: 35, **Compile SDK**: 36
 - **Architecture**: Fragment-based MVVM with Jetpack Navigation
-- **Build**: Gradle with Kotlin DSL, Java 17
+- **Build**: Gradle (Kotlin DSL); app targets Java 17 bytecode (builds on any current JDK — see Build & Test)
 
 ## Key Directories
 
@@ -30,6 +30,10 @@ app/src/main/java/com/game/
 app/src/test/java/com/game/protocol/
 ├── GameProtocolClientTest.kt    # Packet parsing unit tests (fixture-based)
 └── UdpPacketFixtures.kt         # Real captured packets as byte arrays (~260KB)
+
+harness/                         # Real-console harness: drives the PS5 over Remote Play (Python, see harness/README.md)
+├── psctl/                       # Console session, button sequences, HTTP control server, chiaki-ng pairing import
+└── tests/test_remote_play.py    # Runs against the real console only (PS_HOST)
 
 docs/                            # Protocol captures and analysis
 ├── command format.txt           # Binary packet format reference
@@ -207,6 +211,40 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 # the emulator (the emulator NATs the device network and drops inbound UDP).
 scripts/redir-udp        # optional port arg; defaults to 9060
 ```
+
+Builds on any current JDK — `./gradlew assembleDebug` is verified on JDK 26. The Gradle daemon is pinned to Java 21 (`gradle/gradle-daemon-jvm.properties`) and the compile toolchain is auto-provisioned via foojay, so **no JDK 17 install is needed** — the `Java 17` above is only the app's bytecode target.
+
+## Console Harness (Remote Play)
+`harness/` drives the real console instead of a physical controller: `psctl serve` holds one Remote Play
+session (pyremoteplay, pairing imported from chiaki-ng on macOS) and exposes `press`/`shot`/`status`.
+Agents can act on the console with `python -m psctl press "ps 2s down cross"` and read `psctl shot -o f.png`.
+Only one Remote Play client can connect at a time, so close chiaki-ng streams first. Never add fake/mock
+console implementations: the harness exists only to test against real hardware.
+
+## JVM Integration Tests (bots vs. the real console)
+`app/src/test/java/com/game/integration/` plays the real console headlessly, no emulator or APK. Each `PlayerBot`
+is a `GameProtocolClient` that joins, picks an avatar, sends a profile and answers every phase straight from the
+wire (the server reveals the right answers: `TriviaAnswer.IsCorrect`, `SortingAnswer.AnswerDirection`, linking pairs
+by AnswerID suffix `…AnswerA01`↔`…AnswerB01`, not `MatchIndex`). `Ps5Console` talks to `psctl serve` over HTTP for
+frames and button presses. Everything is skipped unless `PS_HOST` is set.
+
+```bash
+PS_HOST=192.168.1.152 ./gradlew testDebugUnitTest --tests "com.game.integration.MultiBotGameTest"
+PS_GAME_QUESTIONS=3 …           # opt-in: starts a real match and plays 3 trivia questions per bot
+PS_FULL_GAME=1 …                # opt-in: plays a whole match until the console ends it (15-30 min)
+PS_BOT_IPS=192.168.1.4,192.168.1.201 …   # one bot per local IP (default: the host IP only)
+scripts/bot-ips up 192.168.1.201          # sudo; pick addresses outside the router's DHCP pool
+```
+
+The console only ever replies to a client's UDP port **9060** — the port is not announced in the handshake and the
+source port is ignored (measured: a client listening on 9061 never completes the handshake). So bots on one host
+need one IP each; `GameProtocolClient(listenHostStr = ip)` binds both sockets to that IP. Frames are saved to
+`app/build/integration/<timestamp>/`. Every test starts from a live, empty lobby: a probe client must get a
+player slot, otherwise `Ps5Console.resetToLobby()` has `psctl` close and relaunch Decades; tests that start a
+match reset afterwards too (`harness/README.md`, "Getting back to a clean lobby"), so `psctl serve` must be
+running. A KIP protocol crash shows nothing on screen: a bad message kills the game's parser thread while the
+TV keeps animating, with no error dialog, so only the probe can tell a dead game from a live lobby, and only
+a game restart recovers it.
 
 ## Key Dependencies
 - **OkHttp3** (5.3.2) + **Retrofit2** (3.0.0): present but protocol is custom UDP, not HTTP
