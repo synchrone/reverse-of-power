@@ -104,6 +104,9 @@
         <action
             android:id="@+id/action_holdingScreen_to_matchingAnswering"
             app:destination="@id/matchingAnsweringFragment" />
+        <action
+            android:id="@+id/action_holdingScreen_to_powerPick"
+            app:destination="@id/powerPickFragment" />
     </fragment>
 
     <fragment

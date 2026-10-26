@@ -54,7 +54,11 @@ data class RejoiningClientOwnProfileMessage(
 data class ResourceRequirement(
     val GUID: String,
     val Rqrmnt: Int
-)
+) {
+    companion object {
+        const val REQUIRED = 1
+    }
+}
 
 @Serializable
 data class ResourceRequirementsMessage(
