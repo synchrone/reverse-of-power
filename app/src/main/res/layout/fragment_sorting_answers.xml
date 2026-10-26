@@ -111,27 +111,4 @@
             tools:text="Focaccia" />
     </FrameLayout>
 
-    <!-- Feedback overlay -->
-    <FrameLayout
-        android:id="@+id/feedbackOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/feedbackText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="#DDFFFFFF"
-            android:padding="32dp"
-            android:gravity="center"
-            tools:text="Focaccia" />
-    </FrameLayout>
-
-
 </FrameLayout>

@@ -160,12 +160,12 @@ class ProtocolDecoder {
             payloadType = buffer.int
         }
 
-        return when (payloadType) {
-            -7503 -> { // 0xB1E2FFFF - JSON
+        return when {
+            payloadType == -7503 -> { // 0xB1E2FFFF - JSON
                 val messages = parseJsonPayload(data.sliceArray(buffer.position() until data.size))
                 DecodedPacket.DataMessage(messageId, messages)
             }
-            -297790844 -> { // 0x841240EE - multi-JSON
+            payloadType == -297790844 -> { // 0x841240EE - multi-JSON
                 val messages = mutableListOf<GameMessage>()
                 var processed = 15
                 while (processed < payloadLength - 2) {
@@ -179,7 +179,7 @@ class ProtocolDecoder {
                 }
                 DecodedPacket.DataMessage(messageId, messages)
             }
-            -520103681 -> { // 0xFFD8FFE0 - JPEG
+            (payloadType and 0x00FFFFFF) == 0x00FFD8FF -> { // 0xFFD8FFxx - JPEG
                 val jpeg = data.sliceArray(buffer.position()-4 until data.size)
                 DecodedPacket.ImageData(messageId, transferId, jpeg.size, jpeg)
             }

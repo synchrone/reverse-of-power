@@ -3,6 +3,8 @@ package com.game.remoteclient.network
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.PowerManager
 import android.util.Log
 import com.game.protocol.ClientCategorySelectChoice
@@ -61,7 +63,8 @@ import java.util.UUID
 class NetworkManager private constructor() {
 
     private val TAG = "NetworkManager"
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
+    private val mainHandler by lazy { Handler(Looper.getMainLooper()) }
 
     private var protocolClient: GameProtocolClient? = null
     private var currentServer: GameServer? = null
@@ -126,8 +129,12 @@ class NetworkManager private constructor() {
     var pendingMatching: ServerBeginMatchingAnsweringPhase? = null
     // Pending category override for when message arrives before fragment is ready
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
-    // Pending category select request for when message arrives before fragment is ready
-    var pendingCategorySelectRequest: Boolean = false
+    @Volatile var categorySelectClosed: Boolean = false
+        private set
+    private var chosenCategoryIndex: Int? = null
+    private val categoryLock = Any()
+    @Volatile private var categoryOverrideOffered = false
+    @Volatile private var categoryOverrideSent = false
     var pendingEndOfGameFact: ClientEndOfGameFactCommandMessage? = null
 
     // Whether we're connected to Decades (vs KIP)
@@ -178,6 +185,7 @@ class NetworkManager private constructor() {
             _gameState.value = GameState.CONNECTING
             currentServer = server
             availableAvatars.clear()
+            resetCategoryRound()
 
             // Create protocol client
             protocolClient = GameProtocolClient(deviceUID, server.ipAddress, server.port)
@@ -258,6 +266,11 @@ class NetworkManager private constructor() {
             }
 
             is ClientQuizCommandMessage -> {
+                when (message.action) {
+                    ClientQuizCommandMessage.ACTION_READY,
+                    ClientQuizCommandMessage.ACTION_EXIT,
+                    ClientQuizCommandMessage.ACTION_RESET_TO_NAME -> resetCategoryRound()
+                }
                 if (message.action == ClientQuizCommandMessage.ACTION_RESET_TO_NAME) {
                     (onResetToNameEntryInterceptor ?: onResetToNameEntry)?.invoke()
                 } else {
@@ -274,17 +287,19 @@ class NetworkManager private constructor() {
             }
 
             is ServerCategorySelectChoices -> {
+                synchronized(categoryLock) { categorySelectClosed = false }
                 pendingCategoryChoices = message
                 onCategoryChoicesMessage?.invoke(message)
             }
 
             is ServerRequestCategorySelectChoice -> {
                 Log.d(TAG, "ServerRequestCategorySelectChoice: callback=${onCategorySelectRequest != null}")
-                if (onCategorySelectRequest != null) {
-                    onCategorySelectRequest?.invoke()
-                } else {
-                    pendingCategorySelectRequest = true
+                val choice = synchronized(categoryLock) {
+                    categorySelectClosed = true
+                    chosenCategoryIndex.also { chosenCategoryIndex = null }
                 }
+                sendCategoryChoice(choice ?: -1)
+                onCategorySelectRequest?.invoke()
             }
 
             is ServerBeginTriviaAnsweringPhase -> {
@@ -349,11 +364,17 @@ class NetworkManager private constructor() {
             }
 
             is ServerBeginCategorySelectOverride -> {
+                categoryOverrideOffered = true
+                categoryOverrideSent = false
                 pendingCategoryOverride = message
                 onCategoryOverrideMessage?.invoke(message)
             }
 
             is ServerStopCategorySelectOverride -> {
+                // Answer on the main thread so a power-pick tap already queued there is reported
+                if (categoryOverrideOffered) mainHandler.post { sendStopCategoryOverrideResponse(categoryOverrideSent) }
+                categoryOverrideOffered = false
+                pendingCategoryOverride = null
                 onStopCategoryOverride?.invoke(message)
             }
 
@@ -484,13 +505,14 @@ class NetworkManager private constructor() {
     }
 
     fun sendCategorySelectOverride(durationSeconds: Double) {
+        categoryOverrideSent = true
         Log.d(TAG, "Category select override after ${durationSeconds}s")
         scope.launch {
             protocolClient?.sendMessage(ClientCategorySelectOverride(DurationSeconds = durationSeconds))
         }
     }
 
-    fun sendStopCategoryOverrideResponse(overrideSent: Boolean) {
+    private fun sendStopCategoryOverrideResponse(overrideSent: Boolean) {
         Log.d(TAG, "Stop category override response: overrideSent=$overrideSent")
         scope.launch {
             protocolClient?.sendMessage(ClientStopCategorySelectOverrideResponse(OverrideSent = overrideSent))
@@ -498,6 +520,24 @@ class NetworkManager private constructor() {
     }
 
     fun sendCategorySelection(doorIndex: Int) {
+        synchronized(categoryLock) {
+            if (categorySelectClosed) return
+            chosenCategoryIndex = doorIndex
+        }
+        sendCategoryChoice(doorIndex)
+    }
+
+    private fun resetCategoryRound() {
+        synchronized(categoryLock) {
+            chosenCategoryIndex = null
+            categorySelectClosed = false
+        }
+        categoryOverrideOffered = false
+        categoryOverrideSent = false
+        pendingCategoryOverride = null
+    }
+
+    private fun sendCategoryChoice(doorIndex: Int) {
         Log.d(TAG, "Category selected: door $doorIndex")
         scope.launch {
             protocolClient?.sendMessage(ClientCategorySelectChoice(ChosenCategoryIndex = doorIndex))
@@ -568,6 +608,7 @@ class NetworkManager private constructor() {
         selectedAvatarId = null
         isRejoining = false
         availableAvatars.clear()
+        resetCategoryRound()
         _gameState.value = GameState.DISCONNECTED
         Log.d(TAG, "Disconnected from server")
     }

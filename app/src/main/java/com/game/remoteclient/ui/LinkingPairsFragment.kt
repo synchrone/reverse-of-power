@@ -44,6 +44,9 @@ class LinkingPairsFragment : Fragment() {
     private var timer: CountDownTimer? = null
     private var dragFromSlot: Int? = null
     private var answerSent = false
+    private val resetBackground = Runnable {
+        if (_binding != null) binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
+    }
 
     // Callbacks
     private var holdingScreenCb: ((ClientHoldingScreenCommandMessage) -> Unit)? = null
@@ -222,49 +225,26 @@ class LinkingPairsFragment : Fragment() {
 
         if (isCorrect) {
             correctCount++
-            showFeedback(topItem.DisplayText, bottomItem.DisplayText, true)
+            binding.sunburstBackground.setColors(correctPrimary, correctSecondary)
 
             activeTop[topSlot] = null
             activeBottom[bottomSlot] = null
+            updateUI()
 
-            binding.feedbackOverlay.postDelayed({
+            binding.root.postDelayed({
                 if (_binding == null) return@postDelayed
-                hideFeedback()
                 fillSlots()
                 updateUI()
 
                 if (correctCount >= totalPairs) {
                     sendAnswer()
                 }
-            }, 500)
-        } else {
-            showFeedback(topItem.DisplayText, bottomItem.DisplayText, false)
-            binding.feedbackOverlay.postDelayed({
-                if (_binding == null) return@postDelayed
-                hideFeedback()
-            }, 500)
-        }
-    }
-
-    private fun showFeedback(topText: String, bottomText: String, correct: Boolean) {
-        binding.feedbackOverlay.visibility = View.VISIBLE
-        binding.feedbackTopText.text = topText
-        binding.feedbackBottomText.text = bottomText
-
-        if (correct) {
-            binding.sunburstBackground.setColors(correctPrimary, correctSecondary)
-            binding.feedbackTopText.setTextColor(correctPrimary)
-            binding.feedbackBottomText.setTextColor(correctPrimary)
+            }, 300)
         } else {
             binding.sunburstBackground.setColors(incorrectPrimary, incorrectSecondary)
-            binding.feedbackTopText.setTextColor(incorrectPrimary)
-            binding.feedbackBottomText.setTextColor(incorrectPrimary)
         }
-    }
-
-    private fun hideFeedback() {
-        binding.feedbackOverlay.visibility = View.GONE
-        binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
+        binding.root.removeCallbacks(resetBackground)
+        binding.root.postDelayed(resetBackground, 400)
     }
 
     private fun updateUI() {

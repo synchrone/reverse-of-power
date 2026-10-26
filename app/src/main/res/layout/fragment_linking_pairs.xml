@@ -189,48 +189,6 @@
             tools:text="Lex Luthor" />
     </FrameLayout>
 
-    <!-- Feedback overlay -->
-    <FrameLayout
-        android:id="@+id/feedbackOverlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="#DDFFFFFF"
-            android:padding="32dp">
-
-            <TextView
-                android:id="@+id/feedbackTopText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:gravity="center"
-                tools:text="Superman" />
-
-            <TextView
-                android:id="@+id/feedbackBottomText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
-                android:gravity="center"
-                android:layout_marginTop="8dp"
-                tools:text="Lex Luthor" />
-
-        </LinearLayout>
-
-    </FrameLayout>
-
     <!-- Drag line overlay -->
     <com.game.remoteclient.ui.LinkingLineView
         android:id="@+id/linkingLine"
