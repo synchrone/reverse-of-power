@@ -104,7 +104,7 @@ class GameProtocolClient(
 
     // ==================== Core Messaging ====================
 
-    fun sendMessage(msg: GameMessage) {
+    fun sendMessage(msg: GameMessage) = synchronized(sendLock) {
         Log.i(TAG, "> Sending message: $msg")
         encoder.encodeMessage(msg).forEach { sendRawUDP(it) }
     }

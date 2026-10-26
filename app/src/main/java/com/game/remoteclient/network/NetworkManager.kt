@@ -61,7 +61,7 @@ import java.util.UUID
 class NetworkManager private constructor() {
 
     private val TAG = "NetworkManager"
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private val scope = CoroutineScope(Dispatchers.IO.limitedParallelism(1))
 
     private var protocolClient: GameProtocolClient? = null
     private var currentServer: GameServer? = null
