@@ -212,6 +212,10 @@ class Console:
         return screens.scores(self._image())
 
     def reset_to_lobby(self, timeout: float = 300) -> str:
+        lacking = sorted(screens.REQUIRED.intersection(screens.missing()))
+        if lacking:
+            raise ConsoleError(f"No reference images for {', '.join(lacking)} in {screens.REFERENCES}: capture each "
+                               "screen with `psctl shot` and store it with `psctl learn-screen NAME FRAME.png`")
         deadline = time.monotonic() + timeout
         with self._lock:
             self._go_home(deadline)

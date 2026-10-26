@@ -52,8 +52,8 @@ def make_handler(console: Console):
                     self._send(200, console.frame(fmt, max_age), f"image/{fmt.lower()}")
                 elif url.path == "/screen":
                     scores = console.screen_scores()
-                    best = min(scores, key=scores.__getitem__)
-                    self._json(200, {"screen": best if scores[best] < 1 else None,
+                    best = min(scores, key=scores.__getitem__, default=None)
+                    self._json(200, {"screen": best if best is not None and scores[best] < 1 else None,
                                      "scores": {name: round(score, 2) for name, score in sorted(scores.items())}})
                 else:
                     self._json(404, {"error": "not found"})

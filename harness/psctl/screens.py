@@ -36,21 +36,29 @@ SCREENS: dict[str, tuple[Region, ...]] = {
 
 LOBBY = frozenset({"lobby_star", "lobby_organ", "lobby_tip"})
 PROMPTS = frozenset({"language", "autosave", "getting_started"})
+REQUIRED = frozenset({"home", "close_game_menu", "update_menu", "lobby_star", "lobby_organ"})
+
+
+def missing() -> list[str]:
+    return sorted(name for name, regions in SCREENS.items()
+                  if not all((REFERENCES / f"{name}.{index}.png").exists() for index in range(len(regions))))
 
 
 def scores(frame: Image.Image) -> dict[str, float]:
     frame = _normalized(frame)
+    absent = set(missing())
     return {
         name: max(_distance(region.signature(frame), _reference(name, index)) / region.limit
                   for index, region in enumerate(regions))
         for name, regions in SCREENS.items()
+        if name not in absent
     }
 
 
 def classify(frame: Image.Image) -> str | None:
     ranked = scores(frame)
-    best = min(ranked, key=ranked.__getitem__)
-    return best if ranked[best] < 1 else None
+    best = min(ranked, key=ranked.__getitem__, default=None)
+    return best if best is not None and ranked[best] < 1 else None
 
 
 def learn(name: str, frame: Image.Image) -> list[Path]:

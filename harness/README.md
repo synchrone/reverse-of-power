@@ -76,10 +76,14 @@ sits a few rows below, so nothing else is ever pressed there), relaunches, answe
 Decades must be the most recently played game, which every test run keeps true. The JVM integration
 tests call it before and after each test.
 
-Screens are recognized by comparing small grayscale crops of the frame with the references in
+Screens are recognized by comparing small grayscale crops of the frame with reference images in
 `psctl/screens/`; `psctl screen` names the live screen and prints per-screen scores (below 1 is a
-match). If an update changes a screen, save a frame with `shot` and re-learn it:
-`psctl learn-screen lobby_star frame.png` (names are listed in `psctl/screens.py`).
+match). The references are crops of the game's and the console's own artwork, so they are not
+committed: create them once per machine by saving a frame of each screen with `shot` and storing it
+with `psctl learn-screen NAME frame.png` (names and crop boxes are in `psctl/screens.py`; `home` is
+the home screen with the Decades tile focused). The reset refuses to run until `home`,
+`close_game_menu`, `update_menu`, `lobby_star` and `lobby_organ` exist; the first-boot prompts and
+`lobby_tip` are optional. Re-learn a screen the same way if an update changes it.
 
 A protocol crash shows nothing on screen: a bad message kills the game's server-side parser thread
 while the frontend keeps animating, with no error dialog, so the lobby looks normal but no client is
