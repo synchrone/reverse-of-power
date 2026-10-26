@@ -3,6 +3,7 @@ package com.game.integration
 import com.game.protocol.*
 import kotlinx.coroutines.runBlocking
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
@@ -36,12 +37,16 @@ class PlayerBot(
     val powerPlaysUsed = AtomicInteger()
     val challenges = AtomicInteger()
     val continues = AtomicInteger()
+    val finals = AtomicInteger()
+    val challengeKinds = ConcurrentHashMap<String, Int>()
 
     @Volatile var avatarId: String? = null
         private set
     @Volatile var readyToStart = false
         private set
     @Volatile var startPressed = false
+        private set
+    @Volatile var gameEnded = false
         private set
     @Volatile var lastMessageAt = 0L
         private set
@@ -78,8 +83,8 @@ class PlayerBot(
 
     override fun toString() =
         "$name ip=$localIp player=$playerId slot=$slotId avatar=$avatarId trivia=$trivia categories=$categories " +
-            "powerPlays=$powerPlaysUsed challenges=$challenges continues=$continues silent=${silentSeconds()}s " +
-            "last=${received.takeLast(6)}"
+            "powerPlays=$powerPlaysUsed challenges=$challenges $challengeKinds finals=$finals continues=$continues " +
+            "ended=$gameEnded silent=${silentSeconds()}s last=${received.takeLast(6)}"
 
     private fun handle(message: GameMessage) {
         if (message is ServerToClientTimeSyncMessage) return
@@ -98,6 +103,7 @@ class PlayerBot(
                     requestAvatar()
                 }
                 ClientQuizCommandMessage.ACTION_READY -> readyToStart = true
+                ClientQuizCommandMessage.ACTION_EXIT -> gameEnded = true
                 ClientQuizCommandMessage.ACTION_CONTINUE -> later {
                     send(ContinuePressedResponseMessage())
                     continues.incrementAndGet()
@@ -185,6 +191,7 @@ class PlayerBot(
         val chosen = if (correct != null && (wrong.isEmpty() || Random.nextDouble() < accuracy)) correct else wrong.randomOrNull()
         send(ClientTriviaAnswer(ChosenAnswerDisplayIndex = chosen?.DisplayIndex ?: -1, AnswerTime = delayMs / 1000.0))
         trivia.incrementAndGet()
+        if (phase.RoundType == 5) finals.incrementAndGet()
         val options = phase.Answers.joinToString(" | ") { "${it.DisplayIndex}:${it.DisplayText}${if (it.IsCorrect) "*" else ""}" }
         answers += "${phase.QuestionText} [$options] -> ${chosen?.DisplayIndex}"
     }
@@ -232,6 +239,7 @@ class PlayerBot(
     private fun challenge(answer: GameMessage) {
         send(answer)
         challenges.incrementAndGet()
+        challengeKinds.merge(answer::class.simpleName ?: answer.TypeString, 1, Int::plus)
     }
 
     private fun send(message: GameMessage) = client.sendMessage(message)

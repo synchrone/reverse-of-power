@@ -231,6 +231,7 @@ frames and button presses. Everything is skipped unless `PS_HOST` is set.
 ```bash
 PS_HOST=192.168.1.152 ./gradlew testDebugUnitTest --tests "com.game.integration.MultiBotGameTest"
 PS_GAME_QUESTIONS=3 …           # opt-in: starts a real match and plays 3 trivia questions per bot
+PS_FULL_GAME=1 …                # opt-in: plays a whole match until the console ends it (15-30 min)
 PS_BOT_IPS=192.168.1.4,192.168.1.201 …   # one bot per local IP (default: the host IP only)
 scripts/bot-ips up 192.168.1.201          # sudo; pick addresses outside the router's DHCP pool
 ```

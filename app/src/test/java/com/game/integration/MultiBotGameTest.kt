@@ -46,22 +46,46 @@ class MultiBotGameTest {
     }
 
     @Test
+    fun botsPlayAFullGame() {
+        assumeTrue("set PS_FULL_GAME=1 to play a whole match (15-30 min)", System.getenv("PS_FULL_GAME") == "1")
+
+        startMatch()
+        await("the end of the match", 45 * 60_000L, snapshotEveryMs = 120_000, silenceLimitSeconds = 180) {
+            bots.all { it.gameEnded }
+        }
+        snapshot("ended")
+        report()
+
+        bots.forEach { bot ->
+            assertTrue("${bot.name} never reached the finals: $bot", bot.finals.get() > 0)
+            assertTrue("${bot.name} never pressed Continue: $bot", bot.continues.get() > 0)
+        }
+    }
+
+    @Test
     fun botsPlayAGame() {
         val questions = System.getenv("PS_GAME_QUESTIONS")?.toIntOrNull()
         assumeTrue("set PS_GAME_QUESTIONS=N to start a match and play N trivia questions", questions != null)
 
-        spawnBots()
-        awaitAll("every bot to pick an avatar", 30_000) { it.avatarId != null }
-        await("the start prompt", 30_000) { bots.first().readyToStart }
-        snapshot("lobby")
-
-        bots.first().pressStart()
-        matchStarted = true
+        startMatch()
         await("the match to start", 120_000) { bots.any { it.categories.get() > 0 || it.trivia.get() > 0 } }
         snapshot("started")
 
         awaitAll("$questions trivia answers", questions!! * 180_000L) { it.trivia.get() >= questions }
         snapshot("played")
+        report()
+    }
+
+    private fun startMatch() {
+        spawnBots()
+        awaitAll("every bot to pick an avatar", 30_000) { it.avatarId != null }
+        await("the start prompt", 30_000) { bots.first().readyToStart }
+        snapshot("lobby")
+        bots.first().pressStart()
+        matchStarted = true
+    }
+
+    private fun report() {
         println(bots.joinToString("\n"))
         bots.forEach { bot -> bot.answers.forEach { println("${bot.name}: $it") } }
     }
@@ -116,16 +140,32 @@ class MultiBotGameTest {
     private fun awaitAll(what: String, timeoutMs: Long, condition: (PlayerBot) -> Boolean) =
         await(what, timeoutMs) { bots.all(condition) }
 
-    private fun await(what: String, timeoutMs: Long, condition: () -> Boolean) {
+    private fun await(
+        what: String,
+        timeoutMs: Long,
+        snapshotEveryMs: Long = 0,
+        silenceLimitSeconds: Long = 0,
+        condition: () -> Boolean,
+    ) {
         val deadline = System.currentTimeMillis() + timeoutMs
+        var nextSnapshot = System.currentTimeMillis() + snapshotEveryMs
+        var snapshots = 0
         while (!condition()) {
-            if (System.currentTimeMillis() > deadline) {
+            val now = System.currentTimeMillis()
+            val silenced = silenceLimitSeconds > 0 && bots.isNotEmpty() &&
+                bots.all { it.silentSeconds() >= silenceLimitSeconds }
+            if (now > deadline || silenced) {
                 snapshot("timeout")
                 val crashHint = if (bots.isNotEmpty() && bots.all { it.silentSeconds() >= 30 }) {
                     "\nno bot has heard from the console for 30s+: the game's protocol thread has likely died while " +
                         "the screen keeps animating; only a game restart recovers it (the next test's probe triggers one)"
                 } else ""
-                fail("timed out after ${timeoutMs / 1000}s waiting for $what\n${bots.joinToString("\n")}$crashHint")
+                val reason = if (silenced) "the console went silent for ${silenceLimitSeconds}s" else "timed out after ${timeoutMs / 1000}s"
+                fail("$reason waiting for $what\n${bots.joinToString("\n")}$crashHint")
+            }
+            if (snapshotEveryMs > 0 && now >= nextSnapshot) {
+                snapshot("progress-%02d".format(++snapshots))
+                nextSnapshot = now + snapshotEveryMs
             }
             Thread.sleep(250)
         }
