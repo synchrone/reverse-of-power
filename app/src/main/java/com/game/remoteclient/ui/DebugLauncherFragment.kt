@@ -67,7 +67,8 @@ class DebugLauncherFragment : Fragment() {
         PowerType.DISCO_INFERNO to "Disco Inferno",
         PowerType.FIFTY_FIFTY to "50/50",
         PowerType.POINTS_PARTY to "Points Party",
-        PowerType.POINTS_DOUBLER to "Points Doubler"
+        PowerType.POINTS_DOUBLER to "Points Doubler",
+        PowerType.GUESS to "Guess"
     )
     private val ppSlotSelections = intArrayOf(0, 0, 0) // index into powerTypeOptions
     private var targetPlayerCount = 3

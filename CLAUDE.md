@@ -129,6 +129,7 @@ Client                          Server
 ### Power Play Types
 | PowerType | Name           | Description                  | Color       |
 |-----------|----------------|------------------------------|-------------|
+| 1         | GUESS          | Guess who answers correctly  | Indigo      |
 | 4         | FREEZE         | Encase answers in ice        | Ice blue    |
 | 5         | BOMBLES        | Throw bombs over answers     | Orange-red  |
 | 6         | NIBBLERS       | Nibble away at answers       | Orange-red  |
