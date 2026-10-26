@@ -126,8 +126,11 @@ class NetworkManager private constructor() {
     var pendingMatching: ServerBeginMatchingAnsweringPhase? = null
     // Pending category override for when message arrives before fragment is ready
     var pendingCategoryOverride: ServerBeginCategorySelectOverride? = null
-    // Pending category select request for when message arrives before fragment is ready
-    var pendingCategorySelectRequest: Boolean = false
+    var categorySelectClosed: Boolean = false
+        private set
+    @Volatile private var chosenCategoryIndex: Int? = null
+    @Volatile private var categoryOverrideOffered = false
+    @Volatile private var categoryOverrideSent = false
     var pendingEndOfGameFact: ClientEndOfGameFactCommandMessage? = null
 
     // Whether we're connected to Decades (vs KIP)
@@ -274,17 +277,17 @@ class NetworkManager private constructor() {
             }
 
             is ServerCategorySelectChoices -> {
+                categorySelectClosed = false
                 pendingCategoryChoices = message
                 onCategoryChoicesMessage?.invoke(message)
             }
 
             is ServerRequestCategorySelectChoice -> {
                 Log.d(TAG, "ServerRequestCategorySelectChoice: callback=${onCategorySelectRequest != null}")
-                if (onCategorySelectRequest != null) {
-                    onCategorySelectRequest?.invoke()
-                } else {
-                    pendingCategorySelectRequest = true
-                }
+                sendCategoryChoice(chosenCategoryIndex ?: -1)
+                chosenCategoryIndex = null
+                categorySelectClosed = true
+                onCategorySelectRequest?.invoke()
             }
 
             is ServerBeginTriviaAnsweringPhase -> {
@@ -349,11 +352,16 @@ class NetworkManager private constructor() {
             }
 
             is ServerBeginCategorySelectOverride -> {
+                categoryOverrideOffered = true
+                categoryOverrideSent = false
                 pendingCategoryOverride = message
                 onCategoryOverrideMessage?.invoke(message)
             }
 
             is ServerStopCategorySelectOverride -> {
+                if (categoryOverrideOffered) sendStopCategoryOverrideResponse(categoryOverrideSent)
+                categoryOverrideOffered = false
+                pendingCategoryOverride = null
                 onStopCategoryOverride?.invoke(message)
             }
 
@@ -484,13 +492,14 @@ class NetworkManager private constructor() {
     }
 
     fun sendCategorySelectOverride(durationSeconds: Double) {
+        categoryOverrideSent = true
         Log.d(TAG, "Category select override after ${durationSeconds}s")
         scope.launch {
             protocolClient?.sendMessage(ClientCategorySelectOverride(DurationSeconds = durationSeconds))
         }
     }
 
-    fun sendStopCategoryOverrideResponse(overrideSent: Boolean) {
+    private fun sendStopCategoryOverrideResponse(overrideSent: Boolean) {
         Log.d(TAG, "Stop category override response: overrideSent=$overrideSent")
         scope.launch {
             protocolClient?.sendMessage(ClientStopCategorySelectOverrideResponse(OverrideSent = overrideSent))
@@ -498,6 +507,11 @@ class NetworkManager private constructor() {
     }
 
     fun sendCategorySelection(doorIndex: Int) {
+        chosenCategoryIndex = doorIndex
+        sendCategoryChoice(doorIndex)
+    }
+
+    private fun sendCategoryChoice(doorIndex: Int) {
         Log.d(TAG, "Category selected: door $doorIndex")
         scope.launch {
             protocolClient?.sendMessage(ClientCategorySelectChoice(ChosenCategoryIndex = doorIndex))

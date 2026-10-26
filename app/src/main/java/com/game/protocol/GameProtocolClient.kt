@@ -5,6 +5,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.withTimeoutOrNull
 import java.net.*
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 // ==================== Protocol Client ====================
 fun bytes(vararg values: Int) = ByteArray(values.size) { values[it].toByte() }
@@ -45,11 +46,9 @@ class GameProtocolClient(
     private val pendingImageControls = mutableMapOf<Int, String>() // TransferID -> ImageGUID
 
     // GUIDs of images we've already received this session
-    private val receivedResourceGUIDs = mutableSetOf<String>()
-    // Resource request tracking: GUIDs we've requested but haven't received yet
-    private val pendingResourceGUIDs = mutableSetOf<String>()
+    private val receivedResourceGUIDs = ConcurrentHashMap.newKeySet<String>()
     // Requirements to echo back once all resources are received
-    private var pendingRequirements: List<ResourceRequirement>? = null
+    private var pendingRequirements: List<ResourceRequirement> = emptyList()
 
     // Lock to prevent interleaved UDP packets when sending chunked data
     private val sendLock = Any()
@@ -98,6 +97,7 @@ class GameProtocolClient(
 
     fun sendImage(imageData: ByteArray, imageGuid: String, transferId: Int, imgType: Int = 2) = synchronized(sendLock) {
         Log.i(TAG, "> Sending image transfer ID: $transferId (${imageData.size}b)")
+        receivedResourceGUIDs.add(imageGuid)
         val packets = encoder.encodeImageTransfer(imageData, imageGuid, transferId, imgType)
         packets.forEach { sendRawUDP(it) }
     }
@@ -229,7 +229,7 @@ class GameProtocolClient(
         if (pendingGuid != null) {
             Log.d(TAG, "^ matched JPEG for transferId=$transferId with waiting control $pendingGuid (${jpeg.size} bytes)")
             onImageReceived?.invoke(pendingGuid, jpeg)
-            checkResourceComplete(pendingGuid)
+            onResourceReceived(pendingGuid)
         } else {
             pendingImages[transferId] = jpeg
             Log.d(TAG, "^ stored JPEG for transferId=$transferId (${jpeg.size} bytes)")
@@ -241,24 +241,20 @@ class GameProtocolClient(
         if (pendingJpeg != null) {
             Log.d(TAG, "Matched JPEG for transferId=${message.TransferID}, imageGuid=${message.ImageGUID}")
             onImageReceived?.invoke(message.ImageGUID, pendingJpeg)
-            checkResourceComplete(message.ImageGUID)
+            onResourceReceived(message.ImageGUID)
         } else {
             Log.d(TAG, "No pending JPEG for transferId=${message.TransferID}, storing control to wait for JPEG")
             pendingImageControls[message.TransferID] = message.ImageGUID
         }
     }
 
-    private fun checkResourceComplete(guid: String) {
+    private fun onResourceReceived(guid: String) {
         receivedResourceGUIDs.add(guid)
-        pendingResourceGUIDs.remove(guid)
+        if (pendingRequirements.any { it.GUID !in receivedResourceGUIDs }) return
 
         Log.d(TAG, "Resource $guid received, sending AllResourcesReceivedMessage")
-        val req = ResourceRequirement(GUID = guid, Rqrmnt = 0)
-        sendMessage(AllResourcesReceivedMessage(Requirements = listOf(req)))
-
-        if (pendingResourceGUIDs.isEmpty() && pendingRequirements != null) {
-            pendingRequirements = null
-        }
+        sendMessage(AllResourcesReceivedMessage(Requirements = pendingRequirements))
+        pendingRequirements = emptyList()
     }
 
     // ==================== Protocol Responses ====================
@@ -302,15 +298,13 @@ class GameProtocolClient(
             }
 
             is ResourceRequirementsMessage -> {
-                val missing = message.Requirements.filter { it.GUID !in receivedResourceGUIDs }
+                pendingRequirements = message.Requirements.filter { it.Rqrmnt == ResourceRequirement.REQUIRED }
+                val missing = pendingRequirements.filter { it.GUID !in receivedResourceGUIDs }
                 if (missing.isEmpty()) {
-                    sendMessage(AllResourcesReceivedMessage(Requirements = message.Requirements))
+                    sendMessage(AllResourcesReceivedMessage(Requirements = pendingRequirements))
+                    pendingRequirements = emptyList()
                 } else {
-                    pendingRequirements = message.Requirements
-                    for (req in missing) {
-                        pendingResourceGUIDs.add(req.GUID)
-                        sendMessage(RequestResourceMessage(ResourceGUID = req.GUID))
-                    }
+                    missing.forEach { sendMessage(RequestResourceMessage(ResourceGUID = it.GUID)) }
                 }
             }
 

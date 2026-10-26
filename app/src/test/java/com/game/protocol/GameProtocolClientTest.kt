@@ -93,6 +93,76 @@ class GameProtocolClientTest {
     }
 
     @Test
+    fun resourceThatIsNotRequiredIsConfirmedWithoutRequestingIt() {
+        val sent = captureSentMessages()
+        val server = ProtocolEncoder()
+
+        feed(server.encodeMessage(ResourceRequirementsMessage(Requirements = listOf(ResourceRequirement("question-image", 2)))))
+
+        assertEquals(listOf(AllResourcesReceivedMessage(Requirements = emptyList())), sent)
+    }
+
+    @Test
+    fun missingResourcesAreRequestedThenConfirmedTogetherOnceAllArrive() {
+        val sent = captureSentMessages()
+        val server = ProtocolEncoder()
+        val required = listOf(ResourceRequirement("photo-a", 1), ResourceRequirement("photo-b", 1))
+
+        feed(server.encodeMessage(ResourceRequirementsMessage(Requirements = required)))
+        assertEquals(listOf(RequestResourceMessage(ResourceGUID = "photo-a"), RequestResourceMessage(ResourceGUID = "photo-b")), sent)
+        sent.clear()
+
+        feed(serverImage(server, "photo-a", 90, jfif))
+        assertTrue("nothing is confirmed while photo-b is missing", sent.isEmpty())
+
+        val exifImage = serverImage(server, "photo-b", 91, exif)
+        feed(exifImage.drop(1))
+        feed(exifImage.take(1))
+        assertEquals(listOf(AllResourcesReceivedMessage(Requirements = required)), sent)
+    }
+
+    @Test
+    fun ownUploadedPhotoCountsAsHeld() {
+        val sent = captureSentMessages()
+        val server = ProtocolEncoder()
+        client.sendImage(jfif, "own-photo", 2)
+        sent.clear()
+
+        val required = listOf(ResourceRequirement("own-photo", 1))
+        feed(server.encodeMessage(ResourceRequirementsMessage(Requirements = required)))
+
+        assertEquals(listOf(AllResourcesReceivedMessage(Requirements = required)), sent)
+    }
+
+    @Test
+    fun pushedPhotoIsConfirmedWithAnEmptyRequirementList() {
+        val sent = captureSentMessages()
+
+        feed(serverImage(ProtocolEncoder(), "other-player", 90, jfif))
+
+        assertEquals(listOf(AllResourcesReceivedMessage(Requirements = emptyList())), sent)
+    }
+
+    private val jfif = bytes(0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0xFF, 0xD9)
+    private val exif = bytes(0xFF, 0xD8, 0xFF, 0xE1, 0x00, 0x10, 0x45, 0x78, 0x69, 0x66, 0x00, 0xFF, 0xD9)
+
+    private fun serverImage(server: ProtocolEncoder, guid: String, transferId: Int, jpeg: ByteArray): List<ByteArray> =
+        server.encodeMessage(ImageResourceContentTransferMessage(TransferID = transferId, ImageGUID = guid, Acknowledge = true)) +
+            server.encodeImageTransfer(jpeg, guid, transferId).drop(1)
+
+    private fun feed(packets: List<ByteArray>) = packets.forEach { client.handleReceivedPacket(it) }
+
+    private fun captureSentMessages(): MutableList<GameMessage> {
+        val decoder = ProtocolDecoder()
+        val sent = mutableListOf<GameMessage>()
+        client.testMode = true
+        client.onPacketSend = { packet ->
+            (decoder.decode(packet) as? DecodedPacket.DataMessage)?.let { sent += it.messages }
+        }
+        return sent
+    }
+
+    @Test
     fun testValidChunkedPackets(){
         // Load and process all chunked fixture files sequentially
         for (chunk in UdpPacketFixtures.chunkedDatagram1()) {
