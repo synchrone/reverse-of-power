@@ -13,7 +13,6 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import kotlin.math.min
 import kotlin.math.sqrt
 import kotlin.random.Random
 
@@ -161,9 +160,7 @@ class GloopOverlayView @JvmOverloads constructor(
             canvas.drawCircle(cx, cy, r, basePaint)
         }
 
-        // Eraser width: inversely proportional to count (thicker gloop = smaller brush)
-        // 1.2x multiplier so the wipe feels wider than the finger contact area
-        eraserPaint.strokeWidth = min(wf, hf) * 0.18f * 1.2f / layerCount
+        eraserPaint.strokeWidth = FINGER_WIDTH_DP * resources.displayMetrics.density / layerCount
     }
 
     // Touch is dispatched by the full-screen gloopTouchInterceptor in the fragment.
@@ -223,7 +220,7 @@ class GloopOverlayView @JvmOverloads constructor(
 
     private fun checkCoverage() {
         val clearedCells = grid.count { it }
-        if (clearedCells >= grid.size * 0.65f) {
+        if (clearedCells >= grid.size * 0.8f) {
             cleared = true
             ValueAnimator.ofFloat(1f, 0f).apply {
                 duration = 200
@@ -256,5 +253,9 @@ class GloopOverlayView @JvmOverloads constructor(
         gloopBitmap?.recycle()
         gloopBitmap = null
         gloopCanvas = null
+    }
+
+    private companion object {
+        const val FINGER_WIDTH_DP = 56f
     }
 }

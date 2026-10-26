@@ -54,7 +54,11 @@ data class RejoiningClientOwnProfileMessage(
 data class ResourceRequirement(
     val GUID: String,
     val Rqrmnt: Int
-)
+) {
+    companion object {
+        const val REQUIRED = 1
+    }
+}
 
 @Serializable
 data class ResourceRequirementsMessage(
@@ -318,7 +322,7 @@ enum class PowerType(val value: Int) {
 
     // Decades:
     NONE(-1), // empty slot
-    BET(1), // on someone's answering correctly
+    GUESS(1), // pick who will answer correctly
     POINTS_PARTY(8), // points party, pinata — targets everyone
     LOCKDOWN(20), // chains across answer buttons
     ZIPPERS(22), // unzip each answer button

@@ -65,11 +65,7 @@ class CategorySelectionFragment : Fragment() {
             networkManager.pendingCategoryChoices = null
         }
 
-        // Handle category select request that arrived before this fragment was ready
-        if (networkManager.pendingCategorySelectRequest) {
-            networkManager.pendingCategorySelectRequest = false
-            networkManager.sendCategorySelection(selectedDoorIndex ?: -1)
-        }
+        if (networkManager.categorySelectClosed) selectionEnabled = false
     }
 
     private fun setupDoorClickListeners() {
@@ -77,7 +73,7 @@ class CategorySelectionFragment : Fragment() {
         columns.forEachIndexed { index, column ->
             column.setOnClickListener {
                 Log.d("CategorySelection", "Door $index tapped, selectionEnabled=$selectionEnabled, choices=${categoryChoices.size}")
-                if (selectionEnabled && index < categoryChoices.size) {
+                if (selectionEnabled && !networkManager.categorySelectClosed && index < categoryChoices.size) {
                     selectedDoorIndex = index
                     networkManager.sendCategorySelection(index)
                     selectionEnabled = false
@@ -92,9 +88,7 @@ class CategorySelectionFragment : Fragment() {
             activity?.runOnUiThread { updateCategoryChoices(message) }
         }
         categorySelectCb = {
-            activity?.runOnUiThread {
-                networkManager.sendCategorySelection(selectedDoorIndex ?: -1)
-            }
+            activity?.runOnUiThread { selectionEnabled = false }
         }
         holdingScreenCb = { _ ->
             activity?.runOnUiThread { navigateToHoldingScreen() }

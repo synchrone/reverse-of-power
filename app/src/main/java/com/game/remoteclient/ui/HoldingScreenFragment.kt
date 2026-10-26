@@ -18,6 +18,7 @@ import com.game.protocol.ServerBeginEliminatingAnsweringPhase
 import com.game.protocol.ServerBeginMatchingAnsweringPhase
 import com.game.protocol.ServerBeginMissingLetterAnsweringPhase
 import com.game.protocol.ServerBeginSortingAnsweringPhase
+import com.game.protocol.ServerBeginCategorySelectOverride
 import com.game.protocol.ServerColourMessage
 import com.game.remoteclient.GameRemoteClientApplication
 import com.game.remoteclient.R
@@ -49,6 +50,7 @@ class HoldingScreenFragment : Fragment() {
     private var missingLetterCb: ((ServerBeginMissingLetterAnsweringPhase) -> Unit)? = null
     private var matchingCb: ((ServerBeginMatchingAnsweringPhase) -> Unit)? = null
     private var endOfGameFactCb: ((ClientEndOfGameFactCommandMessage) -> Unit)? = null
+    private var categoryOverrideCb: ((ServerBeginCategorySelectOverride) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -110,6 +112,9 @@ class HoldingScreenFragment : Fragment() {
         endOfGameFactCb = { _ ->
             activity?.runOnUiThread { navigateToEndOfGameFact() }
         }
+        categoryOverrideCb = { _ ->
+            activity?.runOnUiThread { findNavController().navigate(R.id.action_holdingScreen_to_powerPick) }
+        }
 
         networkManager.onHoldingScreenMessage = holdingScreenCb
         networkManager.onColourMessage = colourCb
@@ -124,6 +129,7 @@ class HoldingScreenFragment : Fragment() {
         networkManager.onMissingLetterMessage = missingLetterCb
         networkManager.onMatchingMessage = matchingCb
         networkManager.onEndOfGameFact = endOfGameFactCb
+        networkManager.onCategoryOverrideMessage = categoryOverrideCb
     }
 
     private fun navigateToCategorySelection() {
@@ -226,6 +232,7 @@ class HoldingScreenFragment : Fragment() {
         if (networkManager.onMissingLetterMessage === missingLetterCb) networkManager.onMissingLetterMessage = null
         if (networkManager.onMatchingMessage === matchingCb) networkManager.onMatchingMessage = null
         if (networkManager.onEndOfGameFact === endOfGameFactCb) networkManager.onEndOfGameFact = null
+        if (networkManager.onCategoryOverrideMessage === categoryOverrideCb) networkManager.onCategoryOverrideMessage = null
         _binding = null
     }
 }

@@ -106,8 +106,6 @@ class PowerPickFragment : Fragment() {
     }
 
     private fun handleStopOverride() {
-        // Always respond with whether we sent an override
-        networkManager.sendStopCategoryOverrideResponse(overrideSent = overrideSent)
         if (!overrideSent) {
             // No override used — go back immediately
             navigateToHoldingScreen()
