@@ -79,6 +79,20 @@ class GameProtocolClientTest {
     }
 
     @Test
+    fun retransmittedMessageIsAckedEachTimeButDispatchedOnce() {
+        val sent = mutableListOf<ByteArray>()
+        client.onPacketSend = { sent += it }
+
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket6())
+        val dispatched = receivedMessages.size
+        client.handleReceivedPacket(UdpPacketFixtures.singlePacket6())
+
+        assertTrue("fixture should carry at least one message", dispatched > 0)
+        assertEquals("a retransmit must not be dispatched again", dispatched, receivedMessages.size)
+        assertEquals("both deliveries must be ACKed", 2, sent.count { it.size == 38 && it[0] == 0x8A.toByte() && it[1] == 0x33.toByte() })
+    }
+
+    @Test
     fun testValidChunkedPackets(){
         // Load and process all chunked fixture files sequentially
         for (chunk in UdpPacketFixtures.chunkedDatagram1()) {
