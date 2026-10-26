@@ -73,7 +73,7 @@ class CategorySelectionFragment : Fragment() {
         columns.forEachIndexed { index, column ->
             column.setOnClickListener {
                 Log.d("CategorySelection", "Door $index tapped, selectionEnabled=$selectionEnabled, choices=${categoryChoices.size}")
-                if (selectionEnabled && index < categoryChoices.size) {
+                if (selectionEnabled && !networkManager.categorySelectClosed && index < categoryChoices.size) {
                     selectedDoorIndex = index
                     networkManager.sendCategorySelection(index)
                     selectionEnabled = false
