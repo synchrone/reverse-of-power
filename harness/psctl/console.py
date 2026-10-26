@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import logging
 import threading
 import time
 
+from PIL import Image
 from pyremoteplay.device import RPDevice
 
+from . import screens
 from .inputs import DEFAULT_GAP, DEFAULT_HOLD, Wait, parse_sequence
 from .receiver import FrameReceiver
 
@@ -130,12 +133,15 @@ class Console:
 
     def disconnect(self) -> None:
         with self._lock:
-            if self.device.session is not None:
+            session = self.device.session
+            if session is not None:
                 self.device.controller.stop()
                 if self._loop is not None and self._loop.is_running():
                     # Session teardown cancels loop tasks, so run it on the loop.
+                    self._loop.call_soon_threadsafe(session.stop)
                     self._loop.call_soon_threadsafe(self.device.disconnect)
                 else:
+                    session.stop()
                     self.device.disconnect()
             if self._loop is not None:
                 self._loop.call_soon_threadsafe(self._loop.stop)
@@ -196,3 +202,68 @@ class Console:
             "frame_age": receiver.frame_age if receiver else None,
             "session_error": self.device.session.error if self.device.session else None,
         }
+
+    # --- screens and lobby reset -------------------------------------------
+
+    def screen(self) -> str | None:
+        return screens.classify(self._image())
+
+    def screen_scores(self) -> dict[str, float]:
+        return screens.scores(self._image())
+
+    def reset_to_lobby(self, timeout: float = 300) -> str:
+        deadline = time.monotonic() + timeout
+        with self._lock:
+            self._go_home(deadline)
+            self.press("options 1.5s")
+            menu = self.screen()
+            # Only ever cross the focused first item: Delete sits a few rows below it in this menu.
+            if menu == "close_game_menu":
+                self.press("cross 4s")
+            elif menu == "update_menu":
+                self.press("circle 1.5s")
+            else:
+                self.press("circle 1.5s")
+                raise ConsoleError(f"Game menu not recognized (screen: {menu}); pressed nothing in it")
+            if self.screen() != "home":
+                raise ConsoleError(f"Expected the home screen after closing Decades, got {self.screen()}")
+            self.press("cross 3s")
+            launched = time.monotonic()
+            while time.monotonic() < deadline:
+                name = self.screen()
+                if name in screens.LOBBY:
+                    return name
+                if name in screens.PROMPTS:
+                    self.press("cross 1.5s")
+                elif name == "home" and time.monotonic() - launched > 10:
+                    self.press("cross 3s")
+                    launched = time.monotonic()
+                else:
+                    time.sleep(1)
+            raise ConsoleError(f"Decades did not reach the lobby within {timeout:.0f}s (screen: {self.screen()})")
+
+    def _go_home(self, deadline: float) -> None:
+        for _ in range(3):
+            self.press("ps@1.5 2.5s")
+            if self.screen() == "home":
+                return
+            self.press("circle 1.5s")
+        self._reconnect(deadline)
+        self.press("ps@1.5 2.5s")
+        if self.screen() != "home":
+            raise ConsoleError("Could not reach the home screen with Decades focused "
+                               "(it has to be the most recently played game)")
+
+    def _reconnect(self, deadline: float) -> None:
+        self.disconnect()
+        while True:
+            try:
+                self.connect()
+                return
+            except ConsoleError:
+                if time.monotonic() > deadline:
+                    raise
+                time.sleep(15)
+
+    def _image(self) -> Image.Image:
+        return Image.open(io.BytesIO(self.frame("PNG", max_age=3)))

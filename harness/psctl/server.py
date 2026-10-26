@@ -6,6 +6,8 @@ talk to this long-lived server instead of reconnecting per action.
     GET  /               browser remote: live frame + buttons (arrows/Enter/Backspace work too)
     GET  /status         console + session status (JSON)
     GET  /frame.png      latest frame (also /frame.jpg); ?max_age=SECONDS rejects a stalled stream
+    GET  /screen         name of the recognized screen (psctl/screens.py), with per-screen scores
+    POST /reset          body {"timeout": 300}: close Decades and relaunch it to an empty lobby
     POST /press          body {"sequence": "ps 2s down*2 cross", "gap": 0.35}
     POST /stick          body {"stick": "left", "x": 0, "y": -1, "duration": 0.3}
     POST /connect        (re)connect; also done lazily by every action
@@ -48,6 +50,11 @@ def make_handler(console: Console):
                     fmt = "PNG" if url.path.endswith(".png") else "JPEG"
                     max_age = float(query["max_age"][0]) if "max_age" in query else None
                     self._send(200, console.frame(fmt, max_age), f"image/{fmt.lower()}")
+                elif url.path == "/screen":
+                    scores = console.screen_scores()
+                    best = min(scores, key=scores.__getitem__)
+                    self._json(200, {"screen": best if scores[best] < 1 else None,
+                                     "scores": {name: round(score, 2) for name, score in sorted(scores.items())}})
                 else:
                     self._json(404, {"error": "not found"})
             except (ConsoleError, ValueError) as error:
@@ -76,6 +83,8 @@ def make_handler(console: Console):
                 elif path == "/standby":
                     console.standby()
                     self._json(200, {"ok": True})
+                elif path == "/reset":
+                    self._json(200, {"screen": console.reset_to_lobby(float(body.get("timeout", 300)))})
                 else:
                     self._json(404, {"error": "not found"})
             except (ConsoleError, ValueError, KeyError) as error:

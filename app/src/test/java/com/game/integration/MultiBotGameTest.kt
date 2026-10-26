@@ -19,15 +19,19 @@ class MultiBotGameTest {
     private val bots = mutableListOf<PlayerBot>()
     private val console = Ps5Console(System.getenv("PSCTL_URL") ?: "http://127.0.0.1:8765")
     private val outDir = File("build/integration/${System.currentTimeMillis()}")
+    private var matchStarted = false
 
     @Before
-    fun requireConsole() {
+    fun startFromAnEmptyLobby() {
         assumeTrue("set PS_HOST to run the live console tests", !host.isNullOrBlank())
+        if (!console.isInLobby()) println("reset before test: ${console.resetToLobby()}")
     }
 
     @After
-    fun leave() {
+    fun leaveAndCleanUp() {
         bots.forEach { it.close() }
+        if (host.isNullOrBlank()) return
+        if (matchStarted || !console.isInLobby()) println("reset after test: ${console.resetToLobby()}")
     }
 
     @Test
@@ -50,6 +54,7 @@ class MultiBotGameTest {
         snapshot("lobby")
 
         bots.first().pressStart()
+        matchStarted = true
         await("the match to start", 120_000) { bots.any { it.categories.get() > 0 || it.trivia.get() > 0 } }
         snapshot("started")
 

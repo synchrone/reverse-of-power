@@ -62,9 +62,27 @@ psctl shot -o frame.png --max-age 1      # latest frame; fails if the stream sta
 curl -s localhost:8765/status            # console status, running title, frame count
 ```
 
-HTTP API (`psctl/server.py`): `GET /status`, `GET /frame.png|.jpg`, `POST /press
-{"sequence": "..."}`, `POST /stick {"stick","x","y","duration"}`, `POST /connect`,
-`/disconnect`, `/wake`, `/standby`. Actions reconnect automatically if the session dropped.
+HTTP API (`psctl/server.py`): `GET /status`, `GET /frame.png|.jpg`, `GET /screen`, `POST /press
+{"sequence": "..."}`, `POST /stick {"stick","x","y","duration"}`, `POST /reset {"timeout": 300}`,
+`POST /connect`, `/disconnect`, `/wake`, `/standby`. Actions reconnect automatically if the session dropped.
+
+## Getting back to a clean lobby
+
+`psctl reset` (`POST /reset`) returns Decades to an empty lobby from any state: a hung or abandoned
+match, an error dialog, or a crashed game. It holds PS for the home screen, opens OPTIONS on the
+Decades tile, picks **Close Game** only if the menu is recognized as the running-game menu (Delete
+sits a few rows below, so nothing else is ever pressed there), relaunches, answers first-boot prompts
+(language, autosave, Getting Started) and stops once a lobby screen is recognized — about 45 s.
+Decades must be the most recently played game, which every test run keeps true. The JVM integration
+tests call it before and after each test.
+
+Screens are recognized by comparing small grayscale crops of the frame with the references in
+`psctl/screens/`; `psctl screen` names the live screen and prints per-screen scores (below 1 is a
+match). If an update changes a screen, save a frame with `shot` and re-learn it:
+`psctl learn-screen lobby_star frame.png` (names are listed in `psctl/screens.py`).
+
+If presses stop having any effect while video still flows, the console is holding a stale Remote
+Play session; the reset reconnects, retrying every 15 s until the console drops it (about a minute).
 
 Buttons: `up down left right cross circle square triangle l1 r1 l2 r2 l3 r3
 options share ps touchpad` (aliases: `x o start create home`).

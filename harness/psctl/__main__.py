@@ -57,6 +57,16 @@ def main(argv: list[str] | None = None) -> int:
     shot.add_argument("-o", "--output", default="frame.png")
     shot.add_argument("--max-age", type=float, help="fail if the latest frame is older than this (s)")
 
+    screen = sub.add_parser("screen", help="name the screen the console shows (via the server), or of a saved frame")
+    screen.add_argument("frame", nargs="?", help="classify this saved frame instead of the live one")
+
+    reset = sub.add_parser("reset", help="close Decades and relaunch it to an empty lobby (via the server)")
+    reset.add_argument("--timeout", type=float, default=300)
+
+    learn = sub.add_parser("learn-screen", help="store the reference for a screen from a saved frame")
+    learn.add_argument("name", help="screen name from psctl/screens.py")
+    learn.add_argument("frame", help="a 1280x720 frame (e.g. from `shot`) showing that screen")
+
     smoke = sub.add_parser("smoke", help="one-off: wake, connect, optionally press, save a frame, disconnect")
     smoke.add_argument("--press", dest="sequence", help="button sequence to send before the screenshot")
     smoke.add_argument("-o", "--output", default="smoke.png")
@@ -137,7 +147,10 @@ def cmd_serve(args) -> int:
     from .server import serve
 
     console = _console(args, resolution=args.resolution, fps=args.fps)
-    console.connect()
+    try:
+        console.connect()
+    except ConsoleError as error:
+        print(f"warning: {error}; the first request will retry", file=sys.stderr)
     serve(console, args.bind, args.port)
     return 0
 
@@ -154,6 +167,38 @@ def cmd_shot(args) -> int:
     with open(args.output, "wb") as out:
         out.write(data)
     print(args.output)
+    return 0
+
+
+def cmd_screen(args) -> int:
+    if args.frame:
+        from PIL import Image
+
+        from .screens import classify, scores
+
+        frame = Image.open(args.frame)
+        result = {"screen": classify(frame), "scores": {k: round(v, 2) for k, v in sorted(scores(frame).items())}}
+    else:
+        result = _request(args.server, "/screen")
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+def cmd_reset(args) -> int:
+    result = _request(args.server, "/reset", {"timeout": args.timeout}, timeout=args.timeout + 30)
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+def cmd_learn_screen(args) -> int:
+    from PIL import Image
+
+    from .screens import SCREENS, learn
+
+    if args.name not in SCREENS:
+        raise ConsoleError(f"Unknown screen {args.name!r}; known: {', '.join(sorted(SCREENS))}")
+    for path in learn(args.name, Image.open(args.frame)):
+        print(path)
     return 0
 
 
@@ -179,11 +224,11 @@ def cmd_smoke(args) -> int:
     return 0
 
 
-def _request(server: str, path: str, body: dict | None = None, raw: bool = False):
+def _request(server: str, path: str, body: dict | None = None, raw: bool = False, timeout: float = 120):
     data = json.dumps(body).encode() if body is not None else None
     request = urllib.request.Request(server + path, data=data, method="POST" if data else "GET")
     try:
-        with urllib.request.urlopen(request, timeout=120) as response:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
             payload = response.read()
     except urllib.error.HTTPError as error:
         raise ConsoleError(f"{path}: {error.read().decode(errors='replace')}") from error
@@ -201,6 +246,9 @@ COMMANDS = {
     "serve": cmd_serve,
     "press": cmd_press,
     "shot": cmd_shot,
+    "screen": cmd_screen,
+    "reset": cmd_reset,
+    "learn-screen": cmd_learn_screen,
     "smoke": cmd_smoke,
 }
 
