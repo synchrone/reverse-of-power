@@ -20,7 +20,6 @@ class PlayerBot(
     val client = GameProtocolClient(UUID.randomUUID().toString().replace("-", ""), consoleHost, listenHostStr = localIp)
     private val worker = Executors.newSingleThreadScheduledExecutor { Thread(it, "bot-$name").apply { isDaemon = true } }
 
-    private val recent = LinkedHashMap<GameMessage, Long>()
     private val avatars = linkedMapOf<String, Boolean>()
     private var wantsAvatar = false
     private var requestedAvatar: String? = null
@@ -81,9 +80,6 @@ class PlayerBot(
 
     private fun handle(message: GameMessage) {
         if (message is ServerToClientTimeSyncMessage) return
-        val now = System.currentTimeMillis()
-        recent.entries.removeIf { now - it.value > 3_000 }
-        if (recent.put(message, now) != null) return
         received += message.TypeString.removePrefix("KnowledgeIsPower.")
         lastMessageAt = System.currentTimeMillis()
 

@@ -25,6 +25,7 @@ class GameProtocolClient(
     private val encoder = ProtocolEncoder()
     private val decoder = ProtocolDecoder()
     private var lastRcvMessageId: Int? = null
+    private val deliveredMessageIds = LinkedHashSet<Int>()
     private var connectionDeferred: CompletableDeferred<Unit>? = null
     var connectionError: String? = null
 
@@ -178,6 +179,8 @@ class GameProtocolClient(
 
             is DecodedPacket.DataMessage -> {
                 Log.d(TAG, "< DataMessage ${decoded.messageId}: ${decoded.messages.size} messages")
+                sendAck(decoded.messageId)
+                if (isRetransmit(decoded.messageId)) return
 
                 for (message in decoded.messages) {
                     if (message is ImageResourceContentTransferMessage) {
@@ -195,6 +198,8 @@ class GameProtocolClient(
             }
 
             is DecodedPacket.ImageData -> {
+                sendAck(decoded.messageId)
+                if (isRetransmit(decoded.messageId)) return
                 handleImageData(decoded.transferId, decoded.jpeg)
                 lastRcvMessageId = decoded.messageId
             }
@@ -209,6 +214,12 @@ class GameProtocolClient(
                 Log.e(TAG, "Unhandled packet type: $decoded: ${data.toHexString()}")
             }
         }
+    }
+
+    private fun isRetransmit(messageId: Int): Boolean {
+        if (!deliveredMessageIds.add(messageId)) return true
+        if (deliveredMessageIds.size > 1024) deliveredMessageIds.remove(deliveredMessageIds.first())
+        return false
     }
 
     // ==================== Image Matching ====================
