@@ -1,0 +1,14 @@
+#!/bin/bash
+set -euo pipefail
+
+iface="${BOT_IFACE:-en0}"
+action="${1:-}"
+shift || true
+
+case "$action" in
+  up)   for ip in "$@"; do sudo ifconfig "$iface" alias "$ip" netmask 255.255.255.255; done ;;
+  down) for ip in "$@"; do sudo ifconfig "$iface" -alias "$ip"; done ;;
+  *)    echo "usage: $(basename "$0") up|down IP..." >&2; exit 2 ;;
+esac
+
+ifconfig "$iface" | grep -w inet

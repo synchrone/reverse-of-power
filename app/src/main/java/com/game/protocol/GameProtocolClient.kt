@@ -137,7 +137,7 @@ class GameProtocolClient(
         System.setProperty("java.net.preferIPv4Stack", "true")
 
         serverHost = InetAddress.getByName(serverHostStr)
-        serverSocket = DatagramSocket(0, Inet4Address.getByName("0.0.0.0") as InetAddress)
+        serverSocket = DatagramSocket(0, Inet4Address.getByName(listenHostStr) as InetAddress)
         clientSocket = DatagramSocket(listenPort, Inet4Address.getByName(listenHostStr) as InetAddress)
 
         Thread {
