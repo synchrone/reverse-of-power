@@ -22,9 +22,11 @@ class MultiBotGameTest {
     private var matchStarted = false
 
     @Before
-    fun startFromAnEmptyLobby() {
+    fun startFromALiveEmptyLobby() {
         assumeTrue("set PS_HOST to run the live console tests", !host.isNullOrBlank())
-        if (!console.isInLobby()) println("reset before test: ${console.resetToLobby()}")
+        if (console.isInLobby() && consoleAnswers()) return
+        println("reset before test: ${console.resetToLobby()}")
+        assertTrue("the console gives no player slot even after restarting the game", consoleAnswers())
     }
 
     @After
@@ -73,6 +75,15 @@ class MultiBotGameTest {
         }
     }
 
+    private fun consoleAnswers(): Boolean {
+        val probe = PlayerBot("probe", host!!, botIps().first(), avatarJpeg())
+        return try {
+            probe.join(10_000)
+        } finally {
+            probe.close()
+        }
+    }
+
     private fun botIps(): List<String> {
         val ips = System.getenv("PS_BOT_IPS")?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() }
             ?: listOf(DatagramSocket().use { it.connect(InetAddress.getByName(host), 9066); it.localAddress.hostAddress })
@@ -110,7 +121,11 @@ class MultiBotGameTest {
         while (!condition()) {
             if (System.currentTimeMillis() > deadline) {
                 snapshot("timeout")
-                fail("timed out after ${timeoutMs / 1000}s waiting for $what\n${bots.joinToString("\n")}")
+                val crashHint = if (bots.isNotEmpty() && bots.all { it.silentSeconds() >= 30 }) {
+                    "\nno bot has heard from the console for 30s+: the game's protocol thread has likely died while " +
+                        "the screen keeps animating; only a game restart recovers it (the next test's probe triggers one)"
+                } else ""
+                fail("timed out after ${timeoutMs / 1000}s waiting for $what\n${bots.joinToString("\n")}$crashHint")
             }
             Thread.sleep(250)
         }

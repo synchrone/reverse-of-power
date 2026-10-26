@@ -74,9 +74,12 @@ class PlayerBot(
         client.close()
     }
 
+    fun silentSeconds(): Long = if (lastMessageAt == 0L) -1 else (System.currentTimeMillis() - lastMessageAt) / 1000
+
     override fun toString() =
         "$name ip=$localIp player=$playerId slot=$slotId avatar=$avatarId trivia=$trivia categories=$categories " +
-            "powerPlays=$powerPlaysUsed challenges=$challenges continues=$continues last=${received.takeLast(6)}"
+            "powerPlays=$powerPlaysUsed challenges=$challenges continues=$continues silent=${silentSeconds()}s " +
+            "last=${received.takeLast(6)}"
 
     private fun handle(message: GameMessage) {
         if (message is ServerToClientTimeSyncMessage) return

@@ -68,8 +68,8 @@ HTTP API (`psctl/server.py`): `GET /status`, `GET /frame.png|.jpg`, `GET /screen
 
 ## Getting back to a clean lobby
 
-`psctl reset` (`POST /reset`) returns Decades to an empty lobby from any state: a hung or abandoned
-match, an error dialog, or a crashed game. It holds PS for the home screen, opens OPTIONS on the
+`psctl reset` (`POST /reset`) returns Decades to an empty lobby from any state, including a hung or
+abandoned match and a game whose protocol side has crashed. It holds PS for the home screen, opens OPTIONS on the
 Decades tile, picks **Close Game** only if the menu is recognized as the running-game menu (Delete
 sits a few rows below, so nothing else is ever pressed there), relaunches, answers first-boot prompts
 (language, autosave, Getting Started) and stops once a lobby screen is recognized — about 45 s.
@@ -80,6 +80,11 @@ Screens are recognized by comparing small grayscale crops of the frame with the 
 `psctl/screens/`; `psctl screen` names the live screen and prints per-screen scores (below 1 is a
 match). If an update changes a screen, save a frame with `shot` and re-learn it:
 `psctl learn-screen lobby_star frame.png` (names are listed in `psctl/screens.py`).
+
+A protocol crash shows nothing on screen: a bad message kills the game's server-side parser thread
+while the frontend keeps animating, with no error dialog, so the lobby looks normal but no client is
+given a player slot any more. Only restarting the game recovers it. psctl cannot see this; the JVM
+tests detect it with a probe client before each test and then call the reset.
 
 If presses stop having any effect while video still flows, the console is holding a stale Remote
 Play session; the reset reconnects, retrying every 15 s until the console drops it (about a minute).

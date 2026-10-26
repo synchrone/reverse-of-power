@@ -238,9 +238,12 @@ scripts/bot-ips up 192.168.1.201          # sudo; pick addresses outside the rou
 The console only ever replies to a client's UDP port **9060** — the port is not announced in the handshake and the
 source port is ignored (measured: a client listening on 9061 never completes the handshake). So bots on one host
 need one IP each; `GameProtocolClient(listenHostStr = ip)` binds both sockets to that IP. Frames are saved to
-`app/build/integration/<timestamp>/`. Every test starts and ends in an empty lobby: `Ps5Console.resetToLobby()`
-asks `psctl` to close and relaunch Decades from any state, including a hung match or a crashed game
-(`harness/README.md`, "Getting back to a clean lobby"), so `psctl serve` must be running.
+`app/build/integration/<timestamp>/`. Every test starts from a live, empty lobby: a probe client must get a
+player slot, otherwise `Ps5Console.resetToLobby()` has `psctl` close and relaunch Decades; tests that start a
+match reset afterwards too (`harness/README.md`, "Getting back to a clean lobby"), so `psctl serve` must be
+running. A KIP protocol crash shows nothing on screen: a bad message kills the game's parser thread while the
+TV keeps animating, with no error dialog, so only the probe can tell a dead game from a live lobby, and only
+a game restart recovers it.
 
 ## Key Dependencies
 - **OkHttp3** (5.3.2) + **Retrofit2** (3.0.0): present but protocol is custom UDP, not HTTP
