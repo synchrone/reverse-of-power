@@ -5,6 +5,9 @@ import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.io.File
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.util.concurrent.ConcurrentLinkedQueue
 
 
 /**
@@ -141,6 +144,20 @@ class GameProtocolClientTest {
         feed(serverImage(ProtocolEncoder(), "other-player", 90, jfif))
 
         assertEquals(listOf(AllResourcesReceivedMessage(Requirements = emptyList())), sent)
+    }
+
+    @Test
+    fun concurrentSendsGetDistinctMessageIds() {
+        client.testMode = true
+        val ids = ConcurrentLinkedQueue<Int>()
+        client.onPacketSend = { packet -> ids += ByteBuffer.wrap(packet, 2, 4).order(ByteOrder.LITTLE_ENDIAN).int }
+
+        val senders = (1..8).map { Thread { repeat(500) { client.sendMessage(ContinuePressedResponseMessage()) } } }
+        senders.forEach { it.start() }
+        senders.forEach { it.join() }
+
+        assertEquals(4000, ids.size)
+        assertEquals("every message needs its own ID", 4000, ids.toSet().size)
     }
 
     private val jfif = bytes(0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0xFF, 0xD9)
