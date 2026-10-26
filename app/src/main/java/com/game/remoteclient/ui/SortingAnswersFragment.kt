@@ -44,6 +44,9 @@ class SortingAnswersFragment : Fragment() {
     private var rightBucketId = ""
     private var timer: CountDownTimer? = null
     private var answerSent = false
+    private val resetBackground = Runnable {
+        if (_binding != null) binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
+    }
 
     // Drag state
     private var dragStartX = 0f
@@ -192,40 +195,19 @@ class SortingAnswersFragment : Fragment() {
 
         if (isCorrect) {
             correctCount++
-            showFeedback(item.DisplayText, true)
-        } else {
-            showFeedback(item.DisplayText, false)
-        }
-
-        binding.feedbackOverlay.postDelayed({
-            if (_binding == null) return@postDelayed
-            hideFeedback()
-            showNextItem()
-            updateRemainingCount()
-
-            if (currentItem == null && itemQueue.isEmpty()) {
-                sendAnswerAndNavigate()
-            }
-        }, 400)
-    }
-
-    private fun showFeedback(text: String, correct: Boolean) {
-        binding.feedbackOverlay.visibility = View.VISIBLE
-        binding.feedbackText.text = text
-        binding.itemSlot.visibility = View.INVISIBLE
-
-        if (correct) {
             binding.sunburstBackground.setColors(correctPrimary, correctSecondary)
-            binding.feedbackText.setTextColor(correctPrimary)
         } else {
             binding.sunburstBackground.setColors(incorrectPrimary, incorrectSecondary)
-            binding.feedbackText.setTextColor(incorrectPrimary)
         }
-    }
+        binding.root.removeCallbacks(resetBackground)
+        binding.root.postDelayed(resetBackground, 400)
 
-    private fun hideFeedback() {
-        binding.feedbackOverlay.visibility = View.GONE
-        binding.sunburstBackground.setColors(normalPrimary, normalSecondary)
+        showNextItem()
+        updateRemainingCount()
+
+        if (currentItem == null && itemQueue.isEmpty()) {
+            sendAnswerAndNavigate()
+        }
     }
 
     private fun updateRemainingCount() {
