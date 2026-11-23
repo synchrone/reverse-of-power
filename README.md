@@ -46,7 +46,6 @@ It covers every language the games shipped in. The translations are machine draf
 - Polski
 - Português (Brasil)
 - Português (Portugal)
-  — not in the app yet: [review the translation in #26](../../pull/26)
 - Русский
 - Suomi
   — not in the app yet: [review the translation in #23](../../pull/23)
