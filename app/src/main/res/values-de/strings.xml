@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Spielserver finden</string>
+    <string name="enter_ip_address">IP-Adresse eingeben</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Verbinden</string>
+    <string name="discovered_servers">Gefundene Server</string>
+    <string name="scanning">Suche nach Servern…</string>
+    <string name="no_servers_found">Keine Server gefunden</string>
+
+    <string name="enter_name_title">Wie heißt du?</string>
+    <string name="name_hint">Gib deinen Namen ein</string>
+    <string name="continue_button">Weiter</string>
+
+    <string name="avatar_selection_title">Wähle deinen Avatar</string>
+    <string name="use_camera">Kamera verwenden</string>
+    <string name="choose_avatar">Avatar wählen</string>
+    <string name="camera_permission_required">Kameraberechtigung erforderlich</string>
+    <string name="capture_photo">Foto aufnehmen</string>
+    <string name="retake_photo">Neu aufnehmen</string>
+    <string name="use_this_photo">Dieses Foto verwenden</string>
+
+    <string name="waiting_room_title">Warteraum</string>
+    <string name="players_joined">Spieler:</string>
+    <string name="start_game">Spiel starten</string>
+    <string name="waiting_for_players">Warte auf Mitspieler…</string>
+    <string name="you">Du</string>
+
+    <string name="get_ready">Mach dich bereit!</string>
+    <string name="game_starting">Das Spiel beginnt gleich…</string>
+
+    <string name="question_placeholder">Hier erscheint die Frage</string>
+    <string name="answer_a">Antwort A</string>
+    <string name="answer_b">Antwort B</string>
+    <string name="answer_c">Antwort C</string>
+    <string name="answer_d">Antwort D</string>
+
+    <string name="error_connection">Verbindungsfehler</string>
+    <string name="error_server_unreachable">Server nicht erreichbar</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">EINFRIEREN</string>
+    <string name="pp_freeze_desc">Antworten in Eis einschließen</string>
+    <string name="pp_bombs_name">BOMBEN</string>
+    <string name="pp_bombs_desc">Bomben auf die Antworten werfen</string>
+    <string name="pp_munchers_name">NAGER</string>
+    <string name="pp_munchers_desc">An den Antworten knabbern</string>
+    <string name="pp_gloop_name">SCHLEIM</string>
+    <string name="pp_gloop_desc">Antworten mit Schleim bedecken</string>
+    <string name="pp_double_trouble_name">DOPPELSCHLAG</string>
+    <string name="pp_dt_freeze_gloop_desc">Einfrieren und Schleim</string>
+    <string name="pp_dt_freeze_bombs_desc">Einfrieren und Bomben</string>
+    <string name="pp_dt_munchers_gloop_desc">Nager und Schleim</string>
+    <string name="pp_lockdown_name">SPERRE</string>
+    <string name="pp_lockdown_desc">Die Antworten festsperren</string>
+    <string name="pp_zippers_name">REISSVERSCHLUSS</string>
+    <string name="pp_zippers_desc">Die Antworten zuziehen</string>
+    <string name="pp_bug_name">KÄFER</string>
+    <string name="pp_bug_desc">Käfer krabbeln über die Antworten</string>
+    <string name="pp_letter_scatter_name">BUCHSTABENSALAT</string>
+    <string name="pp_letter_scatter_desc">Die Buchstaben durcheinanderwürfeln</string>
+    <string name="pp_disco_name">DISCO-HÖLLE</string>
+    <string name="pp_disco_desc">Discolichter blenden den Bildschirm</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Die Hälfte der Antworten entfernen</string>
+    <string name="pp_points_doubler_name">PUNKTEVERDOPPLER</string>
+    <string name="pp_points_doubler_desc">Du bekommst ×2 Preispunkte</string>
+    <string name="pp_points_party_name">PUNKTEPARTY</string>
+    <string name="pp_points_party_desc">Gewinner bekommen doppelten Gewinn</string>
+    <string name="pp_guess_name">TIPP</string>
+    <string name="pp_guess_desc">Tippe, wer richtig antworten wird</string>
+    <string name="pp_locked_in">✓ Festgelegt!</string>
+    <string name="pp_everyone">Alle</string>
+    <string name="pp_unknown_name">SPEZIALZUG #%1$d</string>
+    <string name="pp_unknown_desc">Bitte merk dir den Effekt und sag es den Entwicklern</string>
+
+    <string name="dont_touch_bombs">Fass die Bomben nicht an!</string>
+
+    <string name="debug">Debug</string>
+    <string name="rescan">Erneut suchen</string>
+    <string name="manual_ip_address">IP-Adresse manuell</string>
+    <string name="enter_ip_prompt">Bitte gib eine IP-Adresse ein</string>
+    <string name="scan_failed">Suche fehlgeschlagen: %1$s</string>
+    <string name="failed_to_connect">Verbindung zu %1$s fehlgeschlagen</string>
+    <string name="connection_error_detail">Verbindungsfehler: %1$s</string>
+
+    <string name="default_player_name">Spieler</string>
+    <string name="name_required">Bitte gib deinen Namen ein</string>
+    <string name="name_too_short">Der Name muss mindestens 2 Zeichen haben</string>
+
+    <string name="select_avatar_type">Avatartyp wählen</string>
+    <string name="waiting_for_avatars">Warte auf Avatare…</string>
+    <string name="select_avatar">Avatar wählen</string>
+    <string name="avatar_unavailable">Avatar nicht verfügbar</string>
+    <string name="take_photo_first">Mach zuerst ein Foto</string>
+    <string name="pick_avatar_first">Wähle zuerst einen Avatar</string>
+    <string name="photo_capture_failed">Fotoaufnahme fehlgeschlagen: %1$s</string>
+
+    <string name="choose_a_category">WÄHLE EINE KATEGORIE</string>
+    <string name="continue_caps">WEITER</string>
+    <string name="category_selected">KATEGORIE GEWÄHLT</string>
+    <string name="power_pick">SUPERWAHL</string>
+    <string name="power_pick_description">Setz einmal pro Spiel eine Superwahl ein,\num die Wahl aller anderen zu überstimmen</string>
+    <string name="power_pick_accepted">Superwahl angenommen!</string>
+    <string name="pick_a_power_play">WÄHLE EINEN SPEZIALZUG</string>
+
+    <string name="smash_odd_one_out">Tippe, um das Unpassende zu zerschlagen</string>
+    <string name="drag_to_link">Ziehe, um Antworten zu verbinden</string>
+    <string name="swipe_to_match">Wische zum Suchen, tippe zum Zuordnen</string>
+    <string name="finals_warning">Finale! Falsche Antworten werden abgelehnt!</string>
+
+    <string name="waiting_for_other_players">Warte auf andere Spieler…</string>
+    <string name="hold_to_start">Halten zum Starten!</string>
+    <string name="hold_to_start_hint">Gedrückt halten, bis alle Lichter leuchten</string>
+
+    <string name="host">HOST</string>
+
+    <string name="cd_captured_photo">Aufgenommenes Foto</string>
+    <string name="cd_expand">Ausklappen</string>
+    <string name="cd_avatar_icon">Avatar-Symbol</string>
+    <string name="cd_power_play_icon">Spezialzug-Symbol</string>
+
+    <string name="connecting_to_server">Verbinde mit Server…</string>
+    <string name="avatar_selected">Gewählt</string>
+    <string name="avatar_available">Verfügbar</string>
+    <string name="avatar_taken">Vergeben</string>
+    <string name="take_photo">Foto machen</string>
+    <string name="x_to_go">Noch %1$s</string>
+    <string name="look_at_tv">Schau auf den Fernseher</string>
+    <string name="drag_to_link_in_order">Ziehe, um der Reihe nach zu verbinden</string>
+    <string name="done_waiting">Fertig, warte auf andere Spieler</string>
+    <string name="choose_a_target">WÄHLE EIN ZIEL</string>
+    <string name="start_caps">START</string>
+</resources>

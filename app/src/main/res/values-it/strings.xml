@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Trova server di gioco</string>
+    <string name="enter_ip_address">Inserisci l\'indirizzo IP</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Connetti</string>
+    <string name="discovered_servers">Server trovati</string>
+    <string name="scanning">Ricerca dei server…</string>
+    <string name="no_servers_found">Nessun server trovato</string>
+
+    <string name="enter_name_title">Come ti chiami?</string>
+    <string name="name_hint">Inserisci il tuo nome</string>
+    <string name="continue_button">Continua</string>
+
+    <string name="avatar_selection_title">Scegli il tuo avatar</string>
+    <string name="use_camera">Usa la fotocamera</string>
+    <string name="choose_avatar">Scegli avatar</string>
+    <string name="camera_permission_required">È necessaria l\'autorizzazione per la fotocamera</string>
+    <string name="capture_photo">Scatta foto</string>
+    <string name="retake_photo">Riprova</string>
+    <string name="use_this_photo">Usa questa foto</string>
+
+    <string name="waiting_room_title">Sala d\'attesa</string>
+    <string name="players_joined">Giocatori:</string>
+    <string name="start_game">Inizia partita</string>
+    <string name="waiting_for_players">In attesa dei giocatori…</string>
+    <string name="you">Tu</string>
+
+    <string name="get_ready">Preparati!</string>
+    <string name="game_starting">La partita sta per iniziare…</string>
+
+    <string name="question_placeholder">Qui apparirà la domanda</string>
+    <string name="answer_a">Risposta A</string>
+    <string name="answer_b">Risposta B</string>
+    <string name="answer_c">Risposta C</string>
+    <string name="answer_d">Risposta D</string>
+
+    <string name="error_connection">Errore di connessione</string>
+    <string name="error_server_unreachable">Impossibile raggiungere il server</string>
+    <string name="cancel">Annulla</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">GELO</string>
+    <string name="pp_freeze_desc">Intrappola le risposte nel ghiaccio</string>
+    <string name="pp_bombs_name">BOMBE</string>
+    <string name="pp_bombs_desc">Lancia bombe sulle risposte</string>
+    <string name="pp_munchers_name">DIVORATORI</string>
+    <string name="pp_munchers_desc">Rosicchiano le risposte</string>
+    <string name="pp_gloop_name">MELMA</string>
+    <string name="pp_gloop_desc">Copri le risposte di melma</string>
+    <string name="pp_double_trouble_name">DOPPIO GUAIO</string>
+    <string name="pp_dt_freeze_gloop_desc">Gelo e melma</string>
+    <string name="pp_dt_freeze_bombs_desc">Gelo e bombe</string>
+    <string name="pp_dt_munchers_gloop_desc">Divoratori e melma</string>
+    <string name="pp_lockdown_name">BLOCCO</string>
+    <string name="pp_lockdown_desc">Blocca le risposte</string>
+    <string name="pp_zippers_name">CERNIERE</string>
+    <string name="pp_zippers_desc">Chiudi le risposte con la zip</string>
+    <string name="pp_bug_name">INSETTI</string>
+    <string name="pp_bug_desc">Gli insetti strisciano sulle risposte</string>
+    <string name="pp_letter_scatter_name">LETTERE SPARSE</string>
+    <string name="pp_letter_scatter_desc">Sparpaglia le lettere</string>
+    <string name="pp_disco_name">INFERNO DISCO</string>
+    <string name="pp_disco_desc">Le luci disco abbagliano lo schermo</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Elimina metà delle risposte</string>
+    <string name="pp_points_doubler_name">PUNTI DOPPI</string>
+    <string name="pp_points_doubler_desc">Ottieni punti premio ×2</string>
+    <string name="pp_points_party_name">FESTA DEI PUNTI</string>
+    <string name="pp_points_party_desc">I vincitori ottengono vincite doppie</string>
+    <string name="pp_guess_name">PRONOSTICO</string>
+    <string name="pp_guess_desc">Indovina chi risponderà correttamente</string>
+    <string name="pp_locked_in">✓ Confermato!</string>
+    <string name="pp_everyone">Tutti</string>
+    <string name="pp_unknown_name">MOSSA SPECIALE #%1$d</string>
+    <string name="pp_unknown_desc">Ricorda l\'effetto e segnalalo agli sviluppatori</string>
+
+    <string name="dont_touch_bombs">Non toccare le bombe!</string>
+
+    <string name="debug">Debug</string>
+    <string name="rescan">Ripeti ricerca</string>
+    <string name="manual_ip_address">Indirizzo IP manuale</string>
+    <string name="enter_ip_prompt">Inserisci un indirizzo IP</string>
+    <string name="scan_failed">Ricerca non riuscita: %1$s</string>
+    <string name="failed_to_connect">Impossibile connettersi a %1$s</string>
+    <string name="connection_error_detail">Errore di connessione: %1$s</string>
+
+    <string name="default_player_name">Giocatore</string>
+    <string name="name_required">Inserisci il tuo nome</string>
+    <string name="name_too_short">Il nome deve avere almeno 2 caratteri</string>
+
+    <string name="select_avatar_type">Scegli il tipo di avatar</string>
+    <string name="waiting_for_avatars">In attesa degli avatar…</string>
+    <string name="select_avatar">Seleziona avatar</string>
+    <string name="avatar_unavailable">Avatar non disponibile</string>
+    <string name="take_photo_first">Prima scatta una foto</string>
+    <string name="pick_avatar_first">Prima scegli un avatar</string>
+    <string name="photo_capture_failed">Scatto non riuscito: %1$s</string>
+
+    <string name="choose_a_category">SCEGLI UNA CATEGORIA</string>
+    <string name="continue_caps">CONTINUA</string>
+    <string name="category_selected">CATEGORIA SCELTA</string>
+    <string name="power_pick">SUPER SCELTA</string>
+    <string name="power_pick_description">Usa una Super scelta una volta a partita\nper scavalcare la scelta degli altri</string>
+    <string name="power_pick_accepted">Super scelta accettata!</string>
+    <string name="pick_a_power_play">SCEGLI UNA MOSSA SPECIALE</string>
+
+    <string name="smash_odd_one_out">Tocca l\'intruso per distruggerlo</string>
+    <string name="drag_to_link">Trascina per collegare le risposte</string>
+    <string name="swipe_to_match">Scorri per cercare, tocca per abbinare</string>
+    <string name="finals_warning">Finale! Le risposte sbagliate vengono rifiutate!</string>
+
+    <string name="waiting_for_other_players">In attesa degli altri giocatori…</string>
+    <string name="hold_to_start">Tieni premuto per iniziare!</string>
+    <string name="hold_to_start_hint">Tieni premuto finché non si accendono tutte le luci</string>
+
+    <string name="host">HOST</string>
+
+    <string name="cd_captured_photo">Foto scattata</string>
+    <string name="cd_expand">Espandi</string>
+    <string name="cd_avatar_icon">Icona avatar</string>
+    <string name="cd_power_play_icon">Icona mossa speciale</string>
+
+    <string name="connecting_to_server">Connessione al server…</string>
+    <string name="avatar_selected">Selezionato</string>
+    <string name="avatar_available">Disponibile</string>
+    <string name="avatar_taken">Occupato</string>
+    <string name="take_photo">Scatta una foto</string>
+    <string name="x_to_go">Ne mancano %1$s</string>
+    <string name="look_at_tv">Guarda la TV</string>
+    <string name="drag_to_link_in_order">Trascina per collegare in ordine</string>
+    <string name="done_waiting">Fatto, in attesa degli altri giocatori</string>
+    <string name="choose_a_target">SCEGLI UN BERSAGLIO</string>
+    <string name="start_caps">VIA</string>
+</resources>

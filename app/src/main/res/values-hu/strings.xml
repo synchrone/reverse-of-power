@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Játékszerver keresése</string>
+    <string name="enter_ip_address">Add meg az IP-címet</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Csatlakozás</string>
+    <string name="discovered_servers">Talált szerverek</string>
+    <string name="scanning">Szerverek keresése…</string>
+    <string name="no_servers_found">Nem található szerver</string>
+
+    <string name="enter_name_title">Hogy hívnak?</string>
+    <string name="name_hint">Írd be a neved</string>
+    <string name="continue_button">Tovább</string>
+
+    <string name="avatar_selection_title">Válassz avatart</string>
+    <string name="use_camera">Kamera használata</string>
+    <string name="choose_avatar">Avatar választása</string>
+    <string name="camera_permission_required">Kamera-engedély szükséges</string>
+    <string name="capture_photo">Fotó készítése</string>
+    <string name="retake_photo">Újra</string>
+    <string name="use_this_photo">Ez a fotó legyen</string>
+
+    <string name="waiting_room_title">Váróterem</string>
+    <string name="players_joined">Játékosok:</string>
+    <string name="start_game">Játék indítása</string>
+    <string name="waiting_for_players">Várakozás a játékosokra…</string>
+    <string name="you">Te</string>
+
+    <string name="get_ready">Készülj!</string>
+    <string name="game_starting">Mindjárt kezdődik a játék…</string>
+
+    <string name="question_placeholder">Itt jelenik meg a kérdés</string>
+    <string name="answer_a">Válasz A</string>
+    <string name="answer_b">Válasz B</string>
+    <string name="answer_c">Válasz C</string>
+    <string name="answer_d">Válasz D</string>
+
+    <string name="error_connection">Kapcsolódási hiba</string>
+    <string name="error_server_unreachable">A szerver nem érhető el</string>
+    <string name="cancel">Mégse</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">FAGYASZTÁS</string>
+    <string name="pp_freeze_desc">Jégbe zárja a válaszokat</string>
+    <string name="pp_bombs_name">BOMBÁK</string>
+    <string name="pp_bombs_desc">Bombákat dob a válaszokra</string>
+    <string name="pp_munchers_name">FALÁNKOK</string>
+    <string name="pp_munchers_desc">Megrágcsálják a válaszokat</string>
+    <string name="pp_gloop_name">TRUTYI</string>
+    <string name="pp_gloop_desc">Trutyival borítja a válaszokat</string>
+    <string name="pp_double_trouble_name">DUPLA BAJ</string>
+    <string name="pp_dt_freeze_gloop_desc">Jég és trutyi</string>
+    <string name="pp_dt_freeze_bombs_desc">Jég és bombák</string>
+    <string name="pp_dt_munchers_gloop_desc">Falánkok és trutyi</string>
+    <string name="pp_lockdown_name">ZÁROLÁS</string>
+    <string name="pp_lockdown_desc">Lezárja a válaszokat</string>
+    <string name="pp_zippers_name">CIPZÁRAK</string>
+    <string name="pp_zippers_desc">Becipzárazza a válaszokat</string>
+    <string name="pp_bug_name">BOGARAK</string>
+    <string name="pp_bug_desc">Bogarak másznak a válaszokon</string>
+    <string name="pp_letter_scatter_name">BETŰSZÓRÁS</string>
+    <string name="pp_letter_scatter_desc">Szétszórja a betűket</string>
+    <string name="pp_disco_name">DISZKÓ</string>
+    <string name="pp_disco_desc">Diszkófények vakítják a képernyőt</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Eltünteti a válaszok felét</string>
+    <string name="pp_points_doubler_name">DUPLA PONT</string>
+    <string name="pp_points_doubler_desc">×2 nyereménypontot kapsz</string>
+    <string name="pp_points_party_name">PONTPARTI</string>
+    <string name="pp_points_party_desc">A győztesek dupla nyereményt kapnak</string>
+    <string name="pp_guess_name">FOGADÁS</string>
+    <string name="pp_guess_desc">Tippeld meg, ki válaszol helyesen</string>
+    <string name="pp_locked_in">✓ Rögzítve!</string>
+    <string name="pp_everyone">Mindenki</string>
+    <string name="pp_unknown_name">AKCIÓ #%1$d</string>
+    <string name="pp_unknown_desc">jegyezd meg a hatást, és szólj a fejlesztőknek</string>
+
+    <string name="dont_touch_bombs">Ne érj a bombákhoz!</string>
+
+    <string name="debug">Hibakeresés</string>
+    <string name="rescan">Újrakeresés</string>
+    <string name="manual_ip_address">IP-cím kézzel</string>
+    <string name="enter_ip_prompt">Adj meg egy IP-címet</string>
+    <string name="scan_failed">Sikertelen keresés: %1$s</string>
+    <string name="failed_to_connect">Nem sikerült csatlakozni: %1$s</string>
+    <string name="connection_error_detail">Kapcsolódási hiba: %1$s</string>
+
+    <string name="default_player_name">Játékos</string>
+    <string name="name_required">Írd be a neved</string>
+    <string name="name_too_short">A név legalább 2 karakter legyen</string>
+
+    <string name="select_avatar_type">Válassz avatartípust</string>
+    <string name="waiting_for_avatars">Várakozás az avatarokra…</string>
+    <string name="select_avatar">Avatar választása</string>
+    <string name="avatar_unavailable">Az avatar nem elérhető</string>
+    <string name="take_photo_first">Előbb készíts egy fotót</string>
+    <string name="pick_avatar_first">Előbb válassz avatart</string>
+    <string name="photo_capture_failed">Nem sikerült a fotó: %1$s</string>
+
+    <string name="choose_a_category">VÁLASSZ KATEGÓRIÁT</string>
+    <string name="continue_caps">TOVÁBB</string>
+    <string name="category_selected">KATEGÓRIA KIVÁLASZTVA</string>
+    <string name="power_pick">SZUPERVÁLASZTÁS</string>
+    <string name="power_pick_description">Játékonként egyszer a Szuperválasztással\nfelülbírálhatod a többiek döntését</string>
+    <string name="power_pick_accepted">Szuperválasztás elfogadva!</string>
+    <string name="pick_a_power_play">VÁLASSZ AKCIÓT</string>
+
+    <string name="smash_odd_one_out">Koppints és törd szét a kakukktojást</string>
+    <string name="drag_to_link">Húzd össze a válaszokat</string>
+    <string name="swipe_to_match">Görgess a kereséshez, koppints a párosításhoz</string>
+    <string name="finals_warning">Döntő! A rossz válaszokat elutasítjuk!</string>
+
+    <string name="waiting_for_other_players">Várakozás a többi játékosra…</string>
+    <string name="hold_to_start">Tartsd nyomva a kezdéshez!</string>
+    <string name="hold_to_start_hint">Tartsd nyomva, amíg minden fény ki nem gyullad</string>
+
+    <string name="host">HÁZIGAZDA</string>
+
+    <string name="cd_captured_photo">Elkészült fotó</string>
+    <string name="cd_expand">Kibontás</string>
+    <string name="cd_avatar_icon">Avatar ikon</string>
+    <string name="cd_power_play_icon">Akció ikon</string>
+
+    <string name="connecting_to_server">Csatlakozás a szerverhez…</string>
+    <string name="avatar_selected">Kiválasztva</string>
+    <string name="avatar_available">Szabad</string>
+    <string name="avatar_taken">Foglalt</string>
+    <string name="take_photo">Fotó készítése</string>
+    <string name="x_to_go">Még %1$s</string>
+    <string name="look_at_tv">Nézd a tévét</string>
+    <string name="drag_to_link_in_order">Húzd össze sorrendben</string>
+    <string name="done_waiting">Kész, várunk a többiekre</string>
+    <string name="choose_a_target">VÁLASSZ CÉLPONTOT</string>
+    <string name="start_caps">START</string>
+</resources>
