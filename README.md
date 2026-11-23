@@ -83,6 +83,8 @@ Contributions are welcome — bug fixes, new features, or protocol documentation
 
 GPLv3 — see [LICENSE](LICENSE) for details.
 
+The placeholder player photo (`app/src/main/res/raw/avatar_stub.jpeg`, sent when no camera photo is available) is original artwork made for this project and dedicated to the public domain under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/).
+
 ## Disclaimer
 
 Reverse of Power is an independent, fan-made project with **no affiliation with, sponsorship by, or endorsement from Sony Interactive Entertainment or Wish Studios**. "Knowledge is Power" and "Knowledge is Power: Decades" are trademarks of Sony Interactive Entertainment, used here only to identify the games this app is compatible with; all trademarks are the property of their respective owners. The project bundles none of the games' assets and exists solely to keep a purchased game playable for the small community of fans who still love it.
