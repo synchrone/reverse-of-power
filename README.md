@@ -57,7 +57,6 @@ It covers every language the games shipped in. The translations are machine draf
 - Suomi
   — not in the app yet: [review the translation in #23](../../pull/23)
 - Svenska
-  — not in the app yet: [review the translation in #27](../../pull/27)
 - Türkçe
 
 ## Getting Started
