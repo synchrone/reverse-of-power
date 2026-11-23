@@ -213,7 +213,9 @@ CategorySelectionFragment → PowerPickFragment | TriviaAnsweringFragment
 scripts/redir-udp        # optional port arg; defaults to 9060
 ```
 
-Builds on any current JDK — `./gradlew assembleDebug` is verified on JDK 26. The Gradle daemon is pinned to Java 21 (`gradle/gradle-daemon-jvm.properties`) and the compile toolchain is auto-provisioned via foojay, so **no JDK 17 install is needed** — the `Java 17` above is only the app's bytecode target.
+Builds on any current JDK — `./gradlew assembleDebug` is verified on JDK 26. The Gradle daemon runs on any JDK 21 (`gradle/gradle-daemon-jvm.properties`, no vendor pin; foojay downloads one only if none is installed) and compiles to Java 17 bytecode, so **no JDK 17 install is needed**.
+
+Two product flavors build side by side: `github` (`com.game.remoteclient`, release-key signed, published by `.github/workflows/release.yml` as `app-release.apk`) and `fdroid` (`io.github.synchrone.reverseofpower`, signed by F-Droid). Variant tasks carry the flavor: `assembleGithubDebug`, `testGithubDebugUnitTest`, `assembleFdroidRelease`. F-Droid reads `versionCode`/`versionName` literally from `app/build.gradle.kts` at each `v*` tag, so bump both before tagging; store text and screenshots live in `fastlane/metadata/android/`.
 
 ## Console Harness (Remote Play)
 `harness/` drives the real console instead of a physical controller: `psctl serve` holds one Remote Play
@@ -230,7 +232,7 @@ by AnswerID suffix `…AnswerA01`↔`…AnswerB01`, not `MatchIndex`). `Ps5Conso
 frames and button presses. Everything is skipped unless `PS_HOST` is set.
 
 ```bash
-PS_HOST=192.168.1.152 ./gradlew testDebugUnitTest --tests "com.game.integration.MultiBotGameTest"
+PS_HOST=192.168.1.152 ./gradlew testGithubDebugUnitTest --tests "com.game.integration.MultiBotGameTest"
 PS_GAME_QUESTIONS=3 …           # opt-in: starts a real match and plays 3 trivia questions per bot
 PS_FULL_GAME=1 …                # opt-in: plays a whole match until the console ends it (15-30 min)
 PS_BOT_IPS=192.168.1.4,192.168.1.201 …   # one bot per local IP (default: the host IP only)

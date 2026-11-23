@@ -18,12 +18,12 @@ if [ ! -f "$PCAP_FILE" ]; then
     exit 1
 fi
 
-./gradlew testDebugUnitTest \
+./gradlew testGithubDebugUnitTest \
     -Dpcap.file="$PCAP_FILE" \
     --tests "PcapReplayTest" \
     --quiet 2>/dev/null
 
-XML_FILE="app/build/test-results/testDebugUnitTest/TEST-com.game.protocol.PcapReplayTest.xml"
+XML_FILE="app/build/test-results/testGithubDebugUnitTest/TEST-com.game.protocol.PcapReplayTest.xml"
 
 if [ ! -f "$XML_FILE" ]; then
     echo "Test result not found. Did the test run?" >&2

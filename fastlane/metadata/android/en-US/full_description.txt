@@ -1,0 +1,25 @@
+Reverse of Power turns your Android phone into a controller for the PlayStation PlayLink party quiz games <i>Knowledge is Power</i> and <i>Knowledge is Power: Decades</i>. It replaces the official companion app, which is no longer maintained, so the games stay playable.
+
+Start your own copy of the game on a PS4 or PS5, open the app on the same Wi-Fi, and it finds the console by itself. Then you play the game as designed:
+
+<ul>
+<li>Pick categories, use your Power Pick and race through the trivia</li>
+<li>Every minigame: linking, sorting, matching, odd one out and missing letters</li>
+<li>Throw power plays at your friends – freeze, bombs, munchers, gloop and more – and wipe them off your own answers</li>
+<li>Put your name and a camera selfie on the TV</li>
+<li>Rejoin a game that is already running</li>
+</ul>
+
+<b>What you need</b>
+<ul>
+<li>Your own copy of <i>Knowledge is Power</i> or <i>Knowledge is Power: Decades</i>, running on your PS4 or PS5</li>
+<li>The phone and the console on the same local network</li>
+</ul>
+
+<b>Privacy</b>
+The app talks only to your console on your local network. It has no accounts, ads, analytics or tracking, and it contacts no internet services.
+
+<b>Limitations</b>
+The app has no sound effects (the game's audio still plays on the TV), and the costume frames for selfies are not included.
+
+Reverse of Power is an independent, fan-made project. It has no affiliation with, sponsorship by, or endorsement from Sony Interactive Entertainment or Wish Studios. "Knowledge is Power" and "Knowledge is Power: Decades" are trademarks of Sony Interactive Entertainment and are used here only to name the games this app works with.

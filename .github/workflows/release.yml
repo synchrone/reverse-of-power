@@ -41,17 +41,19 @@ jobs:
           keyPassword=${KEY_PASSWORD:-${KEYSTORE_PASSWORD}}
           EOF
 
-      - name: Build release APK
-        run: ./gradlew assembleRelease
+      - name: Build release APKs
+        run: |
+          ./gradlew assembleGithubRelease assembleFdroidRelease
+          cp app/build/outputs/apk/github/release/app-github-release.apk app-release.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app-release.apk
 
       - name: Upload to release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/release/app-release.apk
+          files: app-release.apk

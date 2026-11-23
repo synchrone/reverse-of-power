@@ -214,7 +214,7 @@ class PcapReplayTest {
         val pcapFile = System.getProperty("pcap.file")
         if (pcapFile.isNullOrBlank()) {
             println("No pcap.file system property set, skipping replay.")
-            println("Run with: ./gradlew testDebugUnitTest --tests \"com.game.protocol.PcapReplayTest\" -Dpcap.file=<path>")
+            println("Run with: ./gradlew testGithubDebugUnitTest --tests \"com.game.protocol.PcapReplayTest\" -Dpcap.file=<path>")
             return
         }
         PcapReplay.run(pcapFile)
