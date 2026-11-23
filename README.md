@@ -4,6 +4,8 @@
 
 **[Download the latest APK](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk)** · [All releases](../../releases) · Android 8.0+
 
+**On iPhone or iPad?** Try [reverse-of-power-web-version](https://github.com/TotoBarbota/reverse-of-power-web-version) by TotoBarbota: a web port of this app that runs in any phone browser, through a small relay on a computer on the same Wi-Fi.
+
 **Reverse of Power** is a free, open-source Android app that turns your phone or tablet into a controller for the PlayStation "PlayLink" party quiz games — an unofficial, community-built replacement for the original companion app, so the games stay playable now that the official app is no longer maintained.
 
 It speaks the game's local-network protocol directly: point it at a retail copy running on a stock PS4 or PS5 on the same Wi-Fi, and play exactly as the creators intended — pick categories, race through fastest-finger trivia, link and sort answers, and sabotage your friends with power plays.
