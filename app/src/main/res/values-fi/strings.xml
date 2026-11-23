@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Etsi pelipalvelin</string>
+    <string name="enter_ip_address">Syötä IP-osoite</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Yhdistä</string>
+    <string name="discovered_servers">Löydetyt palvelimet</string>
+    <string name="scanning">Etsitään palvelimia…</string>
+    <string name="no_servers_found">Palvelimia ei löytynyt</string>
+
+    <string name="enter_name_title">Mikä on nimesi?</string>
+    <string name="name_hint">Kirjoita nimesi</string>
+    <string name="continue_button">Jatka</string>
+
+    <string name="avatar_selection_title">Valitse avatarisi</string>
+    <string name="use_camera">Käytä kameraa</string>
+    <string name="choose_avatar">Valitse avatar</string>
+    <string name="camera_permission_required">Kameran käyttöoikeus vaaditaan</string>
+    <string name="capture_photo">Ota kuva</string>
+    <string name="retake_photo">Ota uusi</string>
+    <string name="use_this_photo">Käytä tätä kuvaa</string>
+
+    <string name="waiting_room_title">Odotushuone</string>
+    <string name="players_joined">Pelaajat:</string>
+    <string name="start_game">Aloita peli</string>
+    <string name="waiting_for_players">Odotetaan pelaajia…</string>
+    <string name="you">Sinä</string>
+
+    <string name="get_ready">Valmistaudu!</string>
+    <string name="game_starting">Peli alkaa pian…</string>
+
+    <string name="question_placeholder">Kysymys näkyy tässä</string>
+    <string name="answer_a">Vastaus A</string>
+    <string name="answer_b">Vastaus B</string>
+    <string name="answer_c">Vastaus C</string>
+    <string name="answer_d">Vastaus D</string>
+
+    <string name="error_connection">Yhteysvirhe</string>
+    <string name="error_server_unreachable">Palvelimeen ei saada yhteyttä</string>
+    <string name="cancel">Peruuta</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">JÄÄDYTYS</string>
+    <string name="pp_freeze_desc">Vangitse vastaukset jäähän</string>
+    <string name="pp_bombs_name">POMMIT</string>
+    <string name="pp_bombs_desc">Heitä pommeja vastausten päälle</string>
+    <string name="pp_munchers_name">NAKERTAJAT</string>
+    <string name="pp_munchers_desc">Nakerra vastauksia</string>
+    <string name="pp_gloop_name">LIMA</string>
+    <string name="pp_gloop_desc">Peitä vastaukset limalla</string>
+    <string name="pp_double_trouble_name">TUPLAHARMI</string>
+    <string name="pp_dt_freeze_gloop_desc">Jäädytys ja lima</string>
+    <string name="pp_dt_freeze_bombs_desc">Jäädytys ja pommit</string>
+    <string name="pp_dt_munchers_gloop_desc">Nakertajat ja lima</string>
+    <string name="pp_lockdown_name">LUKITUS</string>
+    <string name="pp_lockdown_desc">Lukitse vastaukset paikalleen</string>
+    <string name="pp_zippers_name">VETOKETJUT</string>
+    <string name="pp_zippers_desc">Sulje vastaukset vetoketjulla</string>
+    <string name="pp_bug_name">ÖTÖKÄT</string>
+    <string name="pp_bug_desc">Ötökät ryömivät vastausten päällä</string>
+    <string name="pp_letter_scatter_name">KIRJAINSOTKU</string>
+    <string name="pp_letter_scatter_desc">Sotke kirjaimet</string>
+    <string name="pp_disco_name">DISKOHELVETTI</string>
+    <string name="pp_disco_desc">Diskovalot sokaisevat ruudun</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Poista puolet vastauksista</string>
+    <string name="pp_points_doubler_name">PISTETUPLAUS</string>
+    <string name="pp_points_doubler_desc">Saat ×2 palkintopisteet</string>
+    <string name="pp_points_party_name">PISTEJUHLAT</string>
+    <string name="pp_points_party_desc">Voittajat saavat tuplavoitot</string>
+    <string name="pp_guess_name">ARVAUS</string>
+    <string name="pp_guess_desc">Arvaa, kuka vastaa oikein</string>
+    <string name="pp_locked_in">✓ Lukittu!</string>
+    <string name="pp_everyone">Kaikki</string>
+    <string name="pp_unknown_name">TEHOSIIRTO #%1$d</string>
+    <string name="pp_unknown_desc">Muista vaikutus ja kerro siitä kehittäjille</string>
+
+    <string name="dont_touch_bombs">Älä koske pommeihin!</string>
+
+    <string name="debug">Vianetsintä</string>
+    <string name="rescan">Etsi uudelleen</string>
+    <string name="manual_ip_address">IP-osoite käsin</string>
+    <string name="enter_ip_prompt">Syötä IP-osoite</string>
+    <string name="scan_failed">Haku epäonnistui: %1$s</string>
+    <string name="failed_to_connect">Yhteys kohteeseen %1$s epäonnistui</string>
+    <string name="connection_error_detail">Yhteysvirhe: %1$s</string>
+
+    <string name="default_player_name">Pelaaja</string>
+    <string name="name_required">Kirjoita nimesi</string>
+    <string name="name_too_short">Nimessä on oltava vähintään 2 merkkiä</string>
+
+    <string name="select_avatar_type">Valitse avatarin tyyppi</string>
+    <string name="waiting_for_avatars">Odotetaan avatareja…</string>
+    <string name="select_avatar">Valitse avatar</string>
+    <string name="avatar_unavailable">Avatar ei ole saatavilla</string>
+    <string name="take_photo_first">Ota ensin kuva</string>
+    <string name="pick_avatar_first">Valitse ensin avatar</string>
+    <string name="photo_capture_failed">Kuvan ottaminen epäonnistui: %1$s</string>
+
+    <string name="choose_a_category">VALITSE KATEGORIA</string>
+    <string name="continue_caps">JATKA</string>
+    <string name="category_selected">KATEGORIA VALITTU</string>
+    <string name="power_pick">SUPERVALINTA</string>
+    <string name="power_pick_description">Pelaa supervalinta kerran pelissä\nja kumoa muiden valinnat</string>
+    <string name="power_pick_accepted">Supervalinta hyväksytty!</string>
+    <string name="pick_a_power_play">VALITSE TEHOSIIRTO</string>
+
+    <string name="smash_odd_one_out">Napauta ja murskaa joukosta poikkeava</string>
+    <string name="drag_to_link">Yhdistä vastaukset vetämällä</string>
+    <string name="swipe_to_match">Etsi pyyhkäisemällä, yhdistä napauttamalla</string>
+    <string name="finals_warning">Finaali! Väärät vastaukset hylätään!</string>
+
+    <string name="waiting_for_other_players">Odotetaan muita pelaajia…</string>
+    <string name="hold_to_start">Aloita pitämällä pohjassa!</string>
+    <string name="hold_to_start_hint">Paina ja pidä pohjassa, kunnes valot täyttyvät</string>
+
+    <string name="host">ISÄNTÄ</string>
+
+    <string name="cd_captured_photo">Otettu kuva</string>
+    <string name="cd_expand">Laajenna</string>
+    <string name="cd_avatar_icon">Avatarin kuvake</string>
+    <string name="cd_power_play_icon">Tehosiirron kuvake</string>
+
+    <string name="connecting_to_server">Yhdistetään palvelimeen…</string>
+    <string name="avatar_selected">Valittu</string>
+    <string name="avatar_available">Vapaa</string>
+    <string name="avatar_taken">Varattu</string>
+    <string name="take_photo">Ota kuva</string>
+    <string name="x_to_go">%1$s jäljellä</string>
+    <string name="look_at_tv">Katso televisiota</string>
+    <string name="drag_to_link_in_order">Yhdistä järjestyksessä vetämällä</string>
+    <string name="done_waiting">Valmis, odotetaan muita pelaajia</string>
+    <string name="choose_a_target">VALITSE KOHDE</string>
+    <string name="start_caps">ALOITA</string>
+</resources>
