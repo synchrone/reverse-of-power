@@ -20,6 +20,40 @@ Reverse of Power works with the retail party quiz title **Knowledge is Power** a
 - **Auto-discovery** — finds your console on the local network automatically
 - **Mid-game reconnect** — rejoin a game in progress
 
+## Languages
+
+The app follows your phone's language. On Android 13+ you can also pick a language for this app alone in Settings → Apps → Reverse of Power → Language.
+
+It covers every language the games shipped in. The translations are machine drafts, so corrections from native speakers are welcome as issues or pull requests. Languages with a linked pull request are not in the app yet. Translators' review is welcome in that pull request.
+
+- English
+- العربية (Arabic)
+- Čeština
+- Dansk
+  — not in the app yet: [review the translation in #21](../../pull/21)
+- Deutsch
+- Ελληνικά
+  — not in the app yet: [review the translation in #22](../../pull/22)
+- Español (España)
+- Español (Latinoamérica)
+- Français
+- Italiano
+- Magyar
+- Nederlands
+  — not in the app yet: [review the translation in #25](../../pull/25)
+- Norsk bokmål
+  — not in the app yet: [review the translation in #24](../../pull/24)
+- Polski
+- Português (Brasil)
+- Português (Portugal)
+  — not in the app yet: [review the translation in #26](../../pull/26)
+- Русский
+- Suomi
+  — not in the app yet: [review the translation in #23](../../pull/23)
+- Svenska
+  — not in the app yet: [review the translation in #27](../../pull/27)
+- Türkçe
+
 ## Getting Started
 
 [**Download the latest APK**](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk) or see all versions on the [Releases](../../releases) page. You can also build from source with `./gradlew assembleDebug`.

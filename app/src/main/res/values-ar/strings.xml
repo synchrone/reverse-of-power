@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">البحث عن خادم اللعبة</string>
+    <string name="enter_ip_address">أدخل عنوان IP</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">اتصال</string>
+    <string name="discovered_servers">الخوادم المكتشفة</string>
+    <string name="scanning">جارٍ البحث عن خوادم…</string>
+    <string name="no_servers_found">لم يتم العثور على خوادم</string>
+
+    <string name="enter_name_title">ما اسمك؟</string>
+    <string name="name_hint">أدخل اسمك</string>
+    <string name="continue_button">متابعة</string>
+
+    <string name="avatar_selection_title">اختر صورتك الرمزية</string>
+    <string name="use_camera">استخدم الكاميرا</string>
+    <string name="choose_avatar">اختر صورة رمزية</string>
+    <string name="camera_permission_required">يلزم إذن الوصول إلى الكاميرا</string>
+    <string name="capture_photo">التقط صورة</string>
+    <string name="retake_photo">إعادة الالتقاط</string>
+    <string name="use_this_photo">استخدم هذه الصورة</string>
+
+    <string name="waiting_room_title">غرفة الانتظار</string>
+    <string name="players_joined">اللاعبون:</string>
+    <string name="start_game">ابدأ اللعبة</string>
+    <string name="waiting_for_players">في انتظار انضمام اللاعبين…</string>
+    <string name="you">أنت</string>
+
+    <string name="get_ready">استعد!</string>
+    <string name="game_starting">ستبدأ اللعبة قريبًا…</string>
+
+    <string name="question_placeholder">سيظهر السؤال هنا</string>
+    <string name="answer_a">الإجابة A</string>
+    <string name="answer_b">الإجابة B</string>
+    <string name="answer_c">الإجابة C</string>
+    <string name="answer_d">الإجابة D</string>
+
+    <string name="error_connection">خطأ في الاتصال</string>
+    <string name="error_server_unreachable">تعذّر الوصول إلى الخادم</string>
+    <string name="cancel">إلغاء</string>
+    <string name="ok">موافق</string>
+
+    <string name="pp_freeze_name">تجميد</string>
+    <string name="pp_freeze_desc">احبس الإجابات في الجليد</string>
+    <string name="pp_bombs_name">قنابل</string>
+    <string name="pp_bombs_desc">ارمِ القنابل على الإجابات</string>
+    <string name="pp_munchers_name">قوارض</string>
+    <string name="pp_munchers_desc">اقضم الإجابات</string>
+    <string name="pp_gloop_name">هلام</string>
+    <string name="pp_gloop_desc">غطِّ الإجابات بالهلام</string>
+    <string name="pp_double_trouble_name">مشكلة مضاعفة</string>
+    <string name="pp_dt_freeze_gloop_desc">تجميد وهلام</string>
+    <string name="pp_dt_freeze_bombs_desc">تجميد وقنابل</string>
+    <string name="pp_dt_munchers_gloop_desc">قوارض وهلام</string>
+    <string name="pp_lockdown_name">إقفال</string>
+    <string name="pp_lockdown_desc">أقفِل الإجابات في أماكنها</string>
+    <string name="pp_zippers_name">سحّابات</string>
+    <string name="pp_zippers_desc">أغلق الإجابات بالسحّاب</string>
+    <string name="pp_bug_name">حشرات</string>
+    <string name="pp_bug_desc">حشرات تزحف فوق الإجابات</string>
+    <string name="pp_letter_scatter_name">بعثرة الحروف</string>
+    <string name="pp_letter_scatter_desc">بعثر الحروف</string>
+    <string name="pp_disco_name">جحيم الديسكو</string>
+    <string name="pp_disco_desc">أضواء الديسكو تُبهر الشاشة</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">احذف نصف الإجابات</string>
+    <string name="pp_points_doubler_name">مضاعفة النقاط</string>
+    <string name="pp_points_doubler_desc">تحصل على ×2 من نقاط الجائزة</string>
+    <string name="pp_points_party_name">حفلة النقاط</string>
+    <string name="pp_points_party_desc">يحصل الفائزون على أرباح مضاعفة</string>
+    <string name="pp_guess_name">تخمين</string>
+    <string name="pp_guess_desc">خمّن من سيجيب إجابة صحيحة</string>
+    <string name="pp_locked_in">✓ تم التأكيد!</string>
+    <string name="pp_everyone">الجميع</string>
+    <string name="pp_unknown_name">حركة خاصة #%1$d</string>
+    <string name="pp_unknown_desc">يُرجى تذكّر التأثير وإبلاغ المطوّرين به</string>
+
+    <string name="dont_touch_bombs">لا تلمس القنابل!</string>
+
+    <string name="debug">تصحيح الأخطاء</string>
+    <string name="rescan">إعادة البحث</string>
+    <string name="manual_ip_address">إدخال عنوان IP يدويًا</string>
+    <string name="enter_ip_prompt">يُرجى إدخال عنوان IP</string>
+    <string name="scan_failed">فشل البحث: %1$s</string>
+    <string name="failed_to_connect">تعذّر الاتصال بـ %1$s</string>
+    <string name="connection_error_detail">خطأ في الاتصال: %1$s</string>
+
+    <string name="default_player_name">لاعب</string>
+    <string name="name_required">يُرجى إدخال اسمك</string>
+    <string name="name_too_short">يجب أن يتكون الاسم من حرفين على الأقل</string>
+
+    <string name="select_avatar_type">اختر نوع الصورة الرمزية</string>
+    <string name="waiting_for_avatars">في انتظار الصور الرمزية…</string>
+    <string name="select_avatar">اختر صورة رمزية</string>
+    <string name="avatar_unavailable">الصورة الرمزية غير متاحة</string>
+    <string name="take_photo_first">التقط صورة أولًا</string>
+    <string name="pick_avatar_first">اختر صورة رمزية أولًا</string>
+    <string name="photo_capture_failed">فشل التقاط الصورة: %1$s</string>
+
+    <string name="choose_a_category">اختر فئة</string>
+    <string name="continue_caps">متابعة</string>
+    <string name="category_selected">تم اختيار الفئة</string>
+    <string name="power_pick">الاختيار الخارق</string>
+    <string name="power_pick_description">استخدم الاختيار الخارق مرة واحدة في كل لعبة\nلتتجاوز اختيارات الجميع</string>
+    <string name="power_pick_accepted">تم قبول الاختيار الخارق!</string>
+    <string name="pick_a_power_play">اختر حركة خاصة</string>
+
+    <string name="smash_odd_one_out">انقر لتحطيم الإجابة المختلفة</string>
+    <string name="drag_to_link">اسحب لربط الإجابات</string>
+    <string name="swipe_to_match">مرّر للبحث، وانقر للمطابقة</string>
+    <string name="finals_warning">النهائي! تُرفض الإجابات الخاطئة!</string>
+
+    <string name="waiting_for_other_players">في انتظار اللاعبين الآخرين…</string>
+    <string name="hold_to_start">اضغط مطولًا للبدء!</string>
+    <string name="hold_to_start_hint">اضغط مع الاستمرار حتى تمتلئ الأضواء</string>
+
+    <string name="host">المضيف</string>
+
+    <string name="cd_captured_photo">الصورة الملتقطة</string>
+    <string name="cd_expand">توسيع</string>
+    <string name="cd_avatar_icon">أيقونة الصورة الرمزية</string>
+    <string name="cd_power_play_icon">أيقونة الحركة الخاصة</string>
+
+    <string name="connecting_to_server">جارٍ الاتصال بالخادم…</string>
+    <string name="avatar_selected">مُختار</string>
+    <string name="avatar_available">متاح</string>
+    <string name="avatar_taken">محجوز</string>
+    <string name="take_photo">التقط صورة</string>
+    <string name="x_to_go">المتبقي: %1$s</string>
+    <string name="look_at_tv">انظر إلى التلفاز</string>
+    <string name="drag_to_link_in_order">اسحب للربط بالترتيب</string>
+    <string name="done_waiting">تم، في انتظار اللاعبين الآخرين</string>
+    <string name="choose_a_target">اختر هدفًا</string>
+    <string name="start_caps">ابدأ</string>
+</resources>

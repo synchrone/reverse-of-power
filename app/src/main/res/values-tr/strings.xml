@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Oyun Sunucusu Bul</string>
+    <string name="enter_ip_address">IP Adresi Gir</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Bağlan</string>
+    <string name="discovered_servers">Bulunan Sunucular</string>
+    <string name="scanning">Sunucular aranıyor…</string>
+    <string name="no_servers_found">Sunucu bulunamadı</string>
+
+    <string name="enter_name_title">Adın ne?</string>
+    <string name="name_hint">Adını gir</string>
+    <string name="continue_button">Devam</string>
+
+    <string name="avatar_selection_title">Avatarını Seç</string>
+    <string name="use_camera">Kamerayı Kullan</string>
+    <string name="choose_avatar">Avatar Seç</string>
+    <string name="camera_permission_required">Kamera izni gerekli</string>
+    <string name="capture_photo">Fotoğraf Çek</string>
+    <string name="retake_photo">Yeniden Çek</string>
+    <string name="use_this_photo">Bu Fotoğrafı Kullan</string>
+
+    <string name="waiting_room_title">Bekleme Odası</string>
+    <string name="players_joined">Oyuncular:</string>
+    <string name="start_game">Oyunu Başlat</string>
+    <string name="waiting_for_players">Oyuncuların katılması bekleniyor…</string>
+    <string name="you">Sen</string>
+
+    <string name="get_ready">Hazır Ol!</string>
+    <string name="game_starting">Oyun birazdan başlıyor…</string>
+
+    <string name="question_placeholder">Soru burada görünecek</string>
+    <string name="answer_a">Cevap A</string>
+    <string name="answer_b">Cevap B</string>
+    <string name="answer_c">Cevap C</string>
+    <string name="answer_d">Cevap D</string>
+
+    <string name="error_connection">Bağlantı hatası</string>
+    <string name="error_server_unreachable">Sunucuya ulaşılamıyor</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+
+    <string name="pp_freeze_name">BUZLAMA</string>
+    <string name="pp_freeze_desc">Cevapları buza hapset</string>
+    <string name="pp_bombs_name">BOMBALAR</string>
+    <string name="pp_bombs_desc">Cevapların üstüne bomba at</string>
+    <string name="pp_munchers_name">KEMİRGENLER</string>
+    <string name="pp_munchers_desc">Cevapları kemirip bitir</string>
+    <string name="pp_gloop_name">YAPIŞKAN</string>
+    <string name="pp_gloop_desc">Cevapları yapışkana bula</string>
+    <string name="pp_double_trouble_name">ÇİFTE BELA</string>
+    <string name="pp_dt_freeze_gloop_desc">Buzlama ve yapışkan</string>
+    <string name="pp_dt_freeze_bombs_desc">Buzlama ve bombalar</string>
+    <string name="pp_dt_munchers_gloop_desc">Kemirgenler ve yapışkan</string>
+    <string name="pp_lockdown_name">KİLİTLEME</string>
+    <string name="pp_lockdown_desc">Cevapları yerine kilitle</string>
+    <string name="pp_zippers_name">FERMUARLAR</string>
+    <string name="pp_zippers_desc">Cevapları fermuarla kapat</string>
+    <string name="pp_bug_name">BÖCEKLER</string>
+    <string name="pp_bug_desc">Böcekler cevapların üstünde geziniyor</string>
+    <string name="pp_letter_scatter_name">HARF KARMAŞASI</string>
+    <string name="pp_letter_scatter_desc">Harfleri dağıt</string>
+    <string name="pp_disco_name">DİSKO CEHENNEMİ</string>
+    <string name="pp_disco_desc">Disko ışıkları ekranı kamaştırıyor</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Cevapların yarısını kaldır</string>
+    <string name="pp_points_doubler_name">ÇİFT PUAN</string>
+    <string name="pp_points_doubler_desc">×2 ödül puanı kazanırsın</string>
+    <string name="pp_points_party_name">PUAN PARTİSİ</string>
+    <string name="pp_points_party_desc">Kazananlar çifte ödül alır</string>
+    <string name="pp_guess_name">TAHMİN</string>
+    <string name="pp_guess_desc">Kimin doğru cevap vereceğini tahmin et</string>
+    <string name="pp_locked_in">✓ Kilitlendi!</string>
+    <string name="pp_everyone">Herkes</string>
+    <string name="pp_unknown_name">GÜÇ HAMLESİ #%1$d</string>
+    <string name="pp_unknown_desc">Lütfen etkiyi hatırla ve geliştiricilere bildir</string>
+
+    <string name="dont_touch_bombs">Bombalara dokunma!</string>
+
+    <string name="debug">Hata Ayıklama</string>
+    <string name="rescan">Yeniden Tara</string>
+    <string name="manual_ip_address">Elle IP Adresi</string>
+    <string name="enter_ip_prompt">Lütfen bir IP adresi gir</string>
+    <string name="scan_failed">Tarama başarısız: %1$s</string>
+    <string name="failed_to_connect">%1$s adresine bağlanılamadı</string>
+    <string name="connection_error_detail">Bağlantı hatası: %1$s</string>
+
+    <string name="default_player_name">Oyuncu</string>
+    <string name="name_required">Lütfen adını gir</string>
+    <string name="name_too_short">Ad en az 2 karakter olmalı</string>
+
+    <string name="select_avatar_type">Avatar Türünü Seç</string>
+    <string name="waiting_for_avatars">Avatarlar bekleniyor…</string>
+    <string name="select_avatar">Avatar Seç</string>
+    <string name="avatar_unavailable">Avatar kullanılamıyor</string>
+    <string name="take_photo_first">Önce bir fotoğraf çek</string>
+    <string name="pick_avatar_first">Önce bir avatar seç</string>
+    <string name="photo_capture_failed">Fotoğraf çekilemedi: %1$s</string>
+
+    <string name="choose_a_category">BİR KATEGORİ SEÇ</string>
+    <string name="continue_caps">DEVAM</string>
+    <string name="category_selected">KATEGORİ SEÇİLDİ</string>
+    <string name="power_pick">SÜPER SEÇİM</string>
+    <string name="power_pick_description">Oyunda bir kez Süper Seçim kullan,\nherkesin seçimini geçersiz kıl</string>
+    <string name="power_pick_accepted">Süper Seçim kabul edildi!</string>
+    <string name="pick_a_power_play">BİR GÜÇ HAMLESİ SEÇ</string>
+
+    <string name="smash_odd_one_out">Farklı olanı kırmak için dokun</string>
+    <string name="drag_to_link">Cevapları bağlamak için sürükle</string>
+    <string name="swipe_to_match">Bulmak için kaydır, eşleştirmek için dokun</string>
+    <string name="finals_warning">Final! Yanlış cevaplar reddedilir!</string>
+
+    <string name="waiting_for_other_players">Diğer oyuncular bekleniyor…</string>
+    <string name="hold_to_start">Başlatmak için Basılı Tut!</string>
+    <string name="hold_to_start_hint">Işıklar dolana kadar basılı tut</string>
+
+    <string name="host">EV SAHİBİ</string>
+
+    <string name="cd_captured_photo">Çekilen fotoğraf</string>
+    <string name="cd_expand">Genişlet</string>
+    <string name="cd_avatar_icon">Avatar simgesi</string>
+    <string name="cd_power_play_icon">Güç hamlesi simgesi</string>
+
+    <string name="connecting_to_server">Sunucuya bağlanılıyor…</string>
+    <string name="avatar_selected">Seçildi</string>
+    <string name="avatar_available">Müsait</string>
+    <string name="avatar_taken">Dolu</string>
+    <string name="take_photo">Fotoğraf Çek</string>
+    <string name="x_to_go">%1$s kaldı</string>
+    <string name="look_at_tv">Televizyona bak</string>
+    <string name="drag_to_link_in_order">Sırayla bağlamak için sürükle</string>
+    <string name="done_waiting">Tamam, diğer oyuncular bekleniyor</string>
+    <string name="choose_a_target">BİR HEDEF SEÇ</string>
+    <string name="start_caps">BAŞLA</string>
+</resources>
