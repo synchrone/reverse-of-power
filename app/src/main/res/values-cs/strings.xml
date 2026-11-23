@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Najít herní server</string>
+    <string name="enter_ip_address">Zadej IP adresu</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Připojit</string>
+    <string name="discovered_servers">Nalezené servery</string>
+    <string name="scanning">Hledám servery…</string>
+    <string name="no_servers_found">Žádné servery nenalezeny</string>
+
+    <string name="enter_name_title">Jak se jmenuješ?</string>
+    <string name="name_hint">Zadej své jméno</string>
+    <string name="continue_button">Pokračovat</string>
+
+    <string name="avatar_selection_title">Vyber si avatara</string>
+    <string name="use_camera">Použít fotoaparát</string>
+    <string name="choose_avatar">Vybrat avatara</string>
+    <string name="camera_permission_required">Je potřeba přístup k fotoaparátu</string>
+    <string name="capture_photo">Vyfotit</string>
+    <string name="retake_photo">Znovu</string>
+    <string name="use_this_photo">Použít tuto fotku</string>
+
+    <string name="waiting_room_title">Čekárna</string>
+    <string name="players_joined">Hráči:</string>
+    <string name="start_game">Začít hru</string>
+    <string name="waiting_for_players">Čekáme, až se hráči připojí…</string>
+    <string name="you">Ty</string>
+
+    <string name="get_ready">Připrav se!</string>
+    <string name="game_starting">Hra brzy začne…</string>
+
+    <string name="question_placeholder">Tady se objeví otázka</string>
+    <string name="answer_a">Odpověď A</string>
+    <string name="answer_b">Odpověď B</string>
+    <string name="answer_c">Odpověď C</string>
+    <string name="answer_d">Odpověď D</string>
+
+    <string name="error_connection">Chyba připojení</string>
+    <string name="error_server_unreachable">Server je nedostupný</string>
+    <string name="cancel">Zrušit</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">ZMRAZENÍ</string>
+    <string name="pp_freeze_desc">Uzavře odpovědi do ledu</string>
+    <string name="pp_bombs_name">BOMBY</string>
+    <string name="pp_bombs_desc">Hází bomby na odpovědi</string>
+    <string name="pp_munchers_name">ŽROUTI</string>
+    <string name="pp_munchers_desc">Okusují odpovědi</string>
+    <string name="pp_gloop_name">SLIZ</string>
+    <string name="pp_gloop_desc">Zalije odpovědi slizem</string>
+    <string name="pp_double_trouble_name">DVOJITÁ POTÍŽ</string>
+    <string name="pp_dt_freeze_gloop_desc">Led a sliz</string>
+    <string name="pp_dt_freeze_bombs_desc">Led a bomby</string>
+    <string name="pp_dt_munchers_gloop_desc">Žrouti a sliz</string>
+    <string name="pp_lockdown_name">BLOKÁDA</string>
+    <string name="pp_lockdown_desc">Zamkne odpovědi na místě</string>
+    <string name="pp_zippers_name">ZIPY</string>
+    <string name="pp_zippers_desc">Zapne odpovědi na zip</string>
+    <string name="pp_bug_name">BROUCI</string>
+    <string name="pp_bug_desc">Brouci lezou po odpovědích</string>
+    <string name="pp_letter_scatter_name">ROZSYP PÍSMEN</string>
+    <string name="pp_letter_scatter_desc">Rozhází písmena</string>
+    <string name="pp_disco_name">DISKOTÉKA</string>
+    <string name="pp_disco_desc">Disco světla oslňují obrazovku</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Odstraní polovinu odpovědí</string>
+    <string name="pp_points_doubler_name">DVOJNÉ BODY</string>
+    <string name="pp_points_doubler_desc">Získáš ×2 bonusových bodů</string>
+    <string name="pp_points_party_name">BODOVÁ PÁRTY</string>
+    <string name="pp_points_party_desc">Vítězové získají dvojnásobnou výhru</string>
+    <string name="pp_guess_name">SÁZKA</string>
+    <string name="pp_guess_desc">Hádej, kdo odpoví správně</string>
+    <string name="pp_locked_in">✓ Potvrzeno!</string>
+    <string name="pp_everyone">Všichni</string>
+    <string name="pp_unknown_name">TAH #%1$d</string>
+    <string name="pp_unknown_desc">zapamatuj si efekt a řekni o něm vývojářům</string>
+
+    <string name="dont_touch_bombs">Nesahej na bomby!</string>
+
+    <string name="debug">Ladění</string>
+    <string name="rescan">Hledat znovu</string>
+    <string name="manual_ip_address">Ruční zadání IP</string>
+    <string name="enter_ip_prompt">Zadej IP adresu</string>
+    <string name="scan_failed">Hledání selhalo: %1$s</string>
+    <string name="failed_to_connect">Nepodařilo se připojit k %1$s</string>
+    <string name="connection_error_detail">Chyba připojení: %1$s</string>
+
+    <string name="default_player_name">Hráč</string>
+    <string name="name_required">Zadej své jméno</string>
+    <string name="name_too_short">Jméno musí mít aspoň 2 znaky</string>
+
+    <string name="select_avatar_type">Vyber typ avatara</string>
+    <string name="waiting_for_avatars">Čekáme na avatary…</string>
+    <string name="select_avatar">Vybrat avatara</string>
+    <string name="avatar_unavailable">Avatar není dostupný</string>
+    <string name="take_photo_first">Nejdřív se vyfoť</string>
+    <string name="pick_avatar_first">Nejdřív vyber avatara</string>
+    <string name="photo_capture_failed">Focení selhalo: %1$s</string>
+
+    <string name="choose_a_category">VYBER KATEGORII</string>
+    <string name="continue_caps">POKRAČOVAT</string>
+    <string name="category_selected">KATEGORIE VYBRÁNA</string>
+    <string name="power_pick">SUPERVOLBA</string>
+    <string name="power_pick_description">Supervolbu použij jednou za hru\na přebij volbu ostatních</string>
+    <string name="power_pick_accepted">Supervolba přijata!</string>
+    <string name="pick_a_power_play">VYBER TAH</string>
+
+    <string name="smash_odd_one_out">Ťukni a rozbij, co nepatří</string>
+    <string name="drag_to_link">Táhni a spoj odpovědi</string>
+    <string name="swipe_to_match">Přejeď pro hledání, ťukni pro spojení</string>
+    <string name="finals_warning">Finále! Špatné odpovědi se nepřijímají!</string>
+
+    <string name="waiting_for_other_players">Čekáme na ostatní hráče…</string>
+    <string name="hold_to_start">Podrž pro start!</string>
+    <string name="hold_to_start_hint">Drž, dokud se nerozsvítí všechna světla</string>
+
+    <string name="host">HOSTITEL</string>
+
+    <string name="cd_captured_photo">Pořízená fotka</string>
+    <string name="cd_expand">Rozbalit</string>
+    <string name="cd_avatar_icon">Ikona avatara</string>
+    <string name="cd_power_play_icon">Ikona tahu</string>
+
+    <string name="connecting_to_server">Připojuji se k serveru…</string>
+    <string name="avatar_selected">Vybráno</string>
+    <string name="avatar_available">Volné</string>
+    <string name="avatar_taken">Obsazeno</string>
+    <string name="take_photo">Vyfotit</string>
+    <string name="x_to_go">Zbývá: %1$s</string>
+    <string name="look_at_tv">Dívej se na televizi</string>
+    <string name="drag_to_link_in_order">Táhni a spoj ve správném pořadí</string>
+    <string name="done_waiting">Hotovo, čekáme na ostatní</string>
+    <string name="choose_a_target">VYBER CÍL</string>
+    <string name="start_caps">START</string>
+</resources>
