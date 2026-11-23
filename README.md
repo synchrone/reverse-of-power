@@ -1,5 +1,9 @@
 # Reverse of Power
 
+[![Download the latest APK](https://img.shields.io/github/v/release/synchrone/reverse-of-power?label=Download%20APK&logo=android&style=for-the-badge&color=3DDC84)](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk)
+
+**[Download the latest APK](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk)** · [All releases](../../releases) · Android 8.0+
+
 **Reverse of Power** is a free, open-source Android app that turns your phone or tablet into a controller for the PlayStation "PlayLink" party quiz games — an unofficial, community-built replacement for the original companion app, so the games stay playable now that the official app is no longer maintained.
 
 It speaks the game's local-network protocol directly: point it at a retail copy running on a stock PS4 or PS5 on the same Wi-Fi, and play exactly as the creators intended — pick categories, race through fastest-finger trivia, link and sort answers, and sabotage your friends with power plays.
@@ -56,9 +60,7 @@ It covers every language the games shipped in. The translations are machine draf
 
 ## Getting Started
 
-[**Download the latest APK**](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk) or see all versions on the [Releases](../../releases) page. You can also build from source with `./gradlew assembleDebug`.
-
-1. Install the APK on your Android device.
+1. Install the [latest APK](https://github.com/synchrone/reverse-of-power/releases/latest/download/app-release.apk) on your Android device, or build from source with `./gradlew assembleDebug`.
 2. Start the game on your PS4 or PS5.
 3. Open Reverse of Power on the same Wi-Fi network — it discovers the console automatically and connects.
 
