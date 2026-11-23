@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Finn spillserver</string>
+    <string name="enter_ip_address">Skriv inn IP-adresse</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Koble til</string>
+    <string name="discovered_servers">Funnet servere</string>
+    <string name="scanning">Søker etter servere…</string>
+    <string name="no_servers_found">Fant ingen servere</string>
+
+    <string name="enter_name_title">Hva heter du?</string>
+    <string name="name_hint">Skriv inn navnet ditt</string>
+    <string name="continue_button">Fortsett</string>
+
+    <string name="avatar_selection_title">Velg avataren din</string>
+    <string name="use_camera">Bruk kamera</string>
+    <string name="choose_avatar">Velg avatar</string>
+    <string name="camera_permission_required">Kameratillatelse kreves</string>
+    <string name="capture_photo">Ta bilde</string>
+    <string name="retake_photo">Ta på nytt</string>
+    <string name="use_this_photo">Bruk dette bildet</string>
+
+    <string name="waiting_room_title">Venterom</string>
+    <string name="players_joined">Spillere:</string>
+    <string name="start_game">Start spillet</string>
+    <string name="waiting_for_players">Venter på at spillere blir med…</string>
+    <string name="you">Deg</string>
+
+    <string name="get_ready">Gjør deg klar!</string>
+    <string name="game_starting">Spillet starter snart…</string>
+
+    <string name="question_placeholder">Spørsmålet vises her</string>
+    <string name="answer_a">Svar A</string>
+    <string name="answer_b">Svar B</string>
+    <string name="answer_c">Svar C</string>
+    <string name="answer_d">Svar D</string>
+
+    <string name="error_connection">Tilkoblingsfeil</string>
+    <string name="error_server_unreachable">Får ikke kontakt med serveren</string>
+    <string name="cancel">Avbryt</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">FRYS</string>
+    <string name="pp_freeze_desc">Frys svarene inn i is</string>
+    <string name="pp_bombs_name">BOMBER</string>
+    <string name="pp_bombs_desc">Kast bomber over svarene</string>
+    <string name="pp_munchers_name">GNAGERE</string>
+    <string name="pp_munchers_desc">Gnag løs på svarene</string>
+    <string name="pp_gloop_name">SLIM</string>
+    <string name="pp_gloop_desc">Dekk svarene med slim</string>
+    <string name="pp_double_trouble_name">DOBBEL TRØBBEL</string>
+    <string name="pp_dt_freeze_gloop_desc">Frys og slim</string>
+    <string name="pp_dt_freeze_bombs_desc">Frys og bomber</string>
+    <string name="pp_dt_munchers_gloop_desc">Gnagere og slim</string>
+    <string name="pp_lockdown_name">SPERRING</string>
+    <string name="pp_lockdown_desc">Lås svarene fast</string>
+    <string name="pp_zippers_name">GLIDELÅS</string>
+    <string name="pp_zippers_desc">Lukk svarene med glidelås</string>
+    <string name="pp_bug_name">BILLER</string>
+    <string name="pp_bug_desc">Biller kryper over svarene</string>
+    <string name="pp_letter_scatter_name">BOKSTAVKAOS</string>
+    <string name="pp_letter_scatter_desc">Spre bokstavene</string>
+    <string name="pp_disco_name">DISKOHELVETE</string>
+    <string name="pp_disco_desc">Diskolys blender skjermen</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Fjern halvparten av svarene</string>
+    <string name="pp_points_doubler_name">POENGDOBLER</string>
+    <string name="pp_points_doubler_desc">Du får ×2 premiepoeng</string>
+    <string name="pp_points_party_name">POENGFEST</string>
+    <string name="pp_points_party_desc">Vinnerne får dobbel gevinst</string>
+    <string name="pp_guess_name">GJETT</string>
+    <string name="pp_guess_desc">Gjett hvem som svarer riktig</string>
+    <string name="pp_locked_in">✓ Låst!</string>
+    <string name="pp_everyone">Alle</string>
+    <string name="pp_unknown_name">SPESIALTREKK #%1$d</string>
+    <string name="pp_unknown_desc">Husk effekten og si fra til utviklerne</string>
+
+    <string name="dont_touch_bombs">Ikke rør bombene!</string>
+
+    <string name="debug">Debug</string>
+    <string name="rescan">Søk på nytt</string>
+    <string name="manual_ip_address">Manuell IP-adresse</string>
+    <string name="enter_ip_prompt">Skriv inn en IP-adresse</string>
+    <string name="scan_failed">Søket mislyktes: %1$s</string>
+    <string name="failed_to_connect">Kunne ikke koble til %1$s</string>
+    <string name="connection_error_detail">Tilkoblingsfeil: %1$s</string>
+
+    <string name="default_player_name">Spiller</string>
+    <string name="name_required">Skriv inn navnet ditt</string>
+    <string name="name_too_short">Navnet må ha minst 2 tegn</string>
+
+    <string name="select_avatar_type">Velg avatartype</string>
+    <string name="waiting_for_avatars">Venter på avatarer…</string>
+    <string name="select_avatar">Velg avatar</string>
+    <string name="avatar_unavailable">Avataren er utilgjengelig</string>
+    <string name="take_photo_first">Ta et bilde først</string>
+    <string name="pick_avatar_first">Velg en avatar først</string>
+    <string name="photo_capture_failed">Kunne ikke ta bilde: %1$s</string>
+
+    <string name="choose_a_category">VELG EN KATEGORI</string>
+    <string name="continue_caps">FORTSETT</string>
+    <string name="category_selected">KATEGORI VALGT</string>
+    <string name="power_pick">SUPERVALG</string>
+    <string name="power_pick_description">Bruk et Supervalg én gang per spill\nfor å overstyre alle andres valg</string>
+    <string name="power_pick_accepted">Supervalg godtatt!</string>
+    <string name="pick_a_power_play">VELG ET SPESIALTREKK</string>
+
+    <string name="smash_odd_one_out">Trykk for å knuse den som skiller seg ut</string>
+    <string name="drag_to_link">Dra for å koble sammen svar</string>
+    <string name="swipe_to_match">Sveip for å finne, trykk for å koble</string>
+    <string name="finals_warning">Finale! Feil svar avvises!</string>
+
+    <string name="waiting_for_other_players">Venter på andre spillere…</string>
+    <string name="hold_to_start">Hold for å starte!</string>
+    <string name="hold_to_start_hint">Trykk og hold til alle lysene er tent</string>
+
+    <string name="host">VERT</string>
+
+    <string name="cd_captured_photo">Tatt bilde</string>
+    <string name="cd_expand">Utvid</string>
+    <string name="cd_avatar_icon">Avatarikon</string>
+    <string name="cd_power_play_icon">Ikon for spesialtrekk</string>
+
+    <string name="connecting_to_server">Kobler til server…</string>
+    <string name="avatar_selected">Valgt</string>
+    <string name="avatar_available">Ledig</string>
+    <string name="avatar_taken">Opptatt</string>
+    <string name="take_photo">Ta bilde</string>
+    <string name="x_to_go">%1$s igjen</string>
+    <string name="look_at_tv">Se på TV-en</string>
+    <string name="drag_to_link_in_order">Dra for å koble i rekkefølge</string>
+    <string name="done_waiting">Ferdig, venter på andre spillere</string>
+    <string name="choose_a_target">VELG ET MÅL</string>
+    <string name="start_caps">START</string>
+</resources>
