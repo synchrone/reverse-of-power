@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Spelserver zoeken</string>
+    <string name="enter_ip_address">Voer IP-adres in</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Verbinden</string>
+    <string name="discovered_servers">Gevonden servers</string>
+    <string name="scanning">Zoeken naar servers…</string>
+    <string name="no_servers_found">Geen servers gevonden</string>
+
+    <string name="enter_name_title">Hoe heet je?</string>
+    <string name="name_hint">Voer je naam in</string>
+    <string name="continue_button">Doorgaan</string>
+
+    <string name="avatar_selection_title">Kies je avatar</string>
+    <string name="use_camera">Camera gebruiken</string>
+    <string name="choose_avatar">Avatar kiezen</string>
+    <string name="camera_permission_required">Cameratoestemming is vereist</string>
+    <string name="capture_photo">Foto maken</string>
+    <string name="retake_photo">Opnieuw</string>
+    <string name="use_this_photo">Deze foto gebruiken</string>
+
+    <string name="waiting_room_title">Wachtkamer</string>
+    <string name="players_joined">Spelers:</string>
+    <string name="start_game">Spel starten</string>
+    <string name="waiting_for_players">Wachten tot spelers meedoen…</string>
+    <string name="you">Jij</string>
+
+    <string name="get_ready">Maak je klaar!</string>
+    <string name="game_starting">Het spel begint zo…</string>
+
+    <string name="question_placeholder">Hier verschijnt de vraag</string>
+    <string name="answer_a">Antwoord A</string>
+    <string name="answer_b">Antwoord B</string>
+    <string name="answer_c">Antwoord C</string>
+    <string name="answer_d">Antwoord D</string>
+
+    <string name="error_connection">Verbindingsfout</string>
+    <string name="error_server_unreachable">Kan server niet bereiken</string>
+    <string name="cancel">Annuleren</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">BEVRIEZEN</string>
+    <string name="pp_freeze_desc">Zet de antwoorden vast in ijs</string>
+    <string name="pp_bombs_name">BOMMEN</string>
+    <string name="pp_bombs_desc">Gooi bommen op de antwoorden</string>
+    <string name="pp_munchers_name">KNABBELAARS</string>
+    <string name="pp_munchers_desc">Knabbel aan de antwoorden</string>
+    <string name="pp_gloop_name">SLIJM</string>
+    <string name="pp_gloop_desc">Bedek de antwoorden met slijm</string>
+    <string name="pp_double_trouble_name">DUBBELE PECH</string>
+    <string name="pp_dt_freeze_gloop_desc">Bevriezen en slijm</string>
+    <string name="pp_dt_freeze_bombs_desc">Bevriezen en bommen</string>
+    <string name="pp_dt_munchers_gloop_desc">Knabbelaars en slijm</string>
+    <string name="pp_lockdown_name">BLOKKADE</string>
+    <string name="pp_lockdown_desc">Zet de antwoorden op slot</string>
+    <string name="pp_zippers_name">RITSEN</string>
+    <string name="pp_zippers_desc">Rits de antwoorden dicht</string>
+    <string name="pp_bug_name">BEESTJES</string>
+    <string name="pp_bug_desc">Beestjes kruipen over de antwoorden</string>
+    <string name="pp_letter_scatter_name">LETTERSOEP</string>
+    <string name="pp_letter_scatter_desc">Hussel de letters door elkaar</string>
+    <string name="pp_disco_name">DISCO-HEL</string>
+    <string name="pp_disco_desc">Discolampen verblinden het scherm</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Verwijder de helft van de antwoorden</string>
+    <string name="pp_points_doubler_name">DUBBELE PUNTEN</string>
+    <string name="pp_points_doubler_desc">Je krijgt ×2 prijspunten</string>
+    <string name="pp_points_party_name">PUNTENFEEST</string>
+    <string name="pp_points_party_desc">Winnaars krijgen dubbele winst</string>
+    <string name="pp_guess_name">GOK</string>
+    <string name="pp_guess_desc">Gok wie het goede antwoord geeft</string>
+    <string name="pp_locked_in">✓ Vastgelegd!</string>
+    <string name="pp_everyone">Iedereen</string>
+    <string name="pp_unknown_name">SPECIALE ZET #%1$d</string>
+    <string name="pp_unknown_desc">Onthoud het effect en laat het de ontwikkelaars weten</string>
+
+    <string name="dont_touch_bombs">Raak de bommen niet aan!</string>
+
+    <string name="debug">Debug</string>
+    <string name="rescan">Opnieuw zoeken</string>
+    <string name="manual_ip_address">Handmatig IP-adres</string>
+    <string name="enter_ip_prompt">Voer een IP-adres in</string>
+    <string name="scan_failed">Zoeken mislukt: %1$s</string>
+    <string name="failed_to_connect">Kan geen verbinding maken met %1$s</string>
+    <string name="connection_error_detail">Verbindingsfout: %1$s</string>
+
+    <string name="default_player_name">Speler</string>
+    <string name="name_required">Voer je naam in</string>
+    <string name="name_too_short">Naam moet minstens 2 tekens hebben</string>
+
+    <string name="select_avatar_type">Kies avatartype</string>
+    <string name="waiting_for_avatars">Wachten op avatars…</string>
+    <string name="select_avatar">Avatar kiezen</string>
+    <string name="avatar_unavailable">Avatar niet beschikbaar</string>
+    <string name="take_photo_first">Maak eerst een foto</string>
+    <string name="pick_avatar_first">Kies eerst een avatar</string>
+    <string name="photo_capture_failed">Foto maken mislukt: %1$s</string>
+
+    <string name="choose_a_category">KIES EEN CATEGORIE</string>
+    <string name="continue_caps">DOORGAAN</string>
+    <string name="category_selected">CATEGORIE GEKOZEN</string>
+    <string name="power_pick">SUPERKEUZE</string>
+    <string name="power_pick_description">Gebruik één keer per spel een Superkeuze\nom iedereens keuze te overstemmen</string>
+    <string name="power_pick_accepted">Superkeuze geaccepteerd!</string>
+    <string name="pick_a_power_play">KIES EEN SPECIALE ZET</string>
+
+    <string name="smash_odd_one_out">Tik om de vreemde eend kapot te slaan</string>
+    <string name="drag_to_link">Sleep om antwoorden te koppelen</string>
+    <string name="swipe_to_match">Swipe om te zoeken, tik om te koppelen</string>
+    <string name="finals_warning">Finale! Foute antwoorden worden geweigerd!</string>
+
+    <string name="waiting_for_other_players">Wachten op andere spelers…</string>
+    <string name="hold_to_start">Houd vast om te starten!</string>
+    <string name="hold_to_start_hint">Houd ingedrukt tot alle lampjes branden</string>
+
+    <string name="host">HOST</string>
+
+    <string name="cd_captured_photo">Gemaakte foto</string>
+    <string name="cd_expand">Uitvouwen</string>
+    <string name="cd_avatar_icon">Avatarpictogram</string>
+    <string name="cd_power_play_icon">Pictogram speciale zet</string>
+
+    <string name="connecting_to_server">Verbinden met server…</string>
+    <string name="avatar_selected">Gekozen</string>
+    <string name="avatar_available">Beschikbaar</string>
+    <string name="avatar_taken">Bezet</string>
+    <string name="take_photo">Foto maken</string>
+    <string name="x_to_go">Nog %1$s</string>
+    <string name="look_at_tv">Kijk naar de tv</string>
+    <string name="drag_to_link_in_order">Sleep om op volgorde te koppelen</string>
+    <string name="done_waiting">Klaar, wachten op andere spelers</string>
+    <string name="choose_a_target">KIES EEN DOELWIT</string>
+    <string name="start_caps">START</string>
+</resources>
