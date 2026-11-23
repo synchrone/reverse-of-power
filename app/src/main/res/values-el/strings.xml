@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Reverse of Power</string>
+
+    <string name="server_discovery_title">Εύρεση διακομιστή παιχνιδιού</string>
+    <string name="enter_ip_address">Δώσε διεύθυνση IP</string>
+    <string name="ip_address_hint">192.168.1.100</string>
+    <string name="connect_button">Σύνδεση</string>
+    <string name="discovered_servers">Διακομιστές που βρέθηκαν</string>
+    <string name="scanning">Αναζήτηση διακομιστών…</string>
+    <string name="no_servers_found">Δεν βρέθηκαν διακομιστές</string>
+
+    <string name="enter_name_title">Πώς σε λένε;</string>
+    <string name="name_hint">Γράψε το όνομά σου</string>
+    <string name="continue_button">Συνέχεια</string>
+
+    <string name="avatar_selection_title">Διάλεξε το άβαταρ σου</string>
+    <string name="use_camera">Χρήση κάμερας</string>
+    <string name="choose_avatar">Επιλογή άβαταρ</string>
+    <string name="camera_permission_required">Απαιτείται άδεια χρήσης κάμερας</string>
+    <string name="capture_photo">Λήψη φωτογραφίας</string>
+    <string name="retake_photo">Νέα λήψη</string>
+    <string name="use_this_photo">Χρήση αυτής της φωτογραφίας</string>
+
+    <string name="waiting_room_title">Αίθουσα αναμονής</string>
+    <string name="players_joined">Παίκτες:</string>
+    <string name="start_game">Έναρξη παιχνιδιού</string>
+    <string name="waiting_for_players">Αναμονή για παίκτες…</string>
+    <string name="you">Εσύ</string>
+
+    <string name="get_ready">Ετοιμάσου!</string>
+    <string name="game_starting">Το παιχνίδι ξεκινά σε λίγο…</string>
+
+    <string name="question_placeholder">Η ερώτηση θα εμφανιστεί εδώ</string>
+    <string name="answer_a">Απάντηση A</string>
+    <string name="answer_b">Απάντηση B</string>
+    <string name="answer_c">Απάντηση C</string>
+    <string name="answer_d">Απάντηση D</string>
+
+    <string name="error_connection">Σφάλμα σύνδεσης</string>
+    <string name="error_server_unreachable">Ο διακομιστής δεν είναι προσβάσιμος</string>
+    <string name="cancel">Ακύρωση</string>
+    <string name="ok">OK</string>
+
+    <string name="pp_freeze_name">ΠΑΓΩΜΑ</string>
+    <string name="pp_freeze_desc">Κλείσε τις απαντήσεις σε πάγο</string>
+    <string name="pp_bombs_name">ΒΟΜΒΕΣ</string>
+    <string name="pp_bombs_desc">Ρίξε βόμβες πάνω στις απαντήσεις</string>
+    <string name="pp_munchers_name">ΡΟΚΑΝΙΣΤΕΣ</string>
+    <string name="pp_munchers_desc">Ροκάνισε τις απαντήσεις</string>
+    <string name="pp_gloop_name">ΓΛΙΤΣΑ</string>
+    <string name="pp_gloop_desc">Κάλυψε τις απαντήσεις με γλίτσα</string>
+    <string name="pp_double_trouble_name">ΔΙΠΛΟΣ ΜΠΕΛΑΣ</string>
+    <string name="pp_dt_freeze_gloop_desc">Πάγωμα και γλίτσα</string>
+    <string name="pp_dt_freeze_bombs_desc">Πάγωμα και βόμβες</string>
+    <string name="pp_dt_munchers_gloop_desc">Ροκανιστές και γλίτσα</string>
+    <string name="pp_lockdown_name">ΚΛΕΙΔΩΜΑ</string>
+    <string name="pp_lockdown_desc">Κλείδωσε τις απαντήσεις στη θέση τους</string>
+    <string name="pp_zippers_name">ΦΕΡΜΟΥΑΡ</string>
+    <string name="pp_zippers_desc">Κλείσε τις απαντήσεις με φερμουάρ</string>
+    <string name="pp_bug_name">ΖΟΥΖΟΥΝΙΑ</string>
+    <string name="pp_bug_desc">Ζουζούνια σέρνονται στις απαντήσεις</string>
+    <string name="pp_letter_scatter_name">ΣΚΟΡΠΙΑ ΓΡΑΜΜΑΤΑ</string>
+    <string name="pp_letter_scatter_desc">Σκόρπισε τα γράμματα</string>
+    <string name="pp_disco_name">ΚΟΛΑΣΗ ΝΤΙΣΚΟ</string>
+    <string name="pp_disco_desc">Φώτα ντίσκο θαμπώνουν την οθόνη</string>
+    <string name="pp_fifty_fifty_name">50/50</string>
+    <string name="pp_fifty_fifty_desc">Αφαίρεσε τις μισές απαντήσεις</string>
+    <string name="pp_points_doubler_name">ΔΙΠΛΟΙ ΠΟΝΤΟΙ</string>
+    <string name="pp_points_doubler_desc">Παίρνεις ×2 πόντους επάθλου</string>
+    <string name="pp_points_party_name">ΠΑΡΤΙ ΠΟΝΤΩΝ</string>
+    <string name="pp_points_party_desc">Οι νικητές παίρνουν διπλά κέρδη</string>
+    <string name="pp_guess_name">ΜΑΝΤΕΨΙΑ</string>
+    <string name="pp_guess_desc">Μάντεψε ποιος θα απαντήσει σωστά</string>
+    <string name="pp_locked_in">✓ Κλείδωσε!</string>
+    <string name="pp_everyone">Όλοι</string>
+    <string name="pp_unknown_name">ΕΙΔΙΚΗ ΚΙΝΗΣΗ #%1$d</string>
+    <string name="pp_unknown_desc">Θυμήσου το εφέ και πες το στους προγραμματιστές</string>
+
+    <string name="dont_touch_bombs">Μην αγγίξεις τις βόμβες!</string>
+
+    <string name="debug">Αποσφαλμάτωση</string>
+    <string name="rescan">Νέα σάρωση</string>
+    <string name="manual_ip_address">Χειροκίνητη διεύθυνση IP</string>
+    <string name="enter_ip_prompt">Δώσε μια διεύθυνση IP</string>
+    <string name="scan_failed">Η σάρωση απέτυχε: %1$s</string>
+    <string name="failed_to_connect">Αποτυχία σύνδεσης στο %1$s</string>
+    <string name="connection_error_detail">Σφάλμα σύνδεσης: %1$s</string>
+
+    <string name="default_player_name">Παίκτης</string>
+    <string name="name_required">Γράψε το όνομά σου</string>
+    <string name="name_too_short">Το όνομα πρέπει να έχει τουλάχιστον 2 χαρακτήρες</string>
+
+    <string name="select_avatar_type">Επιλογή τύπου άβαταρ</string>
+    <string name="waiting_for_avatars">Αναμονή για άβαταρ…</string>
+    <string name="select_avatar">Επιλογή άβαταρ</string>
+    <string name="avatar_unavailable">Το άβαταρ δεν είναι διαθέσιμο</string>
+    <string name="take_photo_first">Βγάλε πρώτα μια φωτογραφία</string>
+    <string name="pick_avatar_first">Διάλεξε πρώτα άβαταρ</string>
+    <string name="photo_capture_failed">Η λήψη φωτογραφίας απέτυχε: %1$s</string>
+
+    <string name="choose_a_category">ΔΙΑΛΕΞΕ ΚΑΤΗΓΟΡΙΑ</string>
+    <string name="continue_caps">ΣΥΝΕΧΕΙΑ</string>
+    <string name="category_selected">ΚΑΤΗΓΟΡΙΑ ΕΠΙΛΕΧΘΗΚΕ</string>
+    <string name="power_pick">ΥΠΕΡΕΠΙΛΟΓΗ</string>
+    <string name="power_pick_description">Παίξε την Υπερεπιλογή μία φορά ανά παιχνίδι\nγια να παρακάμψεις την επιλογή των άλλων</string>
+    <string name="power_pick_accepted">Η Υπερεπιλογή έγινε δεκτή!</string>
+    <string name="pick_a_power_play">ΔΙΑΛΕΞΕ ΕΙΔΙΚΗ ΚΙΝΗΣΗ</string>
+
+    <string name="smash_odd_one_out">Πάτα για να σπάσεις το παράταιρο</string>
+    <string name="drag_to_link">Σύρε για να συνδέσεις τις απαντήσεις</string>
+    <string name="swipe_to_match">Σύρε για να βρεις, πάτα για ταίριασμα</string>
+    <string name="finals_warning">Τελικός! Οι λάθος απαντήσεις απορρίπτονται!</string>
+
+    <string name="waiting_for_other_players">Αναμονή για τους άλλους παίκτες…</string>
+    <string name="hold_to_start">Κράτα πατημένο για έναρξη!</string>
+    <string name="hold_to_start_hint">Πάτα και κράτα μέχρι να ανάψουν όλα τα φώτα</string>
+
+    <string name="host">ΟΙΚΟΔΕΣΠΟΤΗΣ</string>
+
+    <string name="cd_captured_photo">Φωτογραφία που λήφθηκε</string>
+    <string name="cd_expand">Ανάπτυξη</string>
+    <string name="cd_avatar_icon">Εικονίδιο άβαταρ</string>
+    <string name="cd_power_play_icon">Εικονίδιο ειδικής κίνησης</string>
+
+    <string name="connecting_to_server">Σύνδεση με τον διακομιστή…</string>
+    <string name="avatar_selected">Επιλεγμένο</string>
+    <string name="avatar_available">Διαθέσιμο</string>
+    <string name="avatar_taken">Πιασμένο</string>
+    <string name="take_photo">Βγάλε φωτογραφία</string>
+    <string name="x_to_go">Απομένουν %1$s</string>
+    <string name="look_at_tv">Κοίτα την τηλεόραση</string>
+    <string name="drag_to_link_in_order">Σύρε για να συνδέσεις με τη σειρά</string>
+    <string name="done_waiting">Έτοιμο, αναμονή για τους άλλους παίκτες</string>
+    <string name="choose_a_target">ΔΙΑΛΕΞΕ ΣΤΟΧΟ</string>
+    <string name="start_caps">ΕΝΑΡΞΗ</string>
+</resources>
