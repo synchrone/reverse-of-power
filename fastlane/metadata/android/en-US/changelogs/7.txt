@@ -1,0 +1,3 @@
+Builds with F-Droid's own tools without changes.
+
+- The placeholder player photo, used when no camera photo is available, is new original artwork.
