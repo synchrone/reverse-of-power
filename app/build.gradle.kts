@@ -33,10 +33,21 @@ configure<ApplicationExtension> {
         applicationId = "com.game.remoteclient"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 6
+        versionName = "0.6.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("github") {
+            dimension = "distribution"
+        }
+        create("fdroid") {
+            dimension = "distribution"
+            applicationId = "io.github.synchrone.reverseofpower"
+        }
     }
 
     buildTypes {
@@ -123,9 +134,4 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.7.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
-}
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
-    }
 }
