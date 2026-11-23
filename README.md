@@ -42,7 +42,6 @@ It covers every language the games shipped in. The translations are machine draf
 - Nederlands
   — not in the app yet: [review the translation in #25](../../pull/25)
 - Norsk bokmål
-  — not in the app yet: [review the translation in #24](../../pull/24)
 - Polski
 - Português (Brasil)
 - Português (Portugal)
